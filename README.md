@@ -1,4 +1,4 @@
-## Login & Authentication Feature:
+## Login Feature:
 This branch contains the core authentication logic for the project.
 
 ### Key Functionality:
