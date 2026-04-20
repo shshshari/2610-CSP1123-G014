@@ -1,164 +1,96 @@
+import sqlite3
 import random
 
-# ── DATASET ────────────────────────────────────────────────────────────────────
-STALLS = [
-    {
-        "id": 1,
-        "name": "Stall 1",
-        "category": "local",
-        "price_range": "cheap",
-        "vibe": ["chill", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 2,
-        "name": "Stall 2",
-        "category": "noodles",
-        "price_range": "cheap",
-        "vibe": ["quick", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 3,
-        "name": "Stall 3",
-        "category": "mamak",
-        "price_range": "cheap",
-        "vibe": ["chaotic", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 4,
-        "name": "Stall 4",
-        "category": "arab",
-        "price_range": "cheap",
-        "vibe": ["smokey", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 5,
-        "name": "Stall 5",
-        "category": "local",
-        "price_range": "cheap",
-        "vibe": ["chill", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 6,
-        "name": "Stall 6",
-        "category": "chinese",
-        "price_range": "cheap",
-        "vibe": ["spicy", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 7,
-        "name": "Stall 7",
-        "category": "local",
-        "price_range": "cheap",
-        "vibe": ["explosive", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 8,
-        "name": "Stall 8",
-        "category": "mamak",
-        "price_range": "cheap",
-        "vibe": ["diversity", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 9,
-        "name": "Stall 9",
-        "category": "korean",
-        "price_range": "expensive",
-        "vibe": ["quirky", "filling"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-    {
-        "id": 10,
-        "name": "Stall 10",
-        "category": "cafe",
-        "price_range": "cheap",
-        "vibe": ["calm", "happy"],
-        "dietary": ["halal"],
-        "description": "description."
-    },
-]
+DB_PATH = "stalls.db"
 
-# ── QUESTIONS ──────────────────────────────────────────────────────────────────
-QUESTIONS = [
-    {
-        "id": "hunger",
-        "question": "How hungry are you right now?",
-        "emoji": "🤤",
-        "options": {
-            "a": {"label": "Starving", "tags": {"vibe": "filling"}},
-            "b": {"label": "Not much", "tags": {"vibe": "light"}},
-        }
-    },
-    {
-        "id": "mood",
-        "question": "What's your vibe today?",
-        "emoji": "🤩",
-        "options": {
-            "a": {"label": "Feeling a little bit dangerous today", "tags": {"vibe": "explosive"}},
-            "b": {"label": "I feel so different today", "tags": {"vibe": "quirky"}},
-            "c": {"label": "I feel colorful today", "tags": {"vibe": "diversity"}},
-            "d": {"label": "I feel so calm today", "tags": {"vibe": "chill"}},
-        }
-    },
-    {
-        "id": "budget",
-        "question": "What does your budget look like?",
-        "emoji": "💸",
-        "options": {
-            "a": {"label": "Broke student 💔 (under RM10)", "tags": {"price_range": "cheap"}},
-            "b": {"label": "Moderate (RM10+)", "tags": {"price_range": "moderate"}},
-            "c": {"label": "Treating myself today! (RM15+)", "tags": {"price_range": "expensive"}},
-        }
-    },
-    {
-        "id": "dietary",
-        "question": "Any dietary preference?",
-        "emoji": "👀",
-        "options": {
-            "a": {"label": "Halal", "tags": {"dietary": "halal"}},
-            "b": {"label": "Vegetarian", "tags": {"dietary": "vegetarian"}},
-            "c": {"label": "No preference", "tags": {}},
-        }
-    },
-    {
-        "id": "category",
-        "question": "Feeling any particular cuisine?",
-        "emoji": "🍔",
-        "options": {
-            "a": {"label": "Local / Malay", "tags": {"category": "local"}},
-            "b": {"label": "Western", "tags": {"category": "western"}},
-            "c": {"label": "Mamak", "tags": {"category": "mamak"}},
-            "d": {"label": "Arab", "tags": {"category": "arab"}},
-            "e": {"label": "Japanese", "tags": {"category": "japanese"}},
-            "f": {"label": "Korean", "tags": {"category": "korean"}},
-            "g": {"label": "Chinese", "tags": {"category": "chinese"}},
-            "h": {"label": "Anything", "tags": {}},
-        }
-    },
-]
+# to read stalls from db
+def get_all_stalls():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM stalls")
+    rows = cursor.fetchall()
+    conn.close()
 
-# ── SCORING ENGINE ─────────────────────────────────────────────────────────────
+    stalls = []
+    for row in rows:
+        stalls.append({
+            "id": row["id"],
+            "name": row["name"],
+            "category": row["category"],
+            "price_range": row["price_range"],
+            "vibe": row["vibe"].split(","),        # to give spacing in between words for neatness .split
+            "dietary": row["dietary"].split(","),  
+            "description": row["description"]
+        })
+        return stalls
+
+
+    
+    QUESTIONS = [
+        {
+            "id": "hunger",
+            "question": "How hungry are you right now?",
+            "emoji": "🤤",
+            "options": {
+                "a": {"label": "Starving", "tags": {"vibe": "filling"}},
+                "b": {"label": "Not much", "tags": {"vibe": "light"}},
+            }
+        },
+        {
+            "id": "mood",
+            "question": "What's your vibe today?",
+            "emoji": "🤩",
+            "options": {
+                "a": {"label": "Feeling a little bit dangerous today", "tags": {"vibe": "explosive"}},
+                "b": {"label": "I feel so different today", "tags": {"vibe": "quirky"}},
+                "c": {"label": "I feel colorful today", "tags": {"vibe": "diversity"}},
+                "d": {"label": "I feel so calm today", "tags": {"vibe": "chill"}},
+            }
+        },
+        {
+            "id": "budget",
+            "question": "What does your budget look like?",
+            "emoji": "💸",
+            "options": {
+                "a": {"label": "Broke student 💔 (under RM10)", "tags": {"price_range": "cheap"}},
+                "b": {"label": "Moderate (RM10+)", "tags": {"price_range": "moderate"}},
+                "c": {"label": "Treating myself today! (RM15+)", "tags": {"price_range": "expensive"}},
+            }
+        },
+        {
+            "id": "dietary",
+            "question": "Any dietary preference?",
+            "emoji": "👀",
+            "options": {
+                "a": {"label": "Halal", "tags": {"dietary": "halal"}},
+                "b": {"label": "Vegetarian", "tags": {"dietary": "vegetarian"}},
+                "c": {"label": "No preference", "tags": {}},
+            }
+        },
+        {
+            "id": "category",
+            "question": "Feeling any particular cuisine?",
+            "emoji": "🍔",
+            "options": {
+                "a": {"label": "Local / Malay", "tags": {"category": "local"}},
+                "b": {"label": "Western", "tags": {"category": "western"}},
+                "c": {"label": "Mamak", "tags": {"category": "mamak"}},
+                "d": {"label": "Arab", "tags": {"category": "arab"}},
+                "e": {"label": "Japanese", "tags": {"category": "japanese"}},
+                "f": {"label": "Korean", "tags": {"category": "korean"}},
+                "g": {"label": "Chinese", "tags": {"category": "chinese"}},
+                "h": {"label": "Anything", "tags": {}},
+            }
+        },
+    ]
+
+
+    # score counter
 def stall_score(stall, preferences):
     score = 0
     for key, value in preferences.items():
         stall_value = stall.get(key)
-
         if isinstance(value, list):
             if isinstance(stall_value, list):
                 if any(v in stall_value for v in value):
@@ -173,12 +105,11 @@ def stall_score(stall, preferences):
                             else:
                                 if stall_value == value:
                                     score += 1
-
                                     return score
 
 
-# ── RECOMMENDATION ─────────────────────────────────────────────────────────────
-def get_recommendation(answers):
+ # recommendation generator
+
     preferences = {}
     for q in QUESTIONS:
         qid = q["id"]
@@ -187,25 +118,25 @@ def get_recommendation(answers):
             tags = q["options"].get(selected, {}).get("tags", {})
             preferences.update(tags)
 
-            scored = [(stall, stall_score(stall, preferences)) for stall in STALLS]
+            scored = [(stall, stall_score(stall, preferences)) for stall in stalls]
 
             if not scored:
-                return random.choice(STALLS), "random"
+                return random.choice(stalls), "random", preferences
 
             max_score = max(s for _, s in scored)
 
             if max_score == 0:
-                result = random.choice(STALLS)
+                result = random.choice(stalls)
                 mode = "random"
             else:
                 top_stalls = [stall for stall, s in scored if s == max_score]
                 result = random.choice(top_stalls)
                 mode = "matched"
 
-                return result, mode
+                return result, mode, preferences
 
 
-# ── REASON GENERATOR ───────────────────────────────────────────────────────────
+# ─recommendaiton reason generator
 def generate_reason(stall, preferences):
     reasons = []
 
@@ -230,36 +161,3 @@ def generate_reason(stall, preferences):
                     reasons.append("felt right for you today 🎲")
 
                     return "We picked this because it " + ", and ".join(reasons) + "!"
-
-
- # ── TEST RUN ───────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    print("=== MMU Smart Food Recommender — Quiz ===\n")
-
-    user_answers = {}
-
-    for q in QUESTIONS:
-        print(f"{q['emoji']}  {q['question']}")
-        for key, opt in q["options"].items():
-            print(f"   {key}) {opt['label']}")
-            choice = input("   Your answer: ").strip().lower()
-            user_answers[q["id"]] = choice
-            print()
-
-            stall, mode = get_recommendation(user_answers)
-
-            preferences = {}
-            for q in QUESTIONS:
-                qid = q["id"]
-                if qid in user_answers:
-                    selected = user_answers[qid]
-                    tags = q["options"].get(selected, {}).get("tags", {})
-                    preferences.update(tags)
-
-                    print("=" * 45)
-                    print(f"🍴  We recommend: {stall['name']}")
-                    print(f"📍  {stall['description']}")
-                    print(f"💬  {generate_reason(stall, preferences)}")
-                    if mode == "random":
-                        print("🎲  (Random pick — no strong preference detected)")
-                        print("=" * 45)
