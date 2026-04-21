@@ -44,11 +44,11 @@ nav ul li{
     padding: 140px 0;
     margin-bottom: 20px;
 }
-.her0 h2{
+.hero h2{
     font-size: 36px;
     margin-bottom: 10px
 }
-.her0 p{
+.hero p{
     font-size: 20px;
     margin-bottom: 10px
 }
@@ -129,6 +129,27 @@ nav ul li{
 }
 
 
- /*--------RECIPE SECTIO ---------*/
+ /*-------FILTER BUTTON ---------*/
+ .filter-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.filter-btn{
+    padding: 10px 28px;
+    border: 2px solid #1c4273;
+    border-radius: 50px;
+    background: white;
+    color: #1c4273;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+ .filter-btn:hover{
+    background: #1c4273;
+    color: white;
 
 
