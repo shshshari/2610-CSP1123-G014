@@ -1,3 +1,6 @@
+html {
+    scroll-behavior: smooth;
+}
 *{
     margin: 0;
     padding: 0;
@@ -16,6 +19,62 @@ header{
     background:#1c4273;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    margin-left: auto;
+    z-index: 200;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 5%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    min-width: 160px;
+    flex-direction: column;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f5f5f5;
+    color: #1c4273;
+}
+
+.dropdown-menu.open {
+    display: flex;
 }
 .container{
     width: 90%;
@@ -24,18 +83,42 @@ header{
     align-items: center;
     justify-content: space-between;
 }
-nav ul li{
+.nav-list li a {
+    text-decoration: none;
+    color: white;    
     list-style: none;
     display: inline;
     margin-right: 20px;
 }
-.logo{
-    font-size: 24px;
+.nav-list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+}
+
+.nav-list li a:hover {
+    color: #ccc;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  font-family:Georgia, 'Times New Roman', Times, serif
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
 }
 .hero{
     width: 100%;
     height: auto;
-    background: url(static/stall.image.jpg);
+    background: url(stall.image.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -119,7 +202,24 @@ nav ul li{
     font-size: 18px;
     padding: 20px;
 }
-.stalle-card a{
+.fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fav-btn .fa-heart {
+    color: #ccc;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+.stall-card a{
     display: block;
     text-align: center;
     text-decoration: none;
@@ -151,5 +251,6 @@ nav ul li{
  .filter-btn:hover{
     background: #1c4273;
     color: white;
+ }
 
 
