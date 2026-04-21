@@ -29,6 +29,13 @@ class Stall(db.Model):
     category = db.Column(db.String(50))
     description = db.Column(db.Text)
 
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
+
 
 
 
