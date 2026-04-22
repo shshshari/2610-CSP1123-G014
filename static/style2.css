@@ -252,5 +252,11 @@ header{
     background: #1c4273;
     color: white;
  }
+#menu-toggle {
+    display: none;
+}
 
+#menu-toggle:checked ~ .dropdown-menu {
+    display: flex;
+}
 
