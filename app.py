@@ -36,7 +36,10 @@ class Review(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
-
+class Favourite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
 
 @app.route('/')
