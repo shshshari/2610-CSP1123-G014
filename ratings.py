@@ -63,7 +63,7 @@ def stall_list():
     return render_template_string(STALL_LIST_PAGE, stalls=stalls, stall_ratings=stall_ratings)
 
 
-@ratings_bp.route("/stall/<int:stall_id>")
+@ratings_bp.route("/rating/<int:stall_id>")
 def stall_detail(stall_id):
     stall = get_stall(stall_id)
     if not stall:
@@ -92,7 +92,7 @@ def stall_detail(stall_id):
     )
 
 
-@ratings_bp.route("/stall/<int:stall_id>/rate", methods=["POST"])
+@ratings_bp.route("/rating/<int:stall_id>/rate", methods=["POST"])
 def add_rating(stall_id):
     if not is_logged_in():
         return redirect(url_for("ratings.stall_detail", stall_id=stall_id))
@@ -119,7 +119,7 @@ def add_rating(stall_id):
     return redirect(url_for("ratings.stall_detail", stall_id=stall_id))
 
 
-@ratings_bp.route("/stall/<int:stall_id>/rate/edit", methods=["POST"])
+@ratings_bp.route("/rating/<int:stall_id>/rate/edit", methods=["POST"])
 def edit_rating(stall_id):
     user_id = get_current_user_id()
 
@@ -140,7 +140,7 @@ def edit_rating(stall_id):
     return redirect(url_for("ratings.stall_detail", stall_id=stall_id))
 
 
-@ratings_bp.route("/stall/<int:stall_id>/rate/delete", methods=["POST"])
+@ratings_bp.route("/rating/<int:stall_id>/rate/delete", methods=["POST"])
 def delete_rating(stall_id):
     user_id = get_current_user_id()
 
@@ -171,7 +171,7 @@ STALL_LIST_PAGE = """
         <td>{{ stall.category }}</td>
         <td>{{ stall.price_range }}</td>
         <td>{{ stall_ratings[stall.id] if stall_ratings[stall.id] else 'No ratings yet' }} ⭐</td>
-        <td><a href="/stall/{{ stall.id }}">View & Rate</a></td>
+        <td><a href="/rating/{{ stall.id }}">View & Rate</a></td>
     </tr>
     {% endfor %}
 </table>
@@ -192,7 +192,7 @@ STALL_DETAIL_PAGE = """
 {% if already_rated %}
     <p>You rated this stall: {{ user_rating.rating }}/5 ⭐</p>
 
-    <form method="POST" action="/stall/{{ stall.id }}/rate/edit" style="display:inline">
+    <form method="POST" action="/rating/{{ stall.id }}/rate/edit" style="display:inline">
         Change rating:
         <select name="rating" required>
             <option value="5" {{ 'selected' if user_rating.rating == 5 }}>⭐⭐⭐⭐⭐ (5)</option>
@@ -204,12 +204,12 @@ STALL_DETAIL_PAGE = """
         <button type="submit">Update</button>
     </form>
 
-    <form method="POST" action="/stall/{{ stall.id }}/rate/delete" style="display:inline">
+    <form method="POST" action="/rating/{{ stall.id }}/rate/delete" style="display:inline">
         <button type="submit" onclick="return confirm('Remove your rating?')">Remove Rating</button>
     </form>
 
 {% else %}
-    <form method="POST" action="/stall/{{ stall.id }}/rate">
+    <form method="POST" action="/rating/{{ stall.id }}/rate">
         Rate this stall:
         <select name="rating" required>
             <option value="">-- Pick --</option>
@@ -223,5 +223,5 @@ STALL_DETAIL_PAGE = """
     </form>
 {% endif %}
 
-<br><a href="/stalls">← Back to Stalls</a>
+<br><a href="/rating">← Back to Stalls</a>
 """
