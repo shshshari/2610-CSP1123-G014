@@ -1,0 +1,12 @@
+from flask import Flask
+from reccsystem import recc_bp
+from ratings import ratings_bp
+
+app = Flask(__name__)
+app.secret_key = "placeholder_secret_key"
+
+app.register_blueprint(recc_bp)
+app.register_blueprint(ratings_bp)
+
+if __name__ == "__main__":
+    app.run(debug=True)
