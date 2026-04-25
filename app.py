@@ -22,6 +22,26 @@ class User(db.Model, UserMixin):
     password= db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='user')
 
+class Stall(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    location = db.Column(db.String(200))
+    category = db.Column(db.String(50))
+    description = db.Column(db.Text)
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
+
+class Favourite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
+
+
 @app.route('/')
 def home():
     return "<h1>Welcome to MMU Food Finder!</h1><a href='/register'>Register Here</a>"
