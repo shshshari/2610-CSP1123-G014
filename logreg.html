@@ -2,64 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width-device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Form</title>
     <link rel="stylesheet" href="./static/style3.css">
 </head>
 <body>
     <div class="container" id="container">
+
+        <!-- SIGN UP FORM -->
         <div class="form-container sign-up">
-        <form>
-            <h1>Create Account</h1>
-            <div class="social-icons">
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
-            </div>
-            <span>or use email</span>
-            <input type="text" placeholder="Name">
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Paaword">
-            <button>Sign In</button>
+            <form>
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#"></a>
+                </div>
+                <span>or use email</span>
+                <input type="text" placeholder="Name">
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <button>Sign Up</button>
+            </form>
+        </div>
 
-        </form>
-    </div>
-
-    <div class="container" id="container">
+        <!-- SIGN IN FORM -->
         <div class="form-container sign-in">
-        <form>
-            <h1>Sign In</h1>
-            <div class="social-icons">
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
-                <a href="#"></a>
+            <form>
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#"></a>
+                </div>
+                <span>or use email and password</span>
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <a href="#">Forgot your password?</a>
+                <button>Sign In</button>
+            </form>
+        </div>
+
+        <!-- TOGGLE PANEL -->
+        <div class="toggle-container">
+            <div class="toggle">
+
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello!</h1>
+                    <p>Register your personal details</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+
             </div>
-            <span>or use email password</span>
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Paaword">
-            <a href="#">Forget yout password?</a>
-            <button>Sign In</button>
-        </form>
-    </div>
-    <div class="toggle-container">
-        <div class="toggle">
-            <div class="toggle-panel toggle-left"></div>
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details</p>
-            <button class="hidden" id="register">Sign up</button>
         </div>
-              <div class="toggle-panel toggle-right"></div>
-              <h1>Hello!</h1>
-            <p>Register your personal details</p>
-            <button class="hidden" id="register">Sign up</button>
-        </div>
-        </div>
-    </div>
 
-</div>
-
+    </div>
 </body>
+</html>

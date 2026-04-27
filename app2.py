@@ -38,11 +38,11 @@ HTML_HOMEPAGE = """
                 <a href="#">Favourite</a>
                 <a href="#">Review</a>
                 <a href="{{ url_for('profile') }}">Profile</a>
-                {% if logged_in %}
-                    <a href="#">Sign Out</a>
-                {% else %}
-                    <a href="#">Sign In</a>
-                {% endif %}
+            {% if logged_in %}
+                <a href="{{ url_for('logout') }}">Sign Out</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Sign In</a>
+            {% endif %}
             </div>
 
         </div>
@@ -245,6 +245,101 @@ HTML_PROFILE = """
 </html>
 """
 
+HTML_LOGIN = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Form</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
+    <div class="container" id="container">
+
+        <!-- SIGN UP FORM -->
+        <div class="form-container sign-up">
+            <form>
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#"></a>
+                </div>
+                <span>or use email</span>
+                <input type="text" placeholder="Name">
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <button>Sign Up</button>
+            </form>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <div class="form-container sign-in">
+            <form>
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#"></a>
+                </div>
+                <span>or use email and password</span>
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Password">
+                <a href="#">Forgot your password?</a>
+                <button>Sign In</button>
+            </form>
+        </div>
+
+        <!-- TOGGLE PANEL -->
+        <div class="toggle-container">
+            <div class="toggle">
+
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello!</h1>
+                    <p>Register your personal details</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <a href="{{ url_for('index') }}" class="back-home">← Back to Home</a>
+</body>
+</html>
+"""
+
+HTML_REGISTER = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register - MMU Food Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <div class="form-container sign-up" style="width:100%; position:relative; opacity:1;">
+            <form method="POST" action="{{ url_for('register') }}">
+                <h1>Create Account</h1>
+                <span>or use your email</span>
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Password">
+                <button type="submit">Sign Up</button>
+                <p>Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
+"""
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "colors" not in session:
@@ -265,6 +360,26 @@ def index():
 def profile():
     logged_in = session.get("logged_in", False)
     return render_template_string(HTML_PROFILE, logged_in=logged_in)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        session["logged_in"] = True
+        return render_template_string(HTML_HOMEPAGE, colors=session.get("colors", {}), logged_in=True)
+    return render_template_string(HTML_LOGIN)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        return render_template_string(HTML_LOGIN)
+    return render_template_string(HTML_REGISTER)
+
+
+@app.route("/logout")
+def logout():
+    session["logged_in"] = False
+    return render_template_string(HTML_HOMEPAGE, colors=session.get("colors", {}), logged_in=False)
 
 
 if __name__ == "__main__":
