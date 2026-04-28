@@ -45,40 +45,8 @@ class Favourite(db.Model):
 @app.route('/')
 def home():
     return "<h1>Welcome to MMU Food Finder!</h1><a href='/register'>Register Here</a>"
-
-@app.route('/add_stall', methods=['GET', 'POST'])
-@login_required
-def add_stall():
-    if current_user.role != 'manager':
-        flash("Access denied. Managers only. ")
-        return redirect(url_for('home'))
-    if request.method == 'POST':
-        new_stall = Stall(
-            name=request.form.get('name'),
-            location=request.form.get('location'),
-            category=request.form.get('category'),
-            description=request.form.get('description')
-        )
-        db.session.add(new_stall)
-        db.session.commit()
-        flash("Stall registered successfully. ")
-        return redirect(url_for('manager_dashboard'))
-    return render_template('add_stall.html')
-
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        new_pw = request.form.get('new_password')
-        user = User.query.filter_by(email=email).first()
-        if user:
-            user.password = generate_password_hash(new_pw)
-            db.session.commit()
-            flash("Password reset successful.")
-            return redirect(url_for('login'))
-        else:
-            flash("Email not found.")
-        return render_template('forgot_password.html')
+    all_stalls = Stall.query.all()
+    return render_template('home.html', stalls=all_stalls)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -140,7 +108,46 @@ def logout():
 def manager_dashboard():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
-    return "<h1>Manager Dashboard</h1><p>welcome, manager!</p><a href='/logout'>Logout</a>"
+    return redirect(url_for('home'))
+
+    all_stalls = Stall.query.all()
+    return render_template('manager_dashboard.html', stalls=all_stalls)
+
+@app.route('/add_stall', methods=['GET', 'POST'])
+@login_required
+def add_stall():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only. ")
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        new_stall = Stall(
+            name=request.form.get('name'),
+            location=request.form.get('location'),
+            category=request.form.get('category'),
+            description=request.form.get('description')
+        )
+        db.session.add(new_stall)
+        db.session.commit()
+        flash("Stall registered successfully. ")
+        return redirect(url_for('manager_dashboard'))
+    return render_template('add_stall.html')
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        new_pw = request.form.get('new_password')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.password = generate_password_hash(new_pw)
+            db.session.commit()
+            flash("Password reset successful.")
+            return redirect(url_for('login'))
+        else:
+            flash("Email not found.")
+        return render_template('forgot_password.html')
+
 
 if __name__ == '__main__':
     with app.app_context():

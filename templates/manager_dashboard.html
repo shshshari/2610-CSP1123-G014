@@ -1,0 +1,11 @@
+<h2>Your Registered Stalls</h2>
+<ul>
+    {% for stall in stalls %}
+      <li>
+        <strong>{{ stall.name }}</strong> - {{ stall.location }} ({{stall.category}})
+        <p>{{ stall.description }}</p>
+      </li>
+    {% else %}
+    <li>No stalls registered yet. <a href="{{ url_for('add_stall') }}">Add one.</a></li>
+    {% end for %}
+</ul>
