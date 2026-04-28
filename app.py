@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -15,6 +16,7 @@ def load_user(user_id):
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mmu-project-secret'
 db = SQLAlchemy(app)
+reset_codes = {}
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +46,6 @@ class Favourite(db.Model):
 
 @app.route('/')
 def home():
-    return "<h1>Welcome to MMU Food Finder!</h1><a href='/register'>Register Here</a>"
     all_stalls = Stall.query.all()
     return render_template('home.html', stalls=all_stalls)
 
@@ -108,7 +109,7 @@ def logout():
 def manager_dashboard():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
-    return redirect(url_for('home'))
+        return redirect(url_for('home'))
 
     all_stalls = Stall.query.all()
     return render_template('manager_dashboard.html', stalls=all_stalls)
@@ -137,19 +138,39 @@ def add_stall():
 def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
-        new_pw = request.form.get('new_password')
-        user = User.query.filter_by(email=email).first()
-        if user:
-            user.password = generate_password_hash(new_pw)
-            db.session.commit()
-            flash("Password reset successful.")
-            return redirect(url_for('login'))
-        else:
-            flash("Email not found.")
-        return render_template('forgot_password.html')
+        action = request.form.get('action')
 
+        if action == 'send_code':
+            user = User.query.filter_by(email=email).first()
+            if user:
+                code = str(random.randint(100000, 999999))
+                reset_codes[email] = code
+
+                print(f"\n--- EMAIL SENT TO {email} ---")
+                print(f"Your Reset Code is: {code}")
+                print("-------------------------------\n")
+
+                flash("A reset code has been sent to your 'email'.")
+                return render_template('forgot_password.html', email=email, code_sent=True)
+            flash("Email not found")
+
+        elif action == 'verify_code':
+            user_code = request.form.get('code')
+            new_pw = request.form.get('new_password')
+
+            if email in reset_codes and reset_codes[email] == user_code:
+                user= User.query.filter_by(email=email).first()
+                user.password = generate_password_hash(new_pw)
+                db.session.commit()
+                del reset_codes[email]
+                flash("Password updated successfully.")
+                return redirect(url_for('login'))
+            else:
+                flash("Inavlid or expired code.")
+                return render_template('forgot_password.html', email=email, code_sent=True)
+    return render_template('forgot_password.html')
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() #creates the physical database.db file
-    app.run(debug=True)
+    app.run(debug=True)

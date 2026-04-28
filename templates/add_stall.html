@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Stall - MMU Food Finder</title>
+</head>
+<body>
+    <h2>Register a New Food Stall</h2>
+    
+    <form method="POST">
+        <label>Stall Name:</label><br>
+        <input type="text" name="name" required><br><br>
+        
+        <label>Location:</label><br>
+        <input type="text" name="location" required><br><br>
+        
+        <label>Category:</label><br>
+        <input type="text" name="category" required><br><br>
+        
+        <label>Description:</label><br>
+        <textarea name="description"></textarea><br><br>
+        
+        <button type="submit">Add Stall to Database</button>
+    </form>
+    
+    <br>
+    <a href="{{ url_for('manager_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
