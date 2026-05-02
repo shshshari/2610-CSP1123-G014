@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
+import os
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -13,7 +14,8 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'database.db')
 app.config['SECRET_KEY'] = 'mmu-project-secret'
 db = SQLAlchemy(app)
 reset_codes = {}
@@ -170,7 +172,26 @@ def forgot_password():
                 return render_template('forgot_password.html', email=email, code_sent=True)
     return render_template('forgot_password.html')
 
+@app.route('/delete_stall/<int:stall_id>', methods=['POST'])
+@login_required
+def delete_stall(stall_id):
+    if current_user.role != 'manager':
+        flash("Unauthorized access.")
+        return redirect(url_for('home'))
+     
+    stall_to_delete = Stall.query.get_or_404(stall_id)
+    
+    try:
+        db.session.delete(stall_to_delete)
+        db.session.commit()
+        flash(f"'{stall_to_delete.name}' has been deleted successfully.")
+    except:
+        db.session.rollback()
+        flash("Error occurred while deleting the stall.")
+
+    return redirect(url_for('manager_dashboard'))
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() #creates the physical database.db file
-    app.run(debug=True)
+    app.run(debug=True)
