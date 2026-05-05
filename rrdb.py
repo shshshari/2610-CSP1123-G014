@@ -40,6 +40,19 @@ def init_ratings_db():
         )
     """)
 
+    # favourites table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS favourites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            stall_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+         FOREIGN KEY (stall_id) REFERENCES stalls(id),
+         FOREIGN KEY (user_id) REFERENCES users(id),
+         UNIQUE(stall_id, user_id)
+        )
+""")
+
     # placeholder users can delete later
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
@@ -51,7 +64,7 @@ def init_ratings_db():
 
     conn.commit()
     conn.close()
-    print("ratings + reviews tables ready!")
+    print("ratings + reviews + favourite tables ready!")
 
 if __name__ == "__main__":
     init_ratings_db()

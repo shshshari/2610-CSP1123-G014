@@ -56,6 +56,42 @@ def user_already_reviewed(stall_id, user_id):
     conn.close()
     return exists is not None
 
+def is_favourited(stall_id, user_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT id FROM favourites WHERE stall_id=? AND user_id=?",
+        (stall_id, user_id)
+    )
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
+
+
+def toggle_favourite_db(stall_id, user_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id FROM favourites WHERE stall_id=? AND user_id=?",
+        (stall_id, user_id)
+    )
+    exists = cursor.fetchone()
+
+    if exists:
+        cursor.execute(
+            "DELETE FROM favourites WHERE stall_id=? AND user_id=?",
+            (stall_id, user_id)
+        )
+    else:
+        cursor.execute(
+            "INSERT INTO favourites (stall_id, user_id) VALUES (?, ?)",
+            (stall_id, user_id)
+        )
+
+    conn.commit()
+    conn.close()
+
 def get_all_stalls():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -94,9 +130,20 @@ def get_reviews(stall_id):
 def stall_list():
     stalls = get_all_stalls()
     stall_ratings = {}
+    user_id = get_current_user_id()
+
+    favourites = {}
+
     for stall in stalls:
         stall_ratings[stall["id"]] = get_average_rating(stall["id"])
-    return render_template_string(STALL_LIST_PAGE, stalls=stalls, stall_ratings=stall_ratings)
+        favourites[stall["id"]] = is_favourited(stall["id"], user_id)
+
+    return render_template_string(
+        STALL_LIST_PAGE,
+        stalls=stalls,
+        stall_ratings=stall_ratings,
+        favourites=favourites
+        )
 
 
 @ratings_bp.route("/rating/<int:stall_id>")
@@ -113,7 +160,7 @@ def stall_detail(stall_id):
     reviews = get_reviews(stall_id)
     admin = is_admin()
 
-    # get user's existing rating if any
+
     user_rating = None
     if already_rated:
         conn = sqlite3.connect(DB_PATH)
@@ -216,6 +263,15 @@ def add_review(stall_id):
     conn.close()
     return redirect(url_for("ratings.stall_detail", stall_id=stall_id))
 
+@ratings_bp.route("/favourite/<int:stall_id>", methods=["POST"])
+def toggle_favourite(stall_id):
+    if not is_logged_in():
+        return redirect(url_for("ratings.stall_list"))
+
+    user_id = get_current_user_id()
+    toggle_favourite_db(stall_id, user_id)
+
+    return redirect(request.referrer or url_for("ratings.stall_list"))
 
 @ratings_bp.route("/rating/<int:stall_id>/review/edit/<int:review_id>", methods=["POST"])
 def edit_review(stall_id, review_id):
@@ -238,7 +294,7 @@ def delete_review(stall_id, review_id):
     user_id = get_current_user_id()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    # admin can delete any review, user can only delete their own
+    
     if is_admin():
         cursor.execute("DELETE FROM reviews WHERE id=?", (review_id,))
     else:
@@ -285,6 +341,15 @@ h2 { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; margi
 <div class="card">
 <div class="card-img">🍽️</div>
 <div class="card-body">
+<form method="POST" action="/favourite/{{ stall.id }}" style="text-align:right;">
+<button type="submit" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">
+{% if favourites[stall.id] %}
+❤️
+{% else %}
+🤍
+{% endif %}
+</button>
+</form>
 <div class="card-name">{{ stall.name }}</div>
 <div class="card-meta">
 <span class="tag">{{ stall.category }}</span>
