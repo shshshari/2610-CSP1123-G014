@@ -26,12 +26,18 @@ class User(db.Model, UserMixin):
     password= db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='user')
 
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    stalls = db.relationship('Stall', backref='place', lazy=True)
+
 class Stall(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    location = db.Column(db.String(200))
-    category = db.Column(db.String(50))
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    category = db.Column(db.String(100))
     description = db.Column(db.Text)
+    manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,7 +54,7 @@ class Favourite(db.Model):
 
 @app.route('/')
 def home():
-    all_stalls = Stall.query.all()
+    all_stalls = Stall.query.join(Location).all()
     return render_template('home.html', stalls=all_stalls)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -123,17 +129,22 @@ def add_stall():
         flash("Access denied. Managers only. ")
         return redirect(url_for('home'))
     if request.method == 'POST':
+        stall_name = request.form.get('name')
+        selected_location_id = request.form.get('location_id') 
+        category = request.form.get('category')
+        description = request.form.get('description')
+        
         new_stall = Stall(
             name=request.form.get('name'),
-            location=request.form.get('location'),
+            location_id=int(request.form.get('location_id')),
             category=request.form.get('category'),
             description=request.form.get('description')
         )
         db.session.add(new_stall)
         db.session.commit()
-        flash("Stall registered successfully. ")
-        return redirect(url_for('manager_dashboard'))
-    return render_template('add_stall.html')
+        return redirect(url_for('home'))
+    locations = Location.query.all()
+    return render_template('add_stall.html', locations=locations)
 
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
@@ -191,7 +202,17 @@ def delete_stall(stall_id):
 
     return redirect(url_for('manager_dashboard'))
 
+with app.app_context():
+    db.create_all()
+    if not Location.query.first():
+        buildings = ["Starbees MMU (Main)", "FCI Building", "FOE Building", "Library area"]
+        for b in buildings:
+            db.session.add(Location(name=b))
+        db.session.commit()
+        print("Database Initialized with Buildings.")
+        
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() #creates the physical database.db file
     app.run(debug=True)
+
