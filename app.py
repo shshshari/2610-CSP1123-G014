@@ -119,8 +119,8 @@ def manager_dashboard():
         flash("Access denied. Managers only.")
         return redirect(url_for('home'))
 
-    all_stalls = Stall.query.all()
-    return render_template('manager_dashboard.html', stalls=all_stalls)
+    my_stalls  = Stall.query.filter_by(manager_id=current_user.id).all()
+    return render_template('manager_dashboard.html', stalls=my_stalls)
 
 @app.route('/add_stall', methods=['GET', 'POST'])
 @login_required
@@ -190,17 +190,43 @@ def delete_stall(stall_id):
         flash("Unauthorized access.")
         return redirect(url_for('home'))
      
-    stall_to_delete = Stall.query.get_or_404(stall_id)
+    stall = Stall.query.get_or_404(stall_id)
+    
+    if stall.manager_id != current_user.id:
+        flash("You do not have permission to delete this stall.")
+        return redirect(url_for('home'))
     
     try:
-        db.session.delete(stall_to_delete)
+        db.session.delete(stall)
         db.session.commit()
-        flash(f"'{stall_to_delete.name}' has been deleted successfully.")
+        flash(f"'{stall.name}' has been deleted successfully.")
     except:
         db.session.rollback()
         flash("Error occurred while deleting the stall.")
 
     return redirect(url_for('manager_dashboard'))
+
+@app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
+@login_required
+def edit_stall(stall_id):
+    stall = Stall.query.get_or_404(stall_id)
+    
+    # Security: Ensure only the owner can edit
+    if stall.manager_id != current_user.id:
+        return "Unauthorized", 403
+
+    if request.method == 'POST':
+        stall.name = request.form.get('name')
+        stall.category = request.form.get('category')
+        stall.description = request.form.get('description')
+        stall.location_id = int(request.form.get('location_id'))
+        
+        db.session.commit()
+        flash("Stall updated successfully!")
+        return redirect(url_for('manager_dashboard'))
+
+    locations = Location.query.all()
+    return render_template('edit_stall.html', stall=stall, locations=locations)
 
 with app.app_context():
     db.create_all()
@@ -213,6 +239,7 @@ with app.app_context():
         
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all() #creates the physical database.db file
+        db.create_all() 
     app.run(debug=True)
 
+#next week filter and category and separate manager data and updating stalls
