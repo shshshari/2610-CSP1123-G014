@@ -38,6 +38,8 @@ class Stall(db.Model):
     category = db.Column(db.String(100))
     description = db.Column(db.Text)
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    food_type = db.Column(db.String(50)) # e.g., 'Halal', 'Non-Halal', 'Vegetarian'
+    price_range = db.Column(db.String(10)) # e.g., '$', '$$', '$$$'
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -133,12 +135,16 @@ def add_stall():
         selected_location_id = request.form.get('location_id') 
         category = request.form.get('category')
         description = request.form.get('description')
-        
+        ftype = request.form.get('food_type')
+        price_range = request.form.get('price_range')
         new_stall = Stall(
             name=request.form.get('name'),
             location_id=int(request.form.get('location_id')),
             category=request.form.get('category'),
-            description=request.form.get('description')
+            description=request.form.get('description'),
+            food_type=ftype,
+            price_range=price_range,
+            manager_id=current_user.id
         )
         db.session.add(new_stall)
         db.session.commit()
@@ -183,6 +189,35 @@ def forgot_password():
                 return render_template('forgot_password.html', email=email, code_sent=True)
     return render_template('forgot_password.html')
 
+@app.route('/explore')
+def explore():
+    cat_filter = request.args.get('category')
+    loc_filter = request.args.get('location')
+    ftype = request.args.get('food_type')
+    price = request.args.get('price_range')
+    search = request.args.get('search')
+
+    query = Stall.query
+
+    if cat_filter:
+        query = query.filter(Stall.category == cat_filter)
+    if loc_filter:
+        query = query.filter(Stall.location_id == loc_filter)
+    if ftype:
+        query = query.filter(Stall.food_type == ftype)
+    if price:
+        query = query.filter(Stall.price_range == price)
+    if search:
+        query = query.filter(Stall.name.contains(search))
+
+    stalls = query.all()
+    locations = Location.query.all()
+    
+    categories = db.session.query(Stall.category).distinct().all()
+    categories = [c[0] for c in categories if c[0]]
+
+    return render_template('explore.html', stalls=stalls, locations=locations, categories=categories)
+
 @app.route('/delete_stall/<int:stall_id>', methods=['POST'])
 @login_required
 def delete_stall(stall_id):
@@ -213,14 +248,15 @@ def edit_stall(stall_id):
     
     # Security: Ensure only the owner can edit
     if stall.manager_id != current_user.id:
-        return "Unauthorized", 403
-
+        flash("Unauthorized. You can only edit your own stalls.")
+        return redirect(url_for('home'))
+    
     if request.method == 'POST':
         stall.name = request.form.get('name')
         stall.category = request.form.get('category')
         stall.description = request.form.get('description')
         stall.location_id = int(request.form.get('location_id'))
-        
+        stall.food_type = request.form.get('food_type')
         db.session.commit()
         flash("Stall updated successfully!")
         return redirect(url_for('manager_dashboard'))

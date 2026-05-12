@@ -12,6 +12,18 @@
         </button>
     </form>
       </td>
+    <div>
+        <h3>{{ stall.name }}</h3>
+        <p>{{ stall.category }} | {{ stall.food_type }}</p>
+        
+        <a href="{{ url_for('edit_stall', stall_id=stall.id) }}">
+            <button type="button">Edit Stall Info</button>
+        </a>
+
+        <form action="{{ url_for('delete_stall', stall_id=stall.id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
+    </div>
     {% else %}
     <li>No stalls registered yet. <a href="{{ url_for('add_stall') }}">Add one.</a></li>
     {% endfor %}
