@@ -21,6 +21,17 @@
   --radius: 10px;
   --shadow: 0 2px 12px rgba(43, 31, 20, 0.08);
 }
+:root {
+  --primary: #1c4273;
+  --primary-light: #eaf1fb;
+  --dark: #1c1c1c;
+  --text: #333;
+  --muted: #777;
+  --border: #ddd;
+  --white: #ffffff;
+  --radius: 10px;
+  --shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 body {
   font-family: 'Nunito', sans-serif;
   background: var(--cream);
@@ -33,7 +44,8 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 14px 48px;
-  background: var(--warm-white);
+  background:  #1c4273;
+  color: white;
   border-bottom: 2px solid var(--border);
   position: sticky;
   top: 0;
@@ -43,12 +55,12 @@ nav {
 .nav-logo {
   font-family: 'Playfair Display', serif;
   font-size: 1rem;
-  color: var(--orange);
+  /*color: var(--orange);*/
 }
 .nav-center {
   font-size: 0.78rem;
   font-weight: 800;
-  color: var(--muted);
+  /*color: var(--muted);*/
   text-transform: uppercase;
   letter-spacing: 2.5px;
 }
@@ -60,7 +72,8 @@ nav {
 .nav-right a {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--mid);
+  /*color: var(--mid);*/
+  color: white;
   text-decoration: none;
   cursor: pointer;
 }
@@ -127,9 +140,10 @@ main {
   font-family: 'Nunito', sans-serif;
 }
 .back-btn:hover {
-  color: var(--orange);
+  /*color: var(--orange);*/
 }
-/* ── TOP SECTION ── */
+
+/* ── TOP SEC)TION ── */
 .stall-top {
   display: flex;
   gap: 36px;
@@ -396,7 +410,7 @@ main {
 .menu-item-price {
   font-size: 0.9rem;
   font-weight: 800;
-  color: var(--orange);
+  color: #1c4273;
   white-space: nowrap;
   margin-left: 10px;
 }

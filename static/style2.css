@@ -1,6 +1,22 @@
 html {
     scroll-behavior: smooth;
 }
+:root {
+  --cream: #fdf6ee;
+  --warm-white: #fff9f2;
+  --orange: #e07b39;
+  --orange-light: #fbecd9;
+  --dark: #2b1f14;
+  --mid: #6b4f35;
+  --muted: #a08060;
+  --border: #e2cdb5;
+  --green: #3d7a56;
+  --green-light: #e4f2ea;
+  --red: #c0392b;
+  --gold: #f0a500;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(43, 31, 20, 0.08);
+}
 *{
     margin: 0;
     padding: 0;
@@ -10,7 +26,8 @@ html {
 body{
     width: 100%;
     min-height: 100vh;
-    background: white;
+   background: var(--cream);
+  color: var(--dark);
 }
 header{
     height: 60px;

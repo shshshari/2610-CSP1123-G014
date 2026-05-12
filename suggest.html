@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Should I Eat? – MMU Food Recommender</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="./static/suggest.css"/>
+</head>
+<body>
+
+<!-- ── MAIN ── -->
+<main>
+ 
+  <!-- ── TRIGGER BUTTON ── -->
+  <div class="trigger-wrapper">
+    <button class="trigger-btn" id="triggerBtn" onclick="showQuiz()">
+      <span class="trigger-icon">?</span>
+      What Should I Eat?
+    </button>
+  </div>
+
+  <!-- ── QUIZ SECTION (shown after clicking button) ── -->
+  <div class="quiz-section" id="quizSection">
+ 
+    <!-- Speech bubble intro -->
+    <div class="speech-bubble">
+      <p>Let's find the perfect food for you!</p>
+      <p class="sub">Answer these questions :</p>
+    </div>
+     <!-- Question 1: Budget -->
+    <div class="question-card">
+      <div class="question-label">
+        <span class="q-number">①</span>
+        <span class="q-text">What's your budget?</span>
+      </div>
+      <div class="options-row">
+        <label class="radio-option">
+          <input type="radio" name="budget" value="under5"/>
+          <span class="radio-custom"></span>
+          under RM 5
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="budget" value="5to10"/>
+          <span class="radio-custom"></span>
+          RM 5 – RM 10
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="budget" value="10to15"/>
+          <span class="radio-custom"></span>
+          RM 10 – 15
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="budget" value="above15"/>
+          <span class="radio-custom"></span>
+          above RM 15
+        </label>
+      </div>
+    </div>
+ 
+    <!-- Question 2: Cuisine -->
+    <div class="question-card">
+      <div class="question-label">
+        <span class="q-number">②</span>
+        <span class="q-text">What type of cuisine do you feel like eating?</span>
+      </div>
+      <div class="options-row">
+        <label class="radio-option">
+          <input type="radio" name="cuisine" value="malay"/>
+          <span class="radio-custom"></span>
+          Malay
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="cuisine" value="chinese"/>
+          <span class="radio-custom"></span>
+          Chinese
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="cuisine" value="western"/>
+          <span class="radio-custom"></span>
+          Western
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="cuisine" value="drinks"/>
+          <span class="radio-custom"></span>
+          Drinks
+        </label>
+      </div>
+    </div>
+     <!-- Submit Button -->
+    <div class="submit-wrapper">
+      <button class="submit-btn" onclick="showResult()">Submit</button>
+    </div>
+ 
+  </div>
+ 
+  <!-- ── RESULT SECTION (shown after submit) ── -->
+  <div class="result-section" id="resultSection">
+    <!-- Speech bubble result -->
+    <div class="speech-bubble result-bubble">
+      <p>How about <strong id="resultStallName">Jinjja Shiok</strong>?</p>
+    </div>
+ 
+    <!-- Stall result card -->
+    <div class="result-card">
+      <div class="result-card-image">
+        <!-- DYNAMIC: replace with actual stall image -->
+        🍽️
+      </div>
+      <div class="result-card-info">
+        <div class="result-stall-name" id="resultName">Jinjja Shiok</div>
+        <div class="result-stall-cat" id="resultCat">Western food</div>
+        <div class="result-stall-meta">
+          <span id="resultPrice">RM 5 – 20</span>
+          <span class="divider">|</span>
+          <span id="resultRating">⭐ 4.5</span>
+        </div>
+      </div>
+    </div>
+    <!-- Action buttons -->
+    <div class="result-actions">
+      <a href="#" class="btn-view" id="viewStallBtn">View Stall →</a>
+      <button class="btn-retry" onclick="resetQuiz()">Try Again</button>
+    </div>
+ 
+  </div>
+ 
+</main>
+<script>
+  // ── Show quiz when trigger button is clicked ──
+  function showQuiz() {
+    document.getElementById('quizSection').classList.add('visible');
+    document.getElementById('triggerBtn').classList.add('active');
+    document.getElementById('resultSection').classList.remove('visible');
+  }
+ 
+  // ── Dummy stall data based on answers ──
+  // DYNAMIC: replace this logic with real recommender output later
+  const stallData = {
+    malay:   { name: "Rasa Shiokk",  cat: "Malaysian Cuisine", price: "RM 4 – 20",  rating: "⭐ 4.7", link: "#" },
+    chinese: { name: "Cita Rasa",    cat: "Chinese Food",      price: "RM 4 – 15",  rating: "⭐ 4.3", link: "#" },
+    western: { name: "Jinjja Shyok", cat: "Western Food",      price: "RM 5 – 20",  rating: "⭐ 4.5", link: "#" },
+    drinks:  { name: "Stall 4",      cat: "Beverages",         price: "RM 3 – 8",   rating: "⭐ 4.1", link: "#" },
+  };
+ 
+  // ── Show result after submit ──
+  function showResult() {
+    const budget  = document.querySelector('input[name="budget"]:checked');
+    const cuisine = document.querySelector('input[name="cuisine"]:checked');
+ 
+    if (!budget || !cuisine) {
+      alert('Please answer both questions before submitting!');
+      return;
+    }
+ 
+    // Pick stall based on cuisine choice
+    // DYNAMIC: swap this with a real API call to your recommender backend
+    const chosen = stallData[cuisine.value] || stallData['western'];
+ 
+    document.getElementById('resultStallName').textContent = chosen.name;
+    document.getElementById('resultName').textContent      = chosen.name;
+    document.getElementById('resultCat').textContent       = chosen.cat;
+    document.getElementById('resultPrice').textContent     = chosen.price;
+    document.getElementById('resultRating').textContent    = chosen.rating;
+    document.getElementById('viewStallBtn').href           = chosen.link;
+ 
+    document.getElementById('quizSection').classList.remove('visible');
+    document.getElementById('resultSection').classList.add('visible');
+  }
+ 
+  // ── Reset to try again ──
+  function resetQuiz() {
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.getElementById('resultSection').classList.remove('visible');
+    document.getElementById('quizSection').classList.add('visible');
+  }
+</script>
+ 
+</body>
+</html>
