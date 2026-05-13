@@ -39,6 +39,9 @@ HTML_HOMEPAGE = """
             <div class="dropdown-menu">
                 <a href="#">Favourite</a>
                 <a href="#">Review</a>
+                {% if session.get('role') == 'manager' %}
+                    <a href="#">Manager Dashboard</a>
+                {% endif %}
                 <a href="{{ url_for('profile') }}">Profile</a>
                 {% if logged_in %}
                     <a href="{{ url_for('logout') }}">Sign Out</a>
