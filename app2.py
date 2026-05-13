@@ -231,16 +231,7 @@ HTML_LOGIN = """
 
                 <input type="email" name="email" placeholder="Email" required/>
                 <input type="password" name="password" placeholder="Password" required/>
-
-                <!-- ROLE SELECTION -->
-                <div class="role-select">
-                    <label>Login As</label>
-                    <select name="role" required>
-                        <option value="">Choose Role</option>
-                        <option value="student">Student</option>
-                        <option value="manager">Manager</option>
-                    </select>
-                </div>
+        
 
                 <a href="#">Forgot your password?</a>
 
@@ -804,12 +795,6 @@ def login():
         password = request.form.get("password")
         role = request.form.get("role")
 
-        # TEMPORARY LOGIN LOGIC
-        # Replace with database later
-
-        session["logged_in"] = True
-        session["role"] = role
-        session["email"] = email
 
         return redirect(url_for("index"))
 
