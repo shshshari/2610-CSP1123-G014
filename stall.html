@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jinjja Shiok – Stall Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="./static/stall.css"/><!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">MMU Food Recommender System</div>
+  <div class="nav-center">Stall Details</div>
+  <div class="nav-right">
+    <a>Profile</a>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main>
+ 
+  <!-- Back Button -->
+  <button class="back-btn" onclick="history.back()">← Back</button>
+ 
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">Home</a>
+    <span class="sep">›</span>
+    <a href="#">Malaysian Cuisine</a>
+    <span class="sep">›</span>
+    <span class="current">Rasa Shiokkk</span>
+  </div>
+
+ <!-- ── TOP SECTION: Image + Info ── -->
+  <div class="stall-top">
+ 
+    <!-- Stall Image -->
+    <div class="stall-image">
+   <img src="static/rasa.jpg" alt=""> 
+      
+    </div>
+ 
+    <!-- Stall Info -->
+    <div class="stall-info">
+ 
+      <div class="stall-header-row">
+        <div class="stall-name">Rasa Shiokkk</div>
+        <!-- <span class="status-badge status-open">Open Now</span>-->
+      </div>
+      
+ 
+      <div class="tags">
+        <span class="tag">Malaysian</span>
+        <span class="tag">Fusion</span>
+        <span class="tag halal">Halal</span>
+      </div>
+ 
+      <div class="stall-category">Malaysian Cuisine · Comfort meals & beverages</div>
+ 
+      <div class="stall-meta">
+        <span>RM 4 – 20</span>
+        <span class="divider">|</span>
+        <span>⭐ 4.7</span>
+        <span class="review-count">(128 reviews)</span>
+      </div>
+ 
+      <div class="stall-location">📍 MMU Foodcourt ,Starbees</div>
+      <div class="stall-hours">🕙 Mon – Sun &nbsp;|&nbsp; 10:00 AM – 10:00 PM</div>
+ 
+      <div class="rec-badge">
+        ✨ Recommended based on your love of Western food
+        <span class="match-score">92% match</span>
+      </div>
+ 
+    </div>
+  </div>
+  <!-- ── ACTION BUTTONS ── -->
+  <div class="action-buttons">
+    <button class="btn btn-fav" id="favBtn" onclick="toggleFav()">
+      <span id="favIcon">🤍</span> Add to Fav
+      <span class="fav-count" id="favCount">· 248</span>
+    </button>
+    <button class="btn btn-review" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
+      ✏️ Write a Review
+    </button>
+    <button class="btn btn-rate" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
+      ⭐ Rate Us!
+    </button>
+  </div>
+ 
+  <hr class="section-divider"/>
+
+ <!-- ── MENU SECTION ── -->
+  <div class="section-title">🍴 Popular Menu Items</div>
+  <div class="menu-grid">
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Nasi Lemak w/ Signature Chicken Chop</div>
+        <div class="menu-item-desc">Grilled, black pepper sauce</div>
+      </div>
+      <div class="menu-item-price">RM 11.90</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Classic Nasi Lemak</div>
+        <div class="menu-item-desc">Crispy battered, tartar sauce</div>
+      </div>
+      <div class="menu-item-price">RM 5.00</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Classic Indomie</div>
+        <div class="menu-item-desc">Maggie Indomie with sambal</div>
+      </div>
+      <div class="menu-item-price">RM 5.00</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Chicken Chop w/ French Fries</div>
+        <div class="menu-item-desc">Mint jelly, roasted potatoes</div>
+      </div>
+      <div class="menu-item-price">RM 11.90</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Indomie w/ Curry Chicken</div>
+        <div class="menu-item-desc">Creamy, garlic bread</div>
+      </div>
+      <div class="menu-item-price">RM 12.90</div>
+    </div>
+    <div class="menu-item">
+      <div>
+        <div class="menu-item-name">Set Drinks</div>
+        <div class="menu-item-desc">Milo / Teh Tarik / Ice Lemon Tea</div>
+      </div>
+      <div class="menu-item-price">RM 4.00</div>
+    </div>
+  </div>
+ 
+  <hr class="section-divider"/>
+
+  <div class="section-tittle"> User Reviews</div>
+  <div class="existing-reviews" id="reviewContainer">
+
+    
+    <div class="review-card" style="animation-delay: 0s">
+      <div class="review-card-top">
+        <div>
+          <div class="reviewer-name">Aisha R.</div>
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="review-date">12 Apr 2025</div>
+      </div>
+      <div class="review-text">The chicken chop here is absolutely amazing! Perfectly grilled and the black pepper sauce is so flavourful. Will definitely come back again 😍</div>
+    </div>
+ 
+    <div class="review-card" style="animation-delay: 0.1s">
+      <div class="review-card-top">
+        <div>
+          <div class="reviewer-name">Haziq M.</div>
+          <div class="review-stars">⭐⭐⭐⭐</div>
+        </div>
+        <div class="review-date">5 Apr 2025</div>
+      </div>
+      <div class="review-text">Good portion size for the price. Fish &amp; chips was crispy and fresh. Queue can be a bit long during lunch hour though.</div>
+    </div>
+ 
+    <div class="review-card" style="animation-delay: 0.2s">
+      <div class="review-card-top">
+        <div>
+          <div class="reviewer-name">Wei Ling T.</div>
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="review-date">28 Mar 2025</div>
+      </div>
+      <div class="review-text">Best western food stall in the canteen by far. Lamb chop is a must-try! Friendly uncle too 😊</div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ── WRITE A REVIEW ── -->
+  <div class="write-review-box" id="writeReview">
+    <h4>✍️ Leave your review</h4>
+    <div class="star-picker" id="starPicker">
+      <span onclick="setStars(1)">★</span>
+      <span onclick="setStars(2)">★</span>
+      <span onclick="setStars(3)">★</span>
+      <span onclick="setStars(4)">★</span>
+      <span onclick="setStars(5)">★</span>
+    </div>
+    <textarea class="review-textarea" id="reviewText" placeholder="Share your experience..."></textarea>
+    <button class="submit-btn" onclick="submitReview()">Submit Review</button>
+  </div>
+ 
+  <hr class="section-divider"/>
+
+  <!-- ── SIMILAR STALLS ── -->
+  <div class="section-title">🔍 You Might Also Like</div>
+  <div class="similar-grid">
+ 
+    <div class="similar-card">
+      <div class="similar-card-img">🥩</div>
+      <div class="similar-card-body">
+        <div class="similar-card-name">Jinja Shiokkk</div>
+        <div class="similar-card-meta">
+          <span>Western · RM 8–18</span>
+          <span class="similar-card-rating">★ 4.3</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="similar-card">
+      <div class="similar-card-img">🍝</div>
+      <div class="similar-card-body">
+        <div class="similar-card-name">Home Sweet Home</div>
+        <div class="similar-card-meta">
+          <span>Italian · RM 7–15</span>
+          <span class="similar-card-rating">★ 4.6</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="similar-card">
+      <div class="similar-card-img">🍔</div>
+      <div class="similar-card-body">
+        <div class="similar-card-name">Uncle Burger</div>
+        <div class="similar-card-meta">
+          <span>Burgers · RM 5–14</span>
+          <span class="similar-card-rating">★ 4.4</span>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+</main>
+
+
+
+</body>
+</html>

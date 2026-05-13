@@ -1,0 +1,68 @@
+HTML_PROFILE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile Page - MMU Food Recommender</title>
+    <link rel="stylesheet" href="./static/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">Logo</h1>
+ 
+            <h2 class="page-title">Profile Page</h2>
+ <div class="nav-right">
+    <span class="profile-label">Profile</span>
+    <label class="hamburger" for="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+    <input type="checkbox" id="menu-toggle">
+    <div class="dropdown-menu">
+        <a href="#">Favourite</a>
+        <a href="#">Review</a>
+        <a href="#">Profile</a>
+        <a href="#">Sign Out</a>
+    </div>
+</div>
+</header>
+
+ <!-- PROFILE SECTION -->
+    <section class="profile-section">
+        <div class="profile-card">
+            <div class="avatar">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h2 class="profile-name">Name</h2>
+                <p class="profile-bio">Bio</p>
+                <button class="btn-edit">Edit Profile</button>
+                <button class="btn-logout">Logout</button>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- FAV STALLS + MY REVIEWS -->
+    <section class="bottom-section">
+ 
+        <div class="column">
+            <h3 class="column-title">- Fav Stalls -</h3>
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+        </div>
+ 
+        <div class="column">
+            <h3 class="column-title">- My Reviews -</h3>
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+        </div>
+ 
+    </section>
+
+</body>
+</html>
