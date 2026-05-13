@@ -1,0 +1,217 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: sans-serif;
+    border: none;
+    outline: none;
+    outline: none;
+    scroll-behavior: smooth;
+    letter-spacing: .4px;
+}
+:root{
+   --color-black: #1c4273;
+   --color-white: #486ab1;
+   --color-dark: #c9e2f7;
+   --color-dark-variant: #0b2545;
+                
+   --transition: .4s ease;
+}
+h1, h2, h3, h4, h5{
+    line-height: 120%;
+}
+h1{
+    font-size: 48px;
+    color: var(--color-black);
+}
+h2{
+    font-size: 28px;
+    color: var(--color-dark-variant);
+}
+h3{
+    font-size: 26px;
+    color: var(--color-black);
+}
+h4{
+    font-size: 19px;
+    color: var(--color-black);
+}
+h5{
+    font-size: 18px;
+    font-weight: 400;
+}
+ .heading{
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 20px;
+}
+p{
+    font-size: 20px;
+    line-height: 140%;
+    color: var(--color-dark-variant);
+}
+.heading-p{
+    padding-top: 9rem;
+    text-align: center;
+}
+a{
+    font-size: 24px;
+    color: var(--color-black);
+    text-decoration-color: var(--color-white);  
+    transition: var(--transition);
+}
+a:hover{
+    color: var(--color-dark-variant);
+    text-decoration-color: var(--color-dark-variant) !important;
+    text-underline-offset: 1rem;
+    text-decoration: underline;
+}
+.btn{
+    display: inline-block;
+    width: fit-content;
+    padding: 1rem;
+    width: 8rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    color: var(--color-black);
+    border: 1px solid var(--color-dark-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600px;
+    font-size: 17px;
+    transition: var(--transition);
+ }
+ .btn:hover{
+    background: var(--color-dark-variant);
+    color: var(--color-white);
+    
+}
+.btn-dark{
+    color: var(--color-white);
+    background: var(--color-dark);
+    text-decoration: none !important;
+}
+.btn-dark:hover{
+    background: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+.btn-primary{
+    background: var(--color-dark-variant);
+    color: var(--color-white);
+}
+.btnn-primary:hover{
+    background: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+img{
+    width: 100%;
+    display: block;
+}
+.about-img{
+    width: 100%;
+    max-width: 350px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 30px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    display: block;
+}
+.icon1{
+    width: 24px;
+    height: max-content;
+    margin-right: 10px;
+}
+.container{
+    max-width: 1100px;
+    width: 90%;
+    margin-top: 20px;
+}  
+
+  /*--------Nav Bar---------*/
+
+nav{
+    height: 5rem;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    background:  #486ab1;
+}
+.nav-container{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+.logo{
+    font-size: 32px;
+    color: var(--color-black);
+    text-decoration: none;
+}
+.nav-links{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-right: auto; 
+}
+
+.app-logo img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+    border: 2px solid #000;
+    border-radius: 25px;
+    padding: 10px 15px;
+    width: 300px;
+    background-color: white;
+}
+
+.search-box .icon {
+    margin-right: 1.5px;
+    font-size: 16px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+}
+
+/* Filters */
+.filters {
+    margin-top: 20px;
+}
+
+.filters button {
+    border: 2px solid black;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.filters button:hover {
+    background-color: #ddd;
+}
