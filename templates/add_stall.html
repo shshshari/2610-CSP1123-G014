@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Stall - MMU Food Finder</title>
+</head>
+<body>
+    <h2>Register a New Food Stall</h2>
+    
+<form method="POST">
+    <label>Stall Name:</label><br>
+    <input type="text" name="name" required><br><br>
+    
+    <label>Building/Area:</label><br>
+    <select name="location_id">
+        {% for loc in locations %}
+        <option value="{{ loc.id }}">{{ loc.name }}</option>
+    {% endfor %}
+    </select><br><br>
+
+    <!-- MUST TYPE THIS LINE - matches 'sub_location' in Python -->
+    <label>Specific Spot/Unit Number:</label><br>
+    <input type="text" name="sub_location" placeholder="e.g., Level 1, Kiosk A" required><br><br>
+    
+    <label>Category:</label><br>
+    <input type="text" name="category" required><br><br>
+    
+    <label>Description:</label><br>
+    <textarea name="description"></textarea><br><br>
+    
+    <button type="submit">Add Stall</button>
+</form>
+    
+    <br>
+    <a href="{{ url_for('manager_dashboard') }}">Back to Dashboard</a>
+    
+</body>
+</html>
