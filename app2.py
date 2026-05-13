@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, session, url_for
+from flask import Flask, render_template_string, request, session, url_for, redirect
 
 app = Flask(__name__)
 app.secret_key = "replace_with_a_random_secret_key"
@@ -39,7 +39,7 @@ HTML_HOMEPAGE = """
             <div class="dropdown-menu">
                 <a href="#">Favourite</a>
                 <a href="#">Review</a>
-                <a href="{{ url_for('profile') }}" onclick="event.preventDefault(); return false;">Profile</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
                 {% if logged_in %}
                     <a href="{{ url_for('logout') }}">Sign Out</a>
                 {% else %}
@@ -61,7 +61,6 @@ HTML_HOMEPAGE = """
                 <button class="filter-btn">Category</button>
                 <button class="filter-btn">Ratings</button>
             </div>
-            <!-- "What Should I Eat?" button linking to suggest page -->
             <div style="margin-top: 16px;">
                 <a href="{{ url_for('suggest') }}" class="filter-btn" style="text-decoration:none;">
                     ❓ What Should I Eat?
@@ -98,7 +97,7 @@ HTML_HOMEPAGE = """
                 </form>
             </div>
 
-            <!-- STALL 3: Rasa Shiokk — clicking image/name goes to stall detail page -->
+            <!-- STALL 3: Rasa Shiokk — clicking goes to stall detail page -->
             <div class="stall-card">
                 <a href="{{ url_for('rasa_stall') }}" style="text-decoration:none; color:inherit;">
                     <img src="{{ url_for('static', filename='stall3.jpg') }}" alt="">
@@ -180,6 +179,122 @@ HTML_HOMEPAGE = """
 """
 
 # ─────────────────────────────────────────────────────────────────
+# LOGIN PAGE
+# Handles both Sign In and Sign Up in one page via toggle panel.
+# /register redirects here with #signup hash to auto-open Sign Up.
+# ─────────────────────────────────────────────────────────────────
+HTML_LOGIN = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login – MMU Food Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
+
+    <div class="container" id="container">
+
+        <!-- SIGN UP FORM -->
+        <div class="form-container sign-up">
+            <form method="POST" action="{{ url_for('register') }}">
+
+                <h1>Create Account</h1>
+                <span>or use your email</span>
+
+                <input type="text" name="name" placeholder="Name" required/>
+                <input type="email" name="email" placeholder="Email" required/>
+                <input type="password" name="password" placeholder="Password" required/>
+
+                <!-- ROLE SELECTION -->
+                <div class="role-select">
+                    <label>Select Role</label>
+                    <select name="role" required>
+                        <option value="">Choose Role</option>
+                        <option value="student">Student</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                </div>
+
+                <button type="submit">Sign Up</button>
+
+            </form>
+        </div>
+
+        <!-- SIGN IN FORM -->
+        <div class="form-container sign-in">
+            <form method="POST" action="{{ url_for('login') }}">
+
+                <h1>Sign In</h1>
+                <span>or use your email and password</span>
+
+                <input type="email" name="email" placeholder="Email" required/>
+                <input type="password" name="password" placeholder="Password" required/>
+
+                <!-- ROLE SELECTION -->
+                <div class="role-select">
+                    <label>Login As</label>
+                    <select name="role" required>
+                        <option value="">Choose Role</option>
+                        <option value="student">Student</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                </div>
+
+                <a href="#">Forgot your password?</a>
+
+                <button type="submit">Sign In</button>
+
+            </form>
+        </div>
+
+        <!-- TOGGLE PANEL -->
+        <div class="toggle-container">
+            <div class="toggle">
+
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to sign in</p>
+                    <button type="button" id="loginToggle">Sign In</button>
+                </div>
+
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello!</h1>
+                    <p>Register your personal details to get started</p>
+                    <button type="button" id="registerToggle">Sign Up</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <a href="{{ url_for('index') }}" class="back-home">← Back to Home</a>
+
+    <script>
+        const container = document.getElementById('container');
+        const registerToggle = document.getElementById('registerToggle');
+        const loginToggle = document.getElementById('loginToggle');
+
+        registerToggle.addEventListener('click', () => {
+            container.classList.add('active');
+        });
+
+        loginToggle.addEventListener('click', () => {
+            container.classList.remove('active');
+        });
+
+        if (window.location.hash === '#signup') {
+            container.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
+"""
+
+# ─────────────────────────────────────────────────────────────────
 # WHAT SHOULD I EAT — SUGGEST PAGE
 # ─────────────────────────────────────────────────────────────────
 HTML_SUGGEST = """
@@ -194,25 +309,18 @@ HTML_SUGGEST = """
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
   <div class="nav-logo">MMU Food Recommender System</div>
-  
   <div class="nav-right">
     <a href="{{ url_for('profile') }}">Profile</a>
-    <div class="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>
 
-<!-- ── MAIN ── -->
 <main>
 
-  <!-- Back Button -->
   <button class="back-btn" onclick="history.back()">← Back</button>
 
-  <!-- TRIGGER BUTTON -->
   <div class="trigger-wrapper">
     <button class="trigger-btn" id="triggerBtn" onclick="showQuiz()">
       <span class="trigger-icon">?</span>
@@ -220,7 +328,6 @@ HTML_SUGGEST = """
     </button>
   </div>
 
-  <!-- QUIZ SECTION -->
   <div class="quiz-section" id="quizSection">
 
     <div class="speech-bubble">
@@ -228,55 +335,29 @@ HTML_SUGGEST = """
       <p class="sub">Answer these questions :</p>
     </div>
 
-    <!-- Q1: Budget -->
     <div class="question-card">
       <div class="question-label">
         <span class="q-number">①</span>
         <span class="q-text">What's your budget?</span>
       </div>
       <div class="options-row">
-        <label class="radio-option">
-          <input type="radio" name="budget" value="under5"/>
-          <span class="radio-custom"></span>under RM 5
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="5to10"/>
-          <span class="radio-custom"></span>RM 5 – RM 10
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="10to15"/>
-          <span class="radio-custom"></span>RM 10 – 15
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="above15"/>
-          <span class="radio-custom"></span>above RM 15
-        </label>
+        <label class="radio-option"><input type="radio" name="budget" value="under5"/><span class="radio-custom"></span>under RM 5</label>
+        <label class="radio-option"><input type="radio" name="budget" value="5to10"/><span class="radio-custom"></span>RM 5 – RM 10</label>
+        <label class="radio-option"><input type="radio" name="budget" value="10to15"/><span class="radio-custom"></span>RM 10 – 15</label>
+        <label class="radio-option"><input type="radio" name="budget" value="above15"/><span class="radio-custom"></span>above RM 15</label>
       </div>
     </div>
 
-    <!-- Q2: Cuisine -->
     <div class="question-card">
       <div class="question-label">
         <span class="q-number">②</span>
         <span class="q-text">What type of cuisine do you feel like eating?</span>
       </div>
       <div class="options-row">
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="malay"/>
-          <span class="radio-custom"></span>Malay
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="chinese"/>
-          <span class="radio-custom"></span>Chinese
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="western"/>
-          <span class="radio-custom"></span>Western
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="drinks"/>
-          <span class="radio-custom"></span>Drinks
-        </label>
+        <label class="radio-option"><input type="radio" name="cuisine" value="malay"/><span class="radio-custom"></span>Malay</label>
+        <label class="radio-option"><input type="radio" name="cuisine" value="chinese"/><span class="radio-custom"></span>Chinese</label>
+        <label class="radio-option"><input type="radio" name="cuisine" value="western"/><span class="radio-custom"></span>Western</label>
+        <label class="radio-option"><input type="radio" name="cuisine" value="drinks"/><span class="radio-custom"></span>Drinks</label>
       </div>
     </div>
 
@@ -286,7 +367,6 @@ HTML_SUGGEST = """
 
   </div>
 
-  <!-- RESULT SECTION -->
   <div class="result-section" id="resultSection">
 
     <div class="speech-bubble">
@@ -334,7 +414,6 @@ HTML_SUGGEST = """
     const budget  = document.querySelector('input[name="budget"]:checked');
     const cuisine = document.querySelector('input[name="cuisine"]:checked');
     if (!budget || !cuisine) { alert('Please answer both questions before submitting!'); return; }
-
     const chosen = stallData[cuisine.value] || stallData['western'];
     document.getElementById('resultStallName').textContent = chosen.name;
     document.getElementById('resultName').textContent      = chosen.name;
@@ -342,7 +421,6 @@ HTML_SUGGEST = """
     document.getElementById('resultPrice').textContent     = chosen.price;
     document.getElementById('resultRating').textContent    = chosen.rating;
     document.getElementById('viewStallBtn').href           = chosen.link;
-
     document.getElementById('quizSection').classList.remove('visible');
     document.getElementById('resultSection').classList.add('visible');
   }
@@ -373,25 +451,19 @@ HTML_STALL = """
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
   <div class="nav-logo">MMU Food Recommender System</div>
   <div class="nav-center">Stall Details</div>
   <div class="nav-right">
     <a href="{{ url_for('profile') }}">Profile</a>
-    <div class="hamburger">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>
 
-<!-- ── MAIN ── -->
 <main>
 
-  <!-- Back Button -->
   <button class="back-btn" onclick="history.back()">← Back</button>
 
-  <!-- Breadcrumb -->
   <div class="breadcrumb">
     <a href="{{ url_for('index') }}">Home</a>
     <span class="sep">›</span>
@@ -400,21 +472,17 @@ HTML_STALL = """
     <span class="current">Rasa Shiokkk</span>
   </div>
 
-  <!-- ── TOP SECTION: Image + Info ── -->
   <div class="stall-top">
 
-    <!-- Stall Image -->
     <div class="stall-image">
       <img src="{{ url_for('static', filename='rasa.jpg') }}" alt="Rasa Shiokkk"
            onerror="this.parentElement.innerHTML='🍛'"/>
     </div>
 
-    <!-- Stall Info -->
     <div class="stall-info">
 
       <div class="stall-header-row">
         <div class="stall-name">Rasa Shiokkk</div>
-        <!-- <span class="status-badge status-open">Open Now</span> -->
       </div>
 
       <div class="tags">
@@ -443,7 +511,6 @@ HTML_STALL = """
     </div>
   </div>
 
-  <!-- ── ACTION BUTTONS ── -->
   <div class="action-buttons">
     <button class="btn btn-fav" id="favBtn" onclick="toggleFav()">
       <span id="favIcon">🤍</span> Add to Fav
@@ -459,7 +526,6 @@ HTML_STALL = """
 
   <hr class="section-divider"/>
 
-  <!-- ── MENU SECTION ── -->
   <div class="section-title">🍴 Popular Menu Items</div>
   <div class="menu-grid">
     <div class="menu-item">
@@ -490,11 +556,10 @@ HTML_STALL = """
 
   <hr class="section-divider"/>
 
-  <!-- ── USER REVIEWS ── -->
   <div class="section-title">💬 User Reviews</div>
   <div class="existing-reviews" id="reviewContainer">
 
-    <div class="review-card" style="animation-delay: 0s">
+    <div class="review-card" style="animation-delay:0s">
       <div class="review-card-top">
         <div><div class="reviewer-name">Aisha</div><div class="review-stars">⭐⭐⭐⭐⭐</div></div>
         <div class="review-date">12 Apr 2025</div>
@@ -502,7 +567,7 @@ HTML_STALL = """
       <div class="review-text">The chicken chop here is absolutely amazing! Perfectly grilled and the black pepper sauce is so flavourful. Will definitely come back again 😍</div>
     </div>
 
-    <div class="review-card" style="animation-delay: 0.1s">
+    <div class="review-card" style="animation-delay:0.1s">
       <div class="review-card-top">
         <div><div class="reviewer-name">Shar</div><div class="review-stars">⭐⭐⭐⭐</div></div>
         <div class="review-date">5 Apr 2025</div>
@@ -510,7 +575,7 @@ HTML_STALL = """
       <div class="review-text">Good portion size for the price. Fish &amp; chips was crispy and fresh. Queue can be a bit long during lunch hour though.</div>
     </div>
 
-    <div class="review-card" style="animation-delay: 0.2s">
+    <div class="review-card" style="animation-delay:0.2s">
       <div class="review-card-top">
         <div><div class="reviewer-name">Shinjie</div><div class="review-stars">⭐⭐⭐⭐⭐</div></div>
         <div class="review-date">28 Mar 2025</div>
@@ -520,7 +585,6 @@ HTML_STALL = """
 
   </div>
 
-  <!-- ── WRITE A REVIEW ── -->
   <div class="write-review-box" id="writeReview">
     <h4>✍️ Leave your review</h4>
     <div class="star-picker" id="starPicker">
@@ -536,7 +600,6 @@ HTML_STALL = """
 
   <hr class="section-divider"/>
 
-  <!-- ── SIMILAR STALLS ── -->
   <div class="section-title">🔍 You Might Also Like</div>
   <div class="similar-grid">
 
@@ -697,95 +760,6 @@ HTML_PROFILE = """
 """
 
 # ─────────────────────────────────────────────────────────────────
-# LOGIN PAGE
-# ─────────────────────────────────────────────────────────────────
-HTML_LOGIN = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
-</head>
-<body>
-    <div class="container" id="container">
-
-        <div class="form-container sign-up">
-            <form>
-                <h1>Create Account</h1>
-                <div class="social-icons"><a href="#"></a></div>
-                <span>or use email</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign Up</button>
-            </form>
-        </div>
-
-        <div class="form-container sign-in">
-            <form>
-                <h1>Sign In</h1>
-                <div class="social-icons"><a href="#"></a></div>
-                <span>or use email and password</span>
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <a href="#">Forgot your password?</a>
-                <button>Sign In</button>
-            </form>
-        </div>
-
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Welcome Back!</h1>
-                    <p>Enter your personal details</p>
-                    <button class="hidden" id="login">Sign In</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Hello!</h1>
-                    <p>Register your personal details</p>
-                    <button class="hidden" id="register">Sign Up</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a href="{{ url_for('index') }}" class="back-home">← Back to Home</a>
-</body>
-</html>
-"""
-
-# ─────────────────────────────────────────────────────────────────
-# REGISTER PAGE
-# ─────────────────────────────────────────────────────────────────
-HTML_REGISTER = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register - MMU Food Recommender</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
-</head>
-<body>
-    <div class="container">
-        <div class="form-container sign-up" style="width:100%; position:relative; opacity:1;">
-            <form method="POST" action="{{ url_for('register') }}">
-                <h1>Create Account</h1>
-                <span>or use your email</span>
-                <input type="text" name="name" placeholder="Name">
-                <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Password">
-                <button type="submit">Sign Up</button>
-                <p>Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
-"""
-
-# ─────────────────────────────────────────────────────────────────
 # ROUTES
 # ─────────────────────────────────────────────────────────────────
 
@@ -823,23 +797,48 @@ def profile():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
+
+        email = request.form.get("email")
+        password = request.form.get("password")
+        role = request.form.get("role")
+
+        # TEMPORARY LOGIN LOGIC
+        # Replace with database later
+
         session["logged_in"] = True
-        return render_template_string(HTML_HOMEPAGE, colors=session.get("colors", {}), logged_in=True)
+        session["role"] = role
+        session["email"] = email
+
+        return redirect(url_for("index"))
+
     return render_template_string(HTML_LOGIN)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        return render_template_string(HTML_LOGIN)
-    return render_template_string(HTML_REGISTER)
 
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        role = request.form.get("role")
+
+        session["logged_in"] = True
+        session["role"] = role
+        session["name"] = name
+        session["email"] = email
+
+        return redirect(url_for("index"))
+
+    return redirect(url_for("login") + "#signup")
 
 @app.route("/logout")
 def logout():
     session["logged_in"] = False
-    return render_template_string(HTML_HOMEPAGE, colors=session.get("colors", {}), logged_in=False)
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
