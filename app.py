@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from reccsystem import recc_bp
+from ratings import ratings_bp
 import random
 import os
 
@@ -9,6 +11,8 @@ app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+app.register_blueprint(recc_bp)
+app.register_blueprint(ratings_bp)
 
 @login_manager.user_loader
 def load_user(user_id):
