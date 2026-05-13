@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
+import os
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -12,9 +14,11 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'database.db')
 app.config['SECRET_KEY'] = 'mmu-project-secret'
 db = SQLAlchemy(app)
+reset_codes = {}
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,9 +26,36 @@ class User(db.Model, UserMixin):
     password= db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='user')
 
+class Location(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    stalls = db.relationship('Stall', backref='place', lazy=True)
+
+class Stall(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=False)
+    category = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
+
+class Favourite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
+
+
 @app.route('/')
 def home():
-    return "<h1>Welcome to MMU Food Finder!</h1><a href='/register'>Register Here</a>"
+    all_stalls = Stall.query.join(Location).all()
+    return render_template('home.html', stalls=all_stalls)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -86,24 +117,129 @@ def logout():
 def manager_dashboard():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
-    return "<h1>Manager Dashboard</h1><p>welcome, manager!</p><a href='/logout'>Logout</a>"
+        return redirect(url_for('home'))
 
+    my_stalls  = Stall.query.filter_by(manager_id=current_user.id).all()
+    return render_template('manager_dashboard.html', stalls=my_stalls)
+
+@app.route('/add_stall', methods=['GET', 'POST'])
+@login_required
+def add_stall():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only. ")
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        stall_name = request.form.get('name')
+        selected_location_id = request.form.get('location_id') 
+        category = request.form.get('category')
+        description = request.form.get('description')
+        
+        new_stall = Stall(
+            name=request.form.get('name'),
+            location_id=int(request.form.get('location_id')),
+            category=request.form.get('category'),
+            description=request.form.get('description')
+        )
+        db.session.add(new_stall)
+        db.session.commit()
+        return redirect(url_for('home'))
+    locations = Location.query.all()
+    return render_template('add_stall.html', locations=locations)
+
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        action = request.form.get('action')
+
+        if action == 'send_code':
+            user = User.query.filter_by(email=email).first()
+            if user:
+                code = str(random.randint(100000, 999999))
+                reset_codes[email] = code
+
+                print(f"\n--- EMAIL SENT TO {email} ---")
+                print(f"Your Reset Code is: {code}")
+                print("-------------------------------\n")
+
+                flash("A reset code has been sent to your 'email'.")
+                return render_template('forgot_password.html', email=email, code_sent=True)
+            flash("Email not found")
+
+        elif action == 'verify_code':
+            user_code = request.form.get('code')
+            new_pw = request.form.get('new_password')
+
+            if email in reset_codes and reset_codes[email] == user_code:
+                user= User.query.filter_by(email=email).first()
+                user.password = generate_password_hash(new_pw)
+                db.session.commit()
+                del reset_codes[email]
+                flash("Password updated successfully.")
+                return redirect(url_for('login'))
+            else:
+                flash("Inavlid or expired code.")
+                return render_template('forgot_password.html', email=email, code_sent=True)
+    return render_template('forgot_password.html')
+
+@app.route('/delete_stall/<int:stall_id>', methods=['POST'])
+@login_required
+def delete_stall(stall_id):
+    if current_user.role != 'manager':
+        flash("Unauthorized access.")
+        return redirect(url_for('home'))
+     
+    stall = Stall.query.get_or_404(stall_id)
+    
+    if stall.manager_id != current_user.id:
+        flash("You do not have permission to delete this stall.")
+        return redirect(url_for('home'))
+    
+    try:
+        db.session.delete(stall)
+        db.session.commit()
+        flash(f"'{stall.name}' has been deleted successfully.")
+    except:
+        db.session.rollback()
+        flash("Error occurred while deleting the stall.")
+
+    return redirect(url_for('manager_dashboard'))
+
+@app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
+@login_required
+def edit_stall(stall_id):
+    stall = Stall.query.get_or_404(stall_id)
+    
+    # Security: Ensure only the owner can edit
+    if stall.manager_id != current_user.id:
+        return "Unauthorized", 403
+
+    if request.method == 'POST':
+        stall.name = request.form.get('name')
+        stall.category = request.form.get('category')
+        stall.description = request.form.get('description')
+        stall.location_id = int(request.form.get('location_id'))
+        
+        db.session.commit()
+        flash("Stall updated successfully!")
+        return redirect(url_for('manager_dashboard'))
+
+    locations = Location.query.all()
+    return render_template('edit_stall.html', stall=stall, locations=locations)
+
+with app.app_context():
+    db.create_all()
+    if not Location.query.first():
+        buildings = ["Starbees MMU (Main)", "FCI Building", "FOE Building", "Library area"]
+        for b in buildings:
+            db.session.add(Location(name=b))
+        db.session.commit()
+        print("Database Initialized with Buildings.")
+        
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all() #creates the physical database.db file
+        db.create_all() 
     app.run(debug=True)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#next week filter and category and separate manager data and updating stalls
