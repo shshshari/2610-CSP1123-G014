@@ -109,6 +109,33 @@ def quiz():
         return render_template_string(RESULT_PAGE, stall=stall, reason=reason, mode=mode)
     return render_template_string(QUIZ_PAGE, questions=QUESTIONS)
 
+# ADD THIS to reccsystem.py after your existing /quiz route
+
+from flask import jsonify
+
+@recc_bp.route("/quiz/api", methods=["POST"])
+def quiz_api():
+    data = request.get_json()
+    answers = {
+        "hunger":   data.get("hunger", ""),
+        "mood":     data.get("mood", ""),
+        "budget":   data.get("budget", ""),
+        "dietary":  data.get("dietary", ""),
+        "category": data.get("category", ""),
+    }
+    stall, mode, preferences = get_recommendation(answers)
+    reason = generate_reason(stall, preferences)
+
+    return jsonify({
+        "id":          stall["id"],
+        "name":        stall["name"],
+        "category":    stall["category"],
+        "price_range": stall["price_range"],
+        "description": stall["description"],
+        "reason":      reason,
+        "mode":        mode
+    })
+
 @recc_bp.route("/admin/stalls")
 def admin_stalls():
     if not is_admin():
