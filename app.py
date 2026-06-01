@@ -38,8 +38,9 @@ class Stall(db.Model):
     category = db.Column(db.String(100))
     description = db.Column(db.Text)
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    food_type = db.Column(db.String(50)) # e.g., 'Halal', 'Non-Halal', 'Vegetarian'
-    price_range = db.Column(db.String(10)) # e.g., '$', '$$', '$$$'
+    food_type = db.Column(db.String(50)) 
+    price_range = db.Column(db.String(10), nullable=False, default="RM") 
+    reviews = db.relationship('Review', backref='stall', cascade="all, delete-orphan", lazy=True)
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -136,14 +137,14 @@ def add_stall():
         category = request.form.get('category')
         description = request.form.get('description')
         ftype = request.form.get('food_type')
-        price_range = request.form.get('price_range')
+        price = request.form.get('price_range')
         new_stall = Stall(
             name=request.form.get('name'),
             location_id=int(request.form.get('location_id')),
             category=request.form.get('category'),
             description=request.form.get('description'),
             food_type=ftype,
-            price_range=price_range,
+            price_range=price,
             manager_id=current_user.id
         )
         db.session.add(new_stall)
@@ -249,7 +250,7 @@ def edit_stall(stall_id):
     # Security: Ensure only the owner can edit
     if stall.manager_id != current_user.id:
         flash("Unauthorized. You can only edit your own stalls.")
-        return redirect(url_for('home'))
+        return redirect(url_for('manager_dashboard'))
     
     if request.method == 'POST':
         stall.name = request.form.get('name')
@@ -257,6 +258,7 @@ def edit_stall(stall_id):
         stall.description = request.form.get('description')
         stall.location_id = int(request.form.get('location_id'))
         stall.food_type = request.form.get('food_type')
+        stall.price_range = request.form.get('price_range')
         db.session.commit()
         flash("Stall updated successfully!")
         return redirect(url_for('manager_dashboard'))
@@ -278,4 +280,3 @@ if __name__ == '__main__':
         db.create_all() 
     app.run(debug=True)
 
-#next week filter and category and separate manager data and updating stalls

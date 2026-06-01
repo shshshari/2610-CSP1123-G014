@@ -26,6 +26,15 @@
     
     <label>Description:</label><br>
     <textarea name="description"></textarea><br><br>
+
+    <div class="form-group">
+    <label for="price_range">Price Range:</label>
+    <select name="price_range" id="price_range" class="form-control" required>
+        <option value="$">Cheap ($) - Under RM10</option>
+        <option value="$$">Moderate ($$) - RM10-RM20</option>
+        <option value="$$$">Expensive ($$$) - Above RM20</option>
+    </select>
+</div>
     
     <button type="submit">Add Stall</button>
 </form>
