@@ -127,8 +127,8 @@ def is_manager():
     except:
         return False
 
-@recc_bp.route("/quiz", methods=["GET", "POST"])
-def quiz():
+@recc_bp.route("/suggest", methods=["GET", "POST"])
+def suggest():
     if request.method == "POST":
         answers = {}
         for q in QUESTIONS:
@@ -140,8 +140,8 @@ def quiz():
         return render_template_string(RESULT_PAGE, stall=stall, reason=reason, mode=mode)
     return render_template_string(QUIZ_PAGE, questions=QUESTIONS)
 
-@recc_bp.route("/quiz/api", methods=["POST"])
-def quiz_api():
+@recc_bp.route("/suggest/api", methods=["POST"])
+def suggest_api():
     data = request.get_json()
     answers = {q["id"]: data.get(q["id"], "") for q in QUESTIONS}
     stall, mode, preferences = get_recommendation(answers)
@@ -157,7 +157,7 @@ def quiz_api():
     "mode": mode
 })
 
-QUIZ_PAGE = """
+SUGGEST_PAGE = """
 <h2>🍴 What Should I Eat?</h2>
 <form method="POST">
 {% for q in questions %}
@@ -175,6 +175,6 @@ RESULT_PAGE = """
 <p>📍 {{ stall.description }}</p>
 <p>💬 {{ reason }}</p>
 {% if mode == "random" %}<p>🎲 (Random pick — no strong preference detected)</p>{% endif %}
-<br><a href="/quiz">Try again</a>
+<br><a href="/suggest">Try again</a>
 <br><a href="/rating/{{ stall.id }}">View stall & rate</a>
 """

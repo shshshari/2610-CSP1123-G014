@@ -5,7 +5,7 @@
     <meta name="viewport" content="width-device-width, initial-scale=1">
     <title>Restaurant food website</title>
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     
@@ -15,11 +15,10 @@
       <div class="container nav-container">  
         <a href="" class="logo">MMU</a>
         <ul class="nav-links">
-          <li><a href="#Home"class="btn btn-dark">Home</a></li>
-          <li><a href="#Search"class="btn btn-dark">Search</a></li>
-          <li><a href="#Favourite"class="btn btn-dark">Favourite</a></li>
-          <li><a href="#Review"class="btn btn-dark">Review</a></li>
-          <li><a href="#Profile"class="btn btn-dark">Profile</a></li>
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+          <li><a href="{{ url_for('search') }}">Search</a></li>
+          <li><a href="{{ url_for('profile') }}">Profile</a></li>
+          <li><a href="{{ url_for('favourites') }}">Log out</a></li>
         </ul>
       </div>
               <div class="container header-container">

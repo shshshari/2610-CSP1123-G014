@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1">
+    <title>MMU food recommender website</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1 class="logo">MMU Food Recommender</h1>
+        <nav> 
+            <ul class="nav-list">
+                <li><a href="{{ url_for('home') }}" style="color: inherit; text-decoration: none;">Home</a></li>
+                
+                <li><a href="#search-section" style="color: inherit; text-decoration: none;">Search</a></li>
+
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('profile') }}" style="color: inherit; text-decoration: none;">Profile</a></li>
+                    
+                    {% if current_user.role and current_user.role.lower() == 'manager' %}
+                        <li><a href="{{ url_for('manager_dashboard') }}" style="color: inherit; text-decoration: none;">Dashboard</a></li>
+                    {% endif %}
+                    
+                    <li><a href="{{ url_for('logout') }}" style="color: inherit; text-decoration: none;">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" style="color: inherit; text-decoration: none;">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
+   
+    <!--HERO SECTION-->
+    <section class="hero" id="search-section">
+        <div class="hero-section">
+            <h1>Welcome to our Food Recommender System</h1>
+            <form action="{{ url_for('home') }}" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Search 🔍">
+                <button type="submit">Search</button>
+            </form>
+            <div class="filter-button">
+                <button class="filter-btn">Range</button>
+                <button class="filter-btn">Category</button>
+                <button class="filter-btn">Ratings</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="stalls">
+        <h1>Featured Stalls</h1>
+        <div class="stall-section">
+            {% for stall in stalls %}
+            <div class="stall-card">
+                <h2>{{ stall.name }}</h2>
+                <p>{{ stall.category }}</p>
+                <p>Add to Favourites <i class="fa fa-heart"></i></p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

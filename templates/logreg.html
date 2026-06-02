@@ -4,42 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Form</title>
-    <link rel="stylesheet" href="./static/style3.css">
+    <!-- Use a direct absolute path to static so your CSS loads via Flask -->
+    <link rel="stylesheet" href="/static/style3.css">
 </head>
 <body>
     <div class="container" id="container">
 
         <!-- SIGN UP FORM -->
         <div class="form-container sign-up">
-            <form>
+            <!-- Added POST and action="/register" -->
+            <form method="POST" action="/register">
                 <h1>Create Account</h1>
                 <div class="social-icons">
                     <a href="#"></a>
                 </div>
-                <span>or use email</span>
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign Up</button>
+                
+                <!-- Added name attributes -->
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <!-- Added type="submit" -->
+                                 <!-- ROLE SELECTION -->
+                <div class="role-select">
+                    <label>Manager Key</label>
+                    <span>only if you are a manager</span>
+                    <input type="text" name="secret_code" placeholder="manager key code">
+                
+                </div>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
 
         <!-- SIGN IN FORM -->
         <div class="form-container sign-in">
-            <form>
+            <!-- Added POST and action="/login" -->
+            <form method="POST" action="/login">
                 <h1>Sign In</h1>
                 <div class="social-icons">
                     <a href="#"></a>
                 </div>
-                <span>or use email and password</span>
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <a href="#">Forgot your password?</a>
-                <button>Sign In</button>
+                <span>use email and password</span>
+                <!-- Added name attributes -->
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <!-- Pointed forgot password to the correct route -->
+                <a href="/forgot_password">Forgot your password?</a>
+                <!-- Added type="submit" -->
+                <button type="submit">Sign In</button>
             </form>
         </div>
 
-        <!-- TOGGLE PANEL -->
+        <!-- TOGGLE PANEL (Untouched) -->
         <div class="toggle-container">
             <div class="toggle">
 
@@ -59,19 +74,18 @@
         </div>
 
     </div>
-    <a href="#" class="back-home">← Back to Home</a>
+    <!-- Pointed back button to home route -->
+    <a href="/" class="back-home">← Back to Home</a>
  
     <script>
         const container = document.getElementById('container');
         const registerBtn = document.getElementById('register');
         const loginBtn = document.getElementById('login');
  
-        // Click "Sign Up" on the right toggle panel → activate Sign Up form
         registerBtn.addEventListener('click', () => {
             container.classList.add('active');
         });
  
-        // Click "Sign In" on the left toggle panel → go back to Sign In form
         loginBtn.addEventListener('click', () => {
             container.classList.remove('active');
         });

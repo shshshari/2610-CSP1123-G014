@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Stall - MMU Food Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">MMU Food Recommender</h1>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('manager_dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main style="max-width: 600px; margin: 40px auto; padding: 20px; background: white; border-radius: 8px; border: 1px solid #ccc;">
+        <h2>Edit Food Stall Details</h2>
+        <br>
+        
+        <form method="POST">
+            <label style="font-weight: bold;">Stall Name:</label><br>
+            <input type="text" name="name" value="{{ stall.name }}" required style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;"><br><br>
+            
+            <label style="font-weight: bold;">Building / Area Location:</label><br>
+            <select name="location_id" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                {% for loc in locations %}
+                    <option value="{{ loc.id }}" {% if loc.id == stall.location_id %}selected{% endif %}>
+                        {{ loc.name }}
+                    </option>
+                {% endfor %}
+            </select><br><br>
+            
+            <label style="font-weight: bold;">Category:</label><br>
+            <input type="text" name="category" value="{{ stall.category }}" required style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;"><br><br>
+            
+            <label style="font-weight: bold;">Description:</label><br>
+            <textarea name="description" rows="5" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;">{{ stall.description }}</textarea><br><br>
+            
+            <button type="submit" style="background: #1c4273; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                Save Changes
+            </button>
+            <a href="{{ url_for('manager_dashboard') }}" style="margin-left: 15px; color: #777; text-decoration: none;">Cancel</a>
+        </form>
+    </main>
+</body>
+</html>

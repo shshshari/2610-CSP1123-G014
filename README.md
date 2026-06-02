@@ -1,6 +1,9 @@
 ## Login Feature:
 This branch contains the core authentication logic for the project.
 
+## Admin Sign Up
+Manager key code is mMu2o26bruh
+
 ### Key Functionality:
 * **User Registration:** Securely adds new users to `database.db`.
 * **Session Management:** Uses `flask-login` to keep users signed in across pages.
