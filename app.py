@@ -45,6 +45,9 @@ class Stall(db.Model):
     category = db.Column(db.String(100))
     description = db.Column(db.Text)
     manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    food_type = db.Column(db.String(50)) 
+    price_range = db.Column(db.String(10), nullable=False, default="RM") 
+    reviews = db.relationship('Review', backref='stall', cascade="all, delete-orphan", lazy=True)
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,15 +62,15 @@ class Favourite(db.Model):
     stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
 
-    @login_manager.user_loader
-    def load_user(user_id):
+@login_manager.user_loader
+def load_user(user_id):
         return User.query.get(int(user_id))
 
 
     # ─── ROUTES ───
 
-    @app.route('/')
-    def home():
+@app.route('/')
+def home():
         query = request.args.get('q', '')
         if query:
             all_stalls = Stall.query.join(Location).filter(
@@ -76,28 +79,76 @@ class Favourite(db.Model):
         else:
             all_stalls = Stall.query.join(Location).all()
             return render_template('homepage1.html', stalls=all_stalls)
+            flash("Login failed. Check your email and password.")
+            return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.")
+    return redirect(url_for('home'))
+
+@app.route('/manager_dashboard')
+@login_required
+def manager_dashboard():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only.")
+        return redirect(url_for('home'))
+
+    my_stalls  = Stall.query.filter_by(manager_id=current_user.id).all()
+    return render_template('manager_dashboard.html', stalls=my_stalls)
+
+@app.route('/add_stall', methods=['GET', 'POST'])
+@login_required
+def add_stall():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only. ")
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        stall_name = request.form.get('name')
+        selected_location_id = request.form.get('location_id') 
+        category = request.form.get('category')
+        description = request.form.get('description')
+        ftype = request.form.get('food_type')
+        price = request.form.get('price_range')
+        new_stall = Stall(
+            name=request.form.get('name'),
+            location_id=int(request.form.get('location_id')),
+            category=request.form.get('category'),
+            description=request.form.get('description'),
+            food_type=ftype,
+            price_range=price,
+            manager_id=current_user.id
+        )
+        db.session.add(new_stall)
+        db.session.commit()
+        return redirect(url_for('home'))
+    locations = Location.query.all()
+    return render_template('add_stall.html', locations=locations)
 
 
-    @app.route('/register', methods=['GET', 'POST'])
-    def register():
-        if request.method == 'POST':
-            user_email = request.form.get('email')
-            user_password = request.form.get('password')
-            secret_code = request.form.get('secret_code', '').strip()
 
-            if secret_code:
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        user_email = request.form.get('email')
+        user_password = request.form.get('password')
+        secret_code = request.form.get('secret_code', '').strip()
+
+        if secret_code:
                 if secret_code == "mMu2o26bruh":
                     role = 'manager'
                 else:
                     flash("Invalid manager secret code. Please try again.")
                     return redirect(url_for('register'))
-            else:
-                role = 'user'
+        else:
+            role = 'user'
 
-            if not user_email or not user_password:
-                flash("Email and Password fields are required.")
-                return redirect(url_for('register'))
-            
+
+        if not user_email or not user_password:
+            flash("Email and Password fields are required.")
+            return redirect(url_for('register'))
             existing_user = User.query.filter_by(email=user_email).first()
             if existing_user:
                 flash("This email is already registered. Please log in.")
@@ -114,46 +165,102 @@ class Favourite(db.Model):
         return render_template('logreg.html')
 
 
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        if request.method == 'POST':
-            email = request.form.get('email')
-            password = request.form.get('password')
-            user = User.query.filter_by(email=email).first()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
 
-            if user and check_password_hash(user.password, password):
-                login_user(user)
-                flash(f"Welcome back, {user.email}!")
-                if user.role == 'manager':
-                    return redirect(url_for('manager_dashboard'))
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            flash(f"Welcome back, {user.email}!")
+            if user.role == 'manager':
+                return redirect(url_for('manager_dashboard'))
                 return redirect(url_for('home'))
             else:
                 flash("Login failed. Check your email and password.")
                 return redirect(url_for('login'))
 
-        return render_template('logreg.html')
+    return render_template('logreg.html')
 
 
-    @app.route('/logout')
-    @login_required
-    def logout():
-        logout_user()
-        flash("You have been logged out.")
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.")
+
+@app.route('/explore')
+def explore():
+    cat_filter = request.args.get('category')
+    loc_filter = request.args.get('location')
+    ftype = request.args.get('food_type')
+    price = request.args.get('price_range')
+    search = request.args.get('search')
+
+    query = Stall.query
+
+    if cat_filter:
+        query = query.filter(Stall.category == cat_filter)
+    if loc_filter:
+        query = query.filter(Stall.location_id == loc_filter)
+    if ftype:
+        query = query.filter(Stall.food_type == ftype)
+    if price:
+        query = query.filter(Stall.price_range == price)
+    if search:
+        query = query.filter(Stall.name.contains(search))
+
+    stalls = query.all()
+    locations = Location.query.all()
+    
+    categories = db.session.query(Stall.category).distinct().all()
+    categories = [c[0] for c in categories if c[0]]
+
+    return render_template('explore.html', stalls=stalls, locations=locations, categories=categories)
+
+@app.route('/delete_stall/<int:stall_id>', methods=['POST'])
+@login_required
+def delete_stall(stall_id):
+    if current_user.role != 'manager':
+        flash("Unauthorized access.")
         return redirect(url_for('home'))
 
 
-    @app.route('/profile')
-    @login_required
-    def profile():
+@app.route('/profile')
+@login_required
+def profile():
         favourites = Favourite.query.filter_by(user_id=current_user.id).all()
         fav_stalls = [Stall.query.get(f.stall_id) for f in favourites]
         reviews = Review.query.filter_by(user_id=current_user.id).all()
         return render_template('profile.html', fav_stalls=fav_stalls, reviews=reviews)
 
+@app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
+@login_required
+def edit_stall(stall_id):
+    stall = Stall.query.get_or_404(stall_id)
+    
+    # Security: Ensure only the owner can edit
+    if stall.manager_id != current_user.id:
+        flash("Unauthorized. You can only edit your own stalls.")
+        return redirect(url_for('manager_dashboard'))
+    
+    if request.method == 'POST':
+        stall.name = request.form.get('name')
+        stall.category = request.form.get('category')
+        stall.description = request.form.get('description')
+        stall.location_id = int(request.form.get('location_id'))
+        stall.food_type = request.form.get('food_type')
+        stall.price_range = request.form.get('price_range')
+        db.session.commit()
+        flash("Stall updated successfully!")
+        return redirect(url_for('manager_dashboard'))
 
-    @app.route('/manager_dashboard')
-    @login_required
-    def manager_dashboard():
+
+@app.route('/manager_dashboard')
+@login_required
+def manager_dashboard():
         if current_user.role != 'manager':
             flash("Access denied. Managers only.")
             return redirect(url_for('home'))
@@ -161,9 +268,9 @@ class Favourite(db.Model):
         return render_template('manager_dashboard.html', stalls=my_stalls)
 
 
-    @app.route('/add_stall', methods=['GET', 'POST'])
-    @login_required
-    def add_stall():
+@app.route('/add_stall', methods=['GET', 'POST'])
+@login_required
+def add_stall():
         if current_user.role != 'manager':
             flash("Access denied. Managers only.")
             return redirect(url_for('home'))
@@ -183,9 +290,9 @@ class Favourite(db.Model):
         return render_template('add_stall.html', locations=locations)
 
 
-    @app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
-    @login_required
-    def edit_stall(stall_id):
+@app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
+@login_required
+def edit_stall(stall_id):
         stall = Stall.query.get_or_404(stall_id)
         if stall.manager_id != current_user.id:
             return "Unauthorized", 403
@@ -201,9 +308,9 @@ class Favourite(db.Model):
         return render_template('edit_stall.html', stall=stall, locations=locations)
 
 
-    @app.route('/delete_stall/<int:stall_id>', methods=['POST'])
-    @login_required
-    def delete_stall(stall_id):
+@app.route('/delete_stall/<int:stall_id>', methods=['POST'])
+@login_required
+def delete_stall(stall_id):
         if current_user.role != 'manager':
             flash("Unauthorized access.")
             return redirect(url_for('home'))
@@ -221,8 +328,8 @@ class Favourite(db.Model):
             return redirect(url_for('manager_dashboard'))
 
 
-    @app.route('/forgot_password', methods=['GET', 'POST'])
-    def forgot_password():
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
         if request.method == 'POST':
             email = request.form.get('email')
             action = request.form.get('action')
@@ -281,3 +388,4 @@ if __name__ == '__main__':
             print("Sample stalls added.")
 
     app.run(debug=True)
+

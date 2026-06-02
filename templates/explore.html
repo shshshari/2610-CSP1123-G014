@@ -1,0 +1,79 @@
+<h2>Explore MMU Stalls</h2>
+
+<form action="{{ url_for('explore') }}" method="GET">
+    <div class="form-group">
+        <input type="text" name="search" placeholder="Search stall names (e.g., He & She)..." value="{{ request.args.get('search', '') }}">
+    </div>
+
+    <div class="form-group">
+        <button type="submit">Apply Search & Filters</button>
+        <a href="{{ url_for('explore') }}"><button type="button">Clear All</button></a>
+    </div>
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="location">
+        <option value="">All Locations</option>
+        {% for loc in locations %}
+            <option value="{{ loc.id }}">{{ loc.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+    <div class="form-group">
+        <label for="search">Find Stalls:</label>
+        <input type="text" name="search" id="search" placeholder="Type name here..." value="{{ request.args.get('search', '') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="price_range">Price Tier:</label>
+        <select name="price_range" id="price_range">
+            <option value="">-- All Prices --</option>
+            <option value="$" {% if request.args.get('price_range') == '$' %}selected{% endif %}>$ (Under RM10)</option>
+            <option value="$$" {% if request.args.get('price_range') == '$$' %}selected{% endif %}>$$ (RM10 - RM20)</option>
+            <option value="$$$" {% if request.args.get('price_range') == '$$$' %}selected{% endif %}>$$$ (Above RM20)</option>
+        </select>
+    </div>
+    <div class="stall-grid">
+    {% for stall in stalls %}
+    <div class="stall-card">
+        <h3>{{ stall.name }}</h3>
+        <p class="category">{{ stall.category }}</p>
+        
+        <p class="price-indicator">
+            <strong>Price range: </strong>
+            {% if stall.price_range == '$' %}
+                <span class="badge badge-low">RM (Under RM10)</span>
+            {% elif stall.price_range == '$$' %}
+                <span class="badge badge-mid">RMRM (RM10 - RM20)</span>
+            {% elif stall.price_range == '$$$' %}
+                <span class="badge badge-high">RMRMRM (Above RM20)</span>
+            {% else %}
+                <span class="badge badge-unknown">N/A</span>
+            {% endif %}
+        </p>
+        
+        <p>{{ stall.description }}</p>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>No campus stalls match your search or price criteria.</p>
+    </div>
+    {% endfor %}
+</div>
+    <div class="form-group">
+        <button type="submit" class="btn-search">Search & Filter</button>
+        <a href="{{ url_for('explore') }}" class="btn-clear">Reset All</a>
+    </div>
+</form>
+
+<ul>
+    {% for stall in stalls %}
+        <li><strong>{{ stall.name }}</strong> ({{ stall.category }}) - {{ stall.place.name }}</li>
+    {% else %}
+        <p>No stalls found matching those filters.</p>
+    {% endfor %}
+</ul>
