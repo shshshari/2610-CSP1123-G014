@@ -54,6 +54,10 @@ class Favourite(db.Model):
     user_id= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Optional: stores who sent it
 
 @app.route('/')
 def home():
@@ -257,7 +261,6 @@ def edit_stall(stall_id):
         stall.category = request.form.get('category')
         stall.description = request.form.get('description')
         stall.location_id = int(request.form.get('location_id'))
-        stall.food_type = request.form.get('food_type')
         stall.price_range = request.form.get('price_range')
         db.session.commit()
         flash("Stall updated successfully!")
@@ -265,6 +268,28 @@ def edit_stall(stall_id):
 
     locations = Location.query.all()
     return render_template('edit_stall.html', stall=stall, locations=locations)
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        user_msg = request.form.get('comment')
+        
+        if not user_msg or user_msg.strip() == "":
+            flash("Feedback text cannot be empty!")
+            return redirect(url_for('feedback'))
+            
+        # Save only the text message to the independent Feedback table
+        new_fb = Feedback(
+            content=user_msg,
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+        db.session.add(new_fb)
+        db.session.commit()
+        
+        flash("Thank you! Your feedback has been recorded.")
+        return redirect(url_for('explore'))
+        
+    return render_template('feedback.html')
 
 with app.app_context():
     db.create_all()

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Feedback</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px;">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div style="background: #d4edda; color: #155724; padding: 10px; margin: 10px auto; max-width: 500px; border-radius: 5px;">
+          {% for message in messages %}
+            <p style="margin: 0;">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div style="max-width: 500px; margin: 40px auto; padding: 30px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="margin-top: 0; color: #1c4273;">System Feedback</h2>
+        <p style="color: #666; font-size: 14px;">Leave any suggestions or feedback about the campus stall application below.</p>
+        <br>
+        
+        <form action="{{ url_for('feedback') }}" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label for="comment" style="display: block; font-weight: bold; margin-bottom: 5px;">Your Message:</label>
+                <textarea name="comment" id="comment" rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical;" placeholder="Type your text feedback here..." required></textarea>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" style="background: #1c4273; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px;">
+                    Submit Feedback
+                </button>
+                <a href="{{ url_for('explore') }}" style="margin-left: 15px; color: #666; text-decoration: none; font-size: 14px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
