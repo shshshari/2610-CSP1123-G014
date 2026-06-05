@@ -21,9 +21,10 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
+
 }
 body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     width: 100%;
     min-height: 100vh;
    background: var(--cream);
@@ -124,7 +125,7 @@ header{
   justify-content: center;
   font-size: 24px;
   text-align: center;
-  font-family:Georgia, 'Times New Roman', Times, serif
+
 }
 
 .logo img {
@@ -245,7 +246,29 @@ header{
     padding: 15px 0;
 }
 
+.quiz {
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding: 10px 28px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: 0.3s;
+    
+  
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
 
+
+.quiz:visited, 
+.quiz:hover, 
+.quiz:active {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
  /*-------FILTER BUTTON ---------*/
  .filter-buttons{
     display: flex;
@@ -277,3 +300,200 @@ header{
     display: flex;
 }
 
+
+.add-stall-body {
+    background-color: #fdfbf7 !important;
+}
+
+
+.add-stall-page main {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e1dbd2;
+}
+
+.add-stall-page h2 {
+    color: #1c4273;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    border-bottom: 2px solid #f0eade;
+    padding-bottom: 10px;
+}
+
+/* Form Input Field Component Restructuring */
+.add-stall-page .form-group {
+    margin-bottom: 20px;
+}
+
+.add-stall-page label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.add-stall-page input[type="text"], 
+.add-stall-page select, 
+.add-stall-page textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: border-color 0.2s;
+}
+
+.add-stall-page input[type="text"]:focus, 
+.add-stall-page select:focus, 
+.add-stall-page textarea:focus {
+    border-color: #1c4273;
+    outline: none;
+}
+
+.add-stall-page textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Submission Form Alignment Controls */
+.add-stall-page .actions-div {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.add-stall-page button[type="submit"] {
+    background-color: #1c4273;
+    color: white;
+    border: none;
+    padding: 11px 25px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-stall-page button[type="submit"]:hover {
+    background-color: #143054;
+}
+
+.add-stall-page .back-link {
+    color: #666;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.add-stall-page .back-link:hover {
+    color: #1c4273;
+}
+
+
+.viewport-auth-reset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh; /* Takes up the whole height of the screen */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.panel-auth-reset {
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            padding: 35px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+        }
+
+        .title-auth-reset {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .subtitle-auth-reset {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #666666;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .subtitle-auth-reset strong {
+            color: #007bff;
+        }
+
+
+        .form-auth-reset {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+
+        .field-auth-reset {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #333333;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .field-auth-reset:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #ffffff;
+        }
+
+
+        .action-auth-reset {
+            width: 100%;
+            padding: 13px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-auth-reset:hover {
+            background-color: #0056b3;
+        }
+
+
+        .alert-auth-reset {
+            padding: 12px;
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    

@@ -85,6 +85,7 @@ header {
 .profile-section {
     padding: 40px 5%;
     background: white;
+   
 }
 
 .profile-card {
@@ -92,7 +93,10 @@ header {
     align-items: center;
     gap: 30px;
 }
-
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+}
 .avatar {
     width: 90px;
     height: 90px;
@@ -252,4 +256,10 @@ header {
 .dropdown-menu a:hover {
     background: #f5f5f5;
     color: #1c4273;
+}
+
+.clickable-review-wrapper:hover .review-card {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    border-color: #ddd;
 }

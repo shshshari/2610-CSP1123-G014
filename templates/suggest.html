@@ -1,180 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>What Should I Eat? – MMU Food Recommender</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="./static/suggest.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMU Food Vibe Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
 </head>
-<body>
+<body style="background: #f7f9fc; font-family: sans-serif; margin: 0; padding: 20px;">
+    <div style="max-width: 800px; margin: 0 auto;">
 
-<!-- ── MAIN ── -->
-<main>
- 
-  <!-- ── TRIGGER BUTTON ── -->
-  <div class="trigger-wrapper">
-    <button class="trigger-btn" id="triggerBtn" onclick="showQuiz()">
-      <span class="trigger-icon">?</span>
-      What Should I Eat?
-    </button>
-  </div>
+        <!-- ================= STAGE 1: DISPLAY THE QUIZ QUESTIONNAIRE ================= -->
+        {% if not vibe_name %}
+        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            
+            <!-- Compact Header Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 25px;">
+                <div style="text-align: left;">
+                    <h1 style="color: #1a73e8; margin: 0; font-size: 24px; font-weight: 700;">MMU Campus Archetype Test</h1>
+                    <p style="color: #666; margin: 4px 0 0 0; font-size: 13px;">Answer the questions below to extract your current mood match.</p>
+                </div>
+                <a href="{{ url_for('home') }}" style="color: #555; text-decoration: none; font-size: 13px; font-weight: 500; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; background: #fafafa; white-space: nowrap;">
+                    🏠 Back Home
+                </a>
+            </div>
+            
+            <form action="{{ url_for('quiz') }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                
+                <!-- Q1 -->
+                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">1. If you had to delete one social media platform forever, which one goes?</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="fandom" value="tiktok" checked style="margin-right: 6px;"> TikTok — My attention span needs saving anyway.
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="fandom" value="instagram" style="margin-right: 6px;"> Instagram — Tired of seeing people's perfect vacation photos.
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="fandom" value="twitter" style="margin-right: 6px;"> X / Twitter — Too much arguing, my brain hurts.
+                    </label>
+                </div>
 
-  <!-- ── QUIZ SECTION (shown after clicking button) ── -->
-  <div class="quiz-section" id="quizSection">
- 
-    <!-- Speech bubble intro -->
-    <div class="speech-bubble">
-      <p>Let's find the perfect food for you!</p>
-      <p class="sub">Answer these questions :</p>
-    </div>
-     <!-- Question 1: Budget -->
-    <div class="question-card">
-      <div class="question-label">
-        <span class="q-number">①</span>
-        <span class="q-text">What's your budget?</span>
-      </div>
-      <div class="options-row">
-        <label class="radio-option">
-          <input type="radio" name="budget" value="under5"/>
-          <span class="radio-custom"></span>
-          under RM 5
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="5to10"/>
-          <span class="radio-custom"></span>
-          RM 5 – RM 10
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="10to15"/>
-          <span class="radio-custom"></span>
-          RM 10 – 15
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="budget" value="above15"/>
-          <span class="radio-custom"></span>
-          above RM 15
-        </label>
-      </div>
-    </div>
- 
-    <!-- Question 2: Cuisine -->
-    <div class="question-card">
-      <div class="question-label">
-        <span class="q-number">②</span>
-        <span class="q-text">What type of cuisine do you feel like eating?</span>
-      </div>
-      <div class="options-row">
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="malay"/>
-          <span class="radio-custom"></span>
-          Malay
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="chinese"/>
-          <span class="radio-custom"></span>
-          Chinese
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="western"/>
-          <span class="radio-custom"></span>
-          Western
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="cuisine" value="drinks"/>
-          <span class="radio-custom"></span>
-          Drinks
-        </label>
-      </div>
-    </div>
-     <!-- Submit Button -->
-    <div class="submit-wrapper">
-      <button class="submit-btn" onclick="showResult()">Submit</button>
-    </div>
- 
-  </div>
- 
-  <!-- ── RESULT SECTION (shown after submit) ── -->
-  <div class="result-section" id="resultSection">
-    <!-- Speech bubble result -->
-    <div class="speech-bubble result-bubble">
-      <p>How about <strong id="resultStallName">Jinjja Shiok</strong>?</p>
-    </div>
- 
-    <!-- Stall result card -->
-    <div class="result-card">
-      <div class="result-card-image">
-        <!-- DYNAMIC: replace with actual stall image -->
-        🍽️
-      </div>
-      <div class="result-card-info">
-        <div class="result-stall-name" id="resultName">Jinjja Shiok</div>
-        <div class="result-stall-cat" id="resultCat">Western food</div>
-        <div class="result-stall-meta">
-          <span id="resultPrice">RM 5 – 20</span>
-          <span class="divider">|</span>
-          <span id="resultRating">⭐ 4.5</span>
+                <!-- Q2 -->
+                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">2. Choose your current psychological battery state:</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="mood" value="chill" checked style="margin-right: 6px;"> Calm and chill — I just want to relax somewhere with a peaceful drink.
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="mood" value="stressed" style="margin-right: 6px;"> Panicked/Stressed — Assignments are breaking me, I need heavy comfort food.
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="mood" value="social" style="margin-right: 6px;"> Energetic and chatty — Gathering the campus squad for a big lunch hang out.
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="mood" value="hurry" style="margin-right: 6px;"> Complete emergency — My next class starts in minutes, I need a fast grab-and-go speedrun.
+                    </label>
+                </div>
+
+                <!-- Q3 -->
+                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">3. If Cyberjaya suddenly had extreme seasonal weather, what are you picking?</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="weather" value="snow" checked style="margin-right: 6px;"> Heavy snow storm (Wearing massive winter jackets to class)
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="weather" value="leaves" style="margin-right: 6px;"> Cozy orange autumn (Leaves falling everywhere outside the library)
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="weather" value="sun" style="margin-right: 6px;"> Perpetual bright summer (Exactly how it already is right now)
+                    </label>
+                </div>
+
+                <!-- Q4 -->
+                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">4. Realistically, how are your digital bank balances looking at this exact second?</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="budget" value="low" checked style="margin-right: 6px;"> Broke student mode (Keep it strictly Under RM10)
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="budget" value="medium" style="margin-right: 6px;"> Standard average day budget (Around RM10 - RM20 is fine)
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="budget" value="high" style="margin-right: 6px;"> Treat yourself day! I am spending premium allowances (Above RM20)
+                    </label>
+                </div>
+
+                <!-- Q5 -->
+                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">5. What is your preferred, ultimate style of procrastinating assignments?</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="study" value="nap" checked style="margin-right: 6px;"> Clean my entire bedroom floor and take a mandatory 3-hour nap.
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="study" value="show" style="margin-right: 6px;"> Start watching a brand new 10-episode drama series from the beginning.
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="study" value="stare" style="margin-right: 6px;"> Open the blank document file, stare at the cursor blinking, then close it.
+                    </label>
+                </div>
+
+                <!-- Q6 -->
+                <div style="padding-bottom: 5px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">6. Pick an animal avatar to guide your dining journey:</h3>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="animal" value="cat" checked style="margin-right: 6px;"> A dramatic sleepy cat 🐱
+                    </label>
+                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="animal" value="capybara" style="margin-right: 6px;"> A completely unbothered, zen Capybara 🧘
+                    </label>
+                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
+                        <input type="radio" name="animal" value="raccoon" style="margin-right: 6px;"> A dumpster-diving trash raccoon full of pure chaos 🦝
+                    </label>
+                </div>
+
+                <button type="submit" style="background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;">
+                    Analyze My Eating Profile 🔮
+                </button>
+            </form>
         </div>
-      </div>
+
+        <!-- ================= STAGE 2: DISPLAY DYNAMIC MATCH RESULTS ================= -->
+        {% else %}
+        <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div style="text-align: left;">
+                <p style="text-transform: uppercase; letter-spacing: 1px; color: #1a73e8; font-weight: 600; margin: 0; font-size: 11px;">Quiz Verdict</p>
+                <h1 style="font-size: 22px; margin: 4px 0 0 0; color: #222; font-weight: 700;">{{ vibe_name }}</h1>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ url_for('quiz') }}" style="color: #1a73e8; text-decoration: none; font-size: 13px; font-weight: 500; border: 1px solid #1a73e8; padding: 6px 12px; border-radius: 4px; background: white;">
+                    🔄 Retake Quiz
+                </a>
+                <a href="{{ url_for('home') }}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 4px; background: #222;">
+                    🏠 Home
+                </a>
+            </div>
+        </div>
+
+        <h2 style="color: #444; margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Your Custom Matches:</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            {% for stall in stalls %}
+            <div style="background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; border: 1px solid #eee;">
+                
+                {% if stall.image_file == 'default_stall.jpg' %}
+                    <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}" style="width: 100%; height: 140px; object-fit: cover;">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}" style="width: 100%; height: 140px; object-fit: cover;">
+                {% endif %}
+                
+                <div style="padding: 12px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+                        <h3 style="margin: 0; font-size: 15px; color: #222; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ stall.name }}</h3>
+                        <span style="font-size: 10px; background: #e8f0fe; color: #1a73e8; padding: 1px 6px; border-radius: 10px; font-weight: 500; text-transform: capitalize; white-space: nowrap;">
+                            {{ stall.category }}
+                        </span>
+                    </div>
+
+                    <p style="font-size: 12px; color: #666; margin: 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ stall.description if stall.description else "No description specified." }}
+                    </p>
+                    
+                    <div style="margin-top: auto; padding-top: 4px;">
+                        <span style="font-size: 10px; color: #777; background: #f5f5f5; padding: 2px 6px; border-radius: 3px; display: inline-block;">
+                            Price: <strong style="color: #333;">{{ stall.price_range }}</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <p style="grid-column: 1/-1; text-align: center; color: #999; padding: 20px 0; font-size: 13px;">No matching stalls found for this tier.</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
-    <!-- Action buttons -->
-    <div class="result-actions">
-      <a href="#" class="btn-view" id="viewStallBtn">View Stall →</a>
-      <button class="btn-retry" onclick="resetQuiz()">Try Again</button>
-    </div>
- 
-  </div>
- 
-</main>
-<script>
-  // ── Show quiz when trigger button is clicked ──
-  function showQuiz() {
-    document.getElementById('quizSection').classList.add('visible');
-    document.getElementById('triggerBtn').classList.add('active');
-    document.getElementById('resultSection').classList.remove('visible');
-  }
- 
-  // ── Dummy stall data based on answers ──
-  // DYNAMIC: replace this logic with real recommender output later
-  const stallData = {
-    malay:   { name: "Rasa Shiokk",  cat: "Malaysian Cuisine", price: "RM 4 – 20",  rating: "⭐ 4.7", link: "#" },
-    chinese: { name: "Cita Rasa",    cat: "Chinese Food",      price: "RM 4 – 15",  rating: "⭐ 4.3", link: "#" },
-    western: { name: "Jinjja Shyok", cat: "Western Food",      price: "RM 5 – 20",  rating: "⭐ 4.5", link: "#" },
-    drinks:  { name: "Stall 4",      cat: "Beverages",         price: "RM 3 – 8",   rating: "⭐ 4.1", link: "#" },
-  };
- 
-  // ── Show result after submit ──
-  function showResult() {
-    const budget  = document.querySelector('input[name="budget"]:checked');
-    const cuisine = document.querySelector('input[name="cuisine"]:checked');
- 
-    if (!budget || !cuisine) {
-      alert('Please answer both questions before submitting!');
-      return;
-    }
- 
-    // Pick stall based on cuisine choice
-    // DYNAMIC: swap this with a real API call to your recommender backend
-    const chosen = stallData[cuisine.value] || stallData['western'];
- 
-    document.getElementById('resultStallName').textContent = chosen.name;
-    document.getElementById('resultName').textContent      = chosen.name;
-    document.getElementById('resultCat').textContent       = chosen.cat;
-    document.getElementById('resultPrice').textContent     = chosen.price;
-    document.getElementById('resultRating').textContent    = chosen.rating;
-    document.getElementById('viewStallBtn').href           = chosen.link;
- 
-    document.getElementById('quizSection').classList.remove('visible');
-    document.getElementById('resultSection').classList.add('visible');
-  }
- 
-  // ── Reset to try again ──
-  function resetQuiz() {
-    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-    document.getElementById('resultSection').classList.remove('visible');
-    document.getElementById('quizSection').classList.add('visible');
-  }
-</script>
- 
 </body>
 </html>

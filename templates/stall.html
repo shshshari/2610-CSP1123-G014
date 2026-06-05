@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jinjja Shiok – Stall Details</title>
+  <title>{{ stall.name }} – Stall Details</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="./static/stall.css"/><!-- ── NAV ── -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='stall.css') }}"/>
+</head>
+<body>
+
+<!-- ── NAV ── -->
 <nav>
   <div class="nav-logo">MMU Food Recommender System</div>
   <div class="nav-center">Stall Details</div>
   <div class="nav-right">
-    <a>Profile</a>
-    <div class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+    <a href="{{ url_for('home') }}" style="color: inherit; text-decoration: none;">Home</a>
+    <a href="{{ url_for('profile') }}" style="color: inherit; text-decoration: none;">Profile</a>
+    <a href="{{ url_for('logout') }}" style="color: inherit; text-decoration: none;">Log Out</a>
   </div>
 </nav>
 
@@ -27,218 +28,195 @@
  
   <!-- Breadcrumb -->
   <div class="breadcrumb">
-    <a href="#">Home</a>
+    <a href="{{ url_for('home') }}">Home</a>
     <span class="sep">›</span>
-    <a href="#">Malaysian Cuisine</a>
+    <span style="text-transform: capitalize;">{{ stall.category }}</span>
     <span class="sep">›</span>
-    <span class="current">Rasa Shiokkk</span>
+    <span class="current">{{ stall.name }}</span>
   </div>
 
- <!-- ── TOP SECTION: Image + Info ── -->
   <div class="stall-top">
- 
-    <!-- Stall Image -->
     <div class="stall-image">
-   <img src="static/rasa.jpg" alt=""> 
-      
+        <!-- ✅ DYNAMICALLY ROUTED USING DATABASE PATH BACKENDS -->
+        {% if stall.image_file == 'default_stall.jpg' %}
+            <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}">
+        {% endif %}
     </div>
- 
-    <!-- Stall Info -->
+
     <div class="stall-info">
- 
-      <div class="stall-header-row">
-        <div class="stall-name">Rasa Shiokkk</div>
-        <!-- <span class="status-badge status-open">Open Now</span>-->
-      </div>
-      
- 
-      <div class="tags">
-        <span class="tag">Malaysian</span>
-        <span class="tag">Fusion</span>
-        <span class="tag halal">Halal</span>
-      </div>
- 
-      <div class="stall-category">Malaysian Cuisine · Comfort meals & beverages</div>
- 
-      <div class="stall-meta">
-        <span>RM 4 – 20</span>
-        <span class="divider">|</span>
-        <span>⭐ 4.7</span>
-        <span class="review-count">(128 reviews)</span>
-      </div>
- 
-      <div class="stall-location">📍 MMU Foodcourt ,Starbees</div>
-      <div class="stall-hours">🕙 Mon – Sun &nbsp;|&nbsp; 10:00 AM – 10:00 PM</div>
- 
-      <div class="rec-badge">
-        ✨ Recommended based on your love of Western food
-        <span class="match-score">92% match</span>
-      </div>
- 
+        <div class="stall-header-row">
+            <div class="stall-name">{{ stall.name }}</div>
+        </div>
+        
+        <div class="tags">
+            <span class="tag" style="text-transform: capitalize;">{{ stall.category }}</span>
+        </div>
+
+        <div class="stall-category">{{ stall.description if stall.description else "No description provided." }}</div>
+
+        <div class="stall-meta">
+            <span>Price: {{ stall.price_range }}</span>
+            <span class="divider">|</span>
+            <span class="review-count">({{ stall.reviews|length }} reviews)</span>
+        </div>
+
+        <!-- Displays location backref safely -->
+        <div class="stall-location">📍 {{ stall.place.name if stall.place else "Main Campus" }}</div>
     </div>
   </div>
+
   <!-- ── ACTION BUTTONS ── -->
   <div class="action-buttons">
-    <button class="btn btn-fav" id="favBtn" onclick="toggleFav()">
-      <span id="favIcon">🤍</span> Add to Fav
-      <span class="fav-count" id="favCount">· 248</span>
-    </button>
     <button class="btn btn-review" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
       ✏️ Write a Review
     </button>
-    <button class="btn btn-rate" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
-      ⭐ Rate Us!
-    </button>
+    {% if current_user.is_authenticated and (current_user.role.lower() == 'admin' or current_user.id == stall.manager_id) %}
+    <div class="admin-actions-div" style="margin-top: 20px; display: flex; gap: 10px;">
+        <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="edit-btn" 
+           style="background-color: #1a73e8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: 500; font-size: 14px; transition: background 0.2s;">
+            ⚙️ Edit Stall Details
+        </a>
+    </div>
+{% endif %}
   </div>
  
   <hr class="section-divider"/>
 
- <!-- ── MENU SECTION ── -->
-  <div class="section-title">🍴 Popular Menu Items</div>
-  <div class="menu-grid">
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Nasi Lemak w/ Signature Chicken Chop</div>
-        <div class="menu-item-desc">Grilled, black pepper sauce</div>
-      </div>
-      <div class="menu-item-price">RM 11.90</div>
-    </div>
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Classic Nasi Lemak</div>
-        <div class="menu-item-desc">Crispy battered, tartar sauce</div>
-      </div>
-      <div class="menu-item-price">RM 5.00</div>
-    </div>
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Classic Indomie</div>
-        <div class="menu-item-desc">Maggie Indomie with sambal</div>
-      </div>
-      <div class="menu-item-price">RM 5.00</div>
-    </div>
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Chicken Chop w/ French Fries</div>
-        <div class="menu-item-desc">Mint jelly, roasted potatoes</div>
-      </div>
-      <div class="menu-item-price">RM 11.90</div>
-    </div>
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Indomie w/ Curry Chicken</div>
-        <div class="menu-item-desc">Creamy, garlic bread</div>
-      </div>
-      <div class="menu-item-price">RM 12.90</div>
-    </div>
-    <div class="menu-item">
-      <div>
-        <div class="menu-item-name">Set Drinks</div>
-        <div class="menu-item-desc">Milo / Teh Tarik / Ice Lemon Tea</div>
-      </div>
-      <div class="menu-item-price">RM 4.00</div>
-    </div>
+  <!-- ── REVIEWS SECTION ── -->
+  <div class="section-title" style="font-size:22px; margin-bottom: 15px;">User Reviews</div>
+  <div class="existing-reviews" id="reviewContainer" style="display: flex; flex-direction: column; gap: 15px;">
+
+    {% if stall.reviews %}
+      {% for review in stall.reviews %}
+        <div class="review-card" id="review-card-{{ review.id }}" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+          
+          <div id="view-mode-{{ review.id }}">
+            <div class="review-card-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <div class="reviewer-name" style="font-weight: 700; color: #333; text-transform: capitalize;">
+                  {{ review.author.name if review.author.name else "Anonymous User" }}
+                </div>
+                <div class="review-stars" style="color: #ffcc00; margin-top: 3px;">
+                  {% for i in range(review.rating) %}⭐{% endfor %}
+                </div>
+              </div>
+
+              <div class="review-actions" style="display: flex; gap: 10px;">
+                {% if current_user.is_authenticated %}
+                  
+                  {% if review.user_id == current_user.id %}
+                    <button onclick="toggleEditMode('{{ review.id }}')" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 13px;">✏️ Edit</button>
+                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Delete your review?');">
+                      <button type="submit" style="background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 13px;">🗑️ Delete</button>
+                    </form>
+                  
+                  {% elif current_user.role == 'manager' %}
+                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Admin Action: Delete this user review?');">
+                      <button type="submit" style="background: #ff3b30; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">🛡️ Admin Delete</button>
+                    </form>
+                  {% endif %}
+
+                {% endif %}
+              </div>
+            </div>
+            <div class="review-text" style="color: #555; font-style: italic;">"{{ review.comment }}"</div>
+          </div>
+
+          {% if review.user_id == current_user.id %}
+          <div id="edit-mode-{{ review.id }}" style="display: none;">
+            <form action="{{ url_for('edit_review', review_id=review.id) }}" method="POST">
+              <div style="margin-bottom: 10px;">
+                <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 4px;">Update Rating:</label>
+                <select name="rating" style="padding: 5px; border-radius: 4px;">
+                  <option value="5" {% if review.rating == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐ (5)</option>
+                  <option value="4" {% if review.rating == 4 %}selected{% endif %}>⭐⭐⭐⭐ (4)</option>
+                  <option value="3" {% if review.rating == 3 %}selected{% endif %}>⭐⭐⭐ (3)</option>
+                  <option value="2" {% if review.rating == 2 %}selected{% endif %}>⭐⭐ (2)</option>
+                  <option value="1" {% if review.rating == 1 %}selected{% endif %}>⭐ (1)</option>
+                </select>
+              </div>
+              <textarea name="comment" style="width: 100%; min-height: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px;">{{ review.comment }}</textarea>
+              <div style="display: flex; gap: 10px;">
+                <button type="submit" style="background: #28a745; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">Save</button>
+                <button type="button" onclick="toggleEditMode('{{ review.id }}')" style="background: #6c757d; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">Cancel</button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="color: #777; font-style: italic; padding: 10px 0;">No reviews written yet. Be the first to share your experience!</p>
+    {% endif %}
+ 
   </div>
  
-  <hr class="section-divider"/>
-
-  <div class="section-tittle"> User Reviews</div>
-  <div class="existing-reviews" id="reviewContainer">
-
+  <!-- ── WRITE A REVIEW FORM ── -->
+<div class="write-review-box" id="writeReview" style="background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 12px; margin-top: 30px;">
+    <h4 style="margin-top: 0; font-size: 18px; margin-bottom: 5px;">✍️ Leave your review</h4>
     
-    <div class="review-card" style="animation-delay: 0s">
-      <div class="review-card-top">
-        <div>
-          <div class="reviewer-name">Aisha R.</div>
-          <div class="review-stars">⭐⭐⭐⭐⭐</div>
-        </div>
-        <div class="review-date">12 Apr 2025</div>
-      </div>
-      <div class="review-text">The chicken chop here is absolutely amazing! Perfectly grilled and the black pepper sauce is so flavourful. Will definitely come back again 😍</div>
-    </div>
- 
-    <div class="review-card" style="animation-delay: 0.1s">
-      <div class="review-card-top">
-        <div>
-          <div class="reviewer-name">Haziq M.</div>
-          <div class="review-stars">⭐⭐⭐⭐</div>
-        </div>
-        <div class="review-date">5 Apr 2025</div>
-      </div>
-      <div class="review-text">Good portion size for the price. Fish &amp; chips was crispy and fresh. Queue can be a bit long during lunch hour though.</div>
-    </div>
- 
-    <div class="review-card" style="animation-delay: 0.2s">
-      <div class="review-card-top">
-        <div>
-          <div class="reviewer-name">Wei Ling T.</div>
-          <div class="review-stars">⭐⭐⭐⭐⭐</div>
-        </div>
-        <div class="review-date">28 Mar 2025</div>
-      </div>
-      <div class="review-text">Best western food stall in the canteen by far. Lamb chop is a must-try! Friendly uncle too 😊</div>
-    </div>
- 
-  </div>
- 
-  <!-- ── WRITE A REVIEW ── -->
-  <div class="write-review-box" id="writeReview">
-    <h4>✍️ Leave your review</h4>
-    <div class="star-picker" id="starPicker">
-      <span onclick="setStars(1)">★</span>
-      <span onclick="setStars(2)">★</span>
-      <span onclick="setStars(3)">★</span>
-      <span onclick="setStars(4)">★</span>
-      <span onclick="setStars(5)">★</span>
-    </div>
-    <textarea class="review-textarea" id="reviewText" placeholder="Share your experience..."></textarea>
-    <button class="submit-btn" onclick="submitReview()">Submit Review</button>
-  </div>
- 
-  <hr class="section-divider"/>
-
-  <!-- ── SIMILAR STALLS ── -->
-  <div class="section-title">🔍 You Might Also Like</div>
-  <div class="similar-grid">
- 
-    <div class="similar-card">
-      <div class="similar-card-img">🥩</div>
-      <div class="similar-card-body">
-        <div class="similar-card-name">Jinja Shiokkk</div>
-        <div class="similar-card-meta">
-          <span>Western · RM 8–18</span>
-          <span class="similar-card-rating">★ 4.3</span>
+    <form action="{{ url_for('add_review', stall_id=stall.id) }}" method="POST">
+      
+      <input type="hidden" name="rating" id="ratingInput" value="5">
+      
+      <div class="star-picker-container" style="margin-bottom: 15px;">
+        <label style="font-size: 14px; font-weight: bold; display: block; margin-bottom: 6px; color: #444;">Your Rating:</label>
+        <div class="star-picker" style="font-size: 32px; cursor: pointer; display: flex; gap: 5px; user-select: none;">
+          <span class="interactive-star" data-value="1" onclick="updateStarPicker(1)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
+          <span class="interactive-star" data-value="2" onclick="updateStarPicker(2)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
+          <span class="interactive-star" data-value="3" onclick="updateStarPicker(3)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
+          <span class="interactive-star" data-value="4" onclick="updateStarPicker(4)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
+          <span class="interactive-star" data-value="5" onclick="updateStarPicker(5)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
         </div>
       </div>
-    </div>
- 
-    <div class="similar-card">
-      <div class="similar-card-img">🍝</div>
-      <div class="similar-card-body">
-        <div class="similar-card-name">Home Sweet Home</div>
-        <div class="similar-card-meta">
-          <span>Italian · RM 7–15</span>
-          <span class="similar-card-rating">★ 4.6</span>
-        </div>
-      </div>
-    </div>
- 
-    <div class="similar-card">
-      <div class="similar-card-img">🍔</div>
-      <div class="similar-card-body">
-        <div class="similar-card-name">Uncle Burger</div>
-        <div class="similar-card-meta">
-          <span>Burgers · RM 5–14</span>
-          <span class="similar-card-rating">★ 4.4</span>
-        </div>
-      </div>
-    </div>
- 
+      
+      <textarea class="review-textarea" name="comment" required placeholder="Share your dining experience..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; margin-bottom: 15px; resize: vertical; box-sizing: border-box;"></textarea>
+      
+      {% if current_user.is_authenticated %}
+        <button type="submit" class="submit-btn" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Submit Review</button>
+      {% else %}
+        <p style="margin: 0; color: #ff3b30; font-size: 14px;">⚠️ Please <a href="{{ url_for('login') }}">login</a> to submit a review.</p>
+      {% endif %}
+    </form>
   </div>
  
 </main>
 
+<!-- Star Picker Styling Script Logic -->
+<script>
+function toggleEditMode(reviewId) {
+    const viewDiv = document.getElementById(`view-mode-${reviewId}`);
+    const editDiv = document.getElementById(`edit-mode-${reviewId}`);
+    
+    if (viewDiv.style.display === "none") {
+        viewDiv.style.display = "block";
+        editDiv.style.display = "none";
+    } else {
+        viewDiv.style.display = "none";
+        editDiv.style.display = "block";
+    }
+}
 
+// Fixed Star Picker Logic
+function updateStarPicker(rating) {
+    // 1. Update the hidden input field value for Flask
+    document.getElementById('ratingInput').value = rating;
+    
+    // 2. Loop through the stars and visually change their color
+    const stars = document.querySelectorAll('.interactive-star');
+    stars.forEach(star => {
+        const starValue = parseInt(star.getAttribute('data-value'));
+        if (starValue <= rating) {
+            star.style.color = '#ffcc00'; // Gold for selected stars
+        } else {
+            star.style.color = '#ccc';    // Gray for unselected stars
+        }
+    });
+}
+</script>
 
 </body>
 </html>

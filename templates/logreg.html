@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Form</title>
-    <!-- Use a direct absolute path to static so your CSS loads via Flask -->
     <link rel="stylesheet" href="/static/style3.css">
 </head>
 <body>
@@ -37,7 +36,6 @@
 
         <!-- SIGN IN FORM -->
         <div class="form-container sign-in">
-            <!-- Added POST and action="/login" -->
             <form method="POST" action="/login">
                 <h1>Sign In</h1>
                 <div class="social-icons">
@@ -51,6 +49,7 @@
                 <a href="/forgot_password">Forgot your password?</a>
                 <!-- Added type="submit" -->
                 <button type="submit">Sign In</button>
+                
             </form>
         </div>
 
@@ -74,8 +73,11 @@
         </div>
 
     </div>
-    <!-- Pointed back button to home route -->
-    <a href="/" class="back-home">← Back to Home</a>
+    <div class="wrapper-nav-back">
+                <a href="{{ url_for('home') }}" class="btn-nav-back">← Back to Home</a>
+                </div>
+        </div>
+
  
     <script>
         const container = document.getElementById('container');

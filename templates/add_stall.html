@@ -1,46 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Stall - MMU Food Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
 </head>
-<body>
-    <h2>Register a New Food Stall</h2>
-    
-<form method="POST">
-    <label>Stall Name:</label><br>
-    <input type="text" name="name" required><br><br>
-    
-    <label>Building/Area:</label><br>
-    <select name="location_id">
-        {% for loc in locations %}
-        <option value="{{ loc.id }}">{{ loc.name }}</option>
-    {% endfor %}
-    </select><br><br>
+<body class="add-stall-body"> 
+    <header>
+        <div class="container">
+            <h1 class="logo">MMU Food Recommender</h1>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="{{ url_for('manager_dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <!-- MUST TYPE THIS LINE - matches 'sub_location' in Python -->
-    <label>Specific Spot/Unit Number:</label><br>
-    <input type="text" name="sub_location" placeholder="e.g., Level 1, Kiosk A" required><br><br>
-    
-    <label>Category:</label><br>
-    <input type="text" name="category" required><br><br>
-    
-    <label>Description:</label><br>
-    <textarea name="description"></textarea><br><br>
+    <div class="add-stall-page"> 
+        <main>
+            <h2>Register a New Food Stall</h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Stall Name:</label>
+                    <input type="text" name="name" placeholder="e.g., Sis Corner" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Building/Area:</label>
+                    <select name="location_id" required>
+                        {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <div class="form-group">
-    <label for="price_range">Price Range:</label>
-    <select name="price_range" id="price_range" class="form-control" required>
-        <option value="$">Cheap ($) - Under RM10</option>
-        <option value="$$">Moderate ($$) - RM10-RM20</option>
-        <option value="$$$">Expensive ($$$) - Above RM20</option>
-    </select>
-</div>
-    
-    <button type="submit">Add Stall</button>
-</form>
-    
-    <br>
-    <a href="{{ url_for('manager_dashboard') }}">Back to Dashboard</a>
-    
+                <div class="form-group">
+                    <label>Specific Spot/Unit Number:</label>
+                    <input type="text" name="sub_location" placeholder="e.g., Level 1, Kiosk A" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category:</label>
+                    <input type="text" name="category" placeholder="e.g., Malay, Nasi Lemak" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea name="description" placeholder="Signature dish recommendations, operating hours, etc..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="price_range">Price Range:</label>
+                    <select name="price_range" id="price_range" required>
+                        <option value="Under RM10">Cheap ($) - Under RM10</option>
+                        <option value="RM10 - RM20" selected>Moderate ($$) - RM10-RM20</option>
+                        <option value="Above RM20">Expensive ($$$) - Above RM20</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Stall Cover Image:</label>
+                    <input type="file" name="image_file" accept="image/*" style="border: none; padding-left: 0;">
+                    <small style="color: #777; display: block; margin-top: 4px; font-size: 12px;">Leaves default placeholder image if left empty.</small>
+                </div>
+                
+                <div class="actions-div">
+                    <a href="{{ url_for('manager_dashboard') }}" class="back-link">Cancel</a>
+                    <button type="submit">Add Stall</button>
+                </div>
+            </form>
+        </main>
+    </div>
 </body>
 </html>
