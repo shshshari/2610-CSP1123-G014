@@ -2,10 +2,21 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Mail, Message
 import random
 import os
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'stfucornball5@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'liMA_127'             
+app.config['MAIL_DEFAULT_SENDER'] = 'stfucornball5@gmail.com'
+
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -170,12 +181,14 @@ def forgot_password():
                 code = str(random.randint(100000, 999999))
                 reset_codes[email] = code
 
-                print(f"\n--- EMAIL SENT TO {email} ---")
-                print(f"Your Reset Code is: {code}")
-                print("-------------------------------\n")
+                print("\n" + "="*40)
+                print(f"FORGOT PASSWORD CODE GENERATED FOR: {email}")
+                print(f"YOUR 6-DIGIT RESET CODE IS: {code}")
+                print("="*40 + "\n")
 
-                flash("A reset code has been sent to your 'email'.")
+                flash("A reset code has been logged to the server terminal.")
                 return render_template('forgot_password.html', email=email, code_sent=True)
+            
             flash("Email not found")
 
         elif action == 'verify_code':
@@ -183,15 +196,18 @@ def forgot_password():
             new_pw = request.form.get('new_password')
 
             if email in reset_codes and reset_codes[email] == user_code:
-                user= User.query.filter_by(email=email).first()
+                user = User.query.filter_by(email=email).first()
                 user.password = generate_password_hash(new_pw)
                 db.session.commit()
+                
                 del reset_codes[email]
-                flash("Password updated successfully.")
+                
+                flash("Password updated successfully. Please log in.")
                 return redirect(url_for('login'))
             else:
-                flash("Inavlid or expired code.")
+                flash("Invalid or incorrect code.")
                 return render_template('forgot_password.html', email=email, code_sent=True)
+                
     return render_template('forgot_password.html')
 
 @app.route('/explore')
@@ -250,8 +266,7 @@ def delete_stall(stall_id):
 @login_required
 def edit_stall(stall_id):
     stall = Stall.query.get_or_404(stall_id)
-    
-    # Security: Ensure only the owner can edit
+
     if stall.manager_id != current_user.id:
         flash("Unauthorized. You can only edit your own stalls.")
         return redirect(url_for('manager_dashboard'))
@@ -290,6 +305,17 @@ def feedback():
         return redirect(url_for('explore'))
         
     return render_template('feedback.html')
+
+@app.route('/manager_feedback', methods=['GET', 'POST'])
+@login_required
+def view_feedback():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only.")
+        return redirect(url_for('explore'))
+        
+    all_feedbacks = Feedback.query.all()
+    
+    return render_template('manager_feedback.html', feedbacks=all_feedbacks)
 
 with app.app_context():
     db.create_all()
