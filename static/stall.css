@@ -33,7 +33,7 @@
   --shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   background: var(--cream);
   color: var(--dark);
   min-height: 100vh;
@@ -53,7 +53,7 @@ nav {
   box-shadow: 0 2px 8px rgba(43, 31, 20, 0.06);
 }
 .nav-logo {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 1rem;
   /*color: var(--orange);*/
 }
@@ -137,7 +137,7 @@ main {
   padding: 0;
   margin-bottom: 20px;
   transition: color 0.15s;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
 }
 .back-btn:hover {
   /*color: var(--orange);*/
@@ -181,7 +181,7 @@ main {
   margin-bottom: 10px;
 }
 .stall-name {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 2rem;
   color: var(--dark);
   border: 2.5px solid var(--dark);
@@ -310,7 +310,7 @@ main {
 .btn {
   padding: 11px 22px;
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
@@ -363,7 +363,7 @@ main {
 }
 /* ── SECTION TITLE ── */
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 1.15rem;
   color: var(--dark);
   margin-bottom: 16px;
@@ -498,7 +498,7 @@ main {
   border-radius: 8px;
   background: var(--cream);
   padding: 10px 12px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 0.88rem;
   color: var(--dark);
   resize: none;
@@ -517,7 +517,7 @@ main {
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 0.88rem;
   font-weight: 800;
   cursor: pointer;

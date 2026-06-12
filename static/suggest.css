@@ -26,7 +26,7 @@
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   background: var(--cream);
   color: var(--dark);
   min-height: 100vh;
@@ -46,14 +46,14 @@ nav {
 }
 
 .nav-logo {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 1.1rem;
   color: var(--nav-text);
   font-weight: 700;
 }
 
 .nav-center {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 1rem;
   font-style: italic;
   color: var(--nav-accent);
@@ -119,7 +119,7 @@ main {
   background: var(--warm-white);
   border: 2.5px solid var(--dark);
   border-radius: 50px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--dark);
@@ -332,7 +332,7 @@ main {
   color: #fff;
   border: none;
   border-radius: 50px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 1rem;
   font-weight: 800;
   cursor: pointer;
@@ -417,7 +417,7 @@ main {
 }
 
 .result-stall-name {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto';
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--dark);
@@ -459,7 +459,7 @@ main {
   background: var(--orange);
   color: #fff;
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 0.9rem;
   font-weight: 800;
   text-decoration: none;
@@ -478,7 +478,7 @@ main {
   color: var(--dark);
   border: 2px solid var(--border);
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto';
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
