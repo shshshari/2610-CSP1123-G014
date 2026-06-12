@@ -12,9 +12,9 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'stfucornball5@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'liMA_127'             
-app.config['MAIL_DEFAULT_SENDER'] = 'stfucornball5@gmail.com'
+app.config['MAIL_USERNAME'] = 'cynthia070607@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'mwet qoaa lqnu ckyv'             
+app.config['MAIL_DEFAULT_SENDER'] = 'cynthia070607@gmail.com'
 
 mail = Mail(app)
 login_manager = LoginManager()
@@ -181,13 +181,18 @@ def forgot_password():
                 code = str(random.randint(100000, 999999))
                 reset_codes[email] = code
 
-                print("\n" + "="*40)
-                print(f"FORGOT PASSWORD CODE GENERATED FOR: {email}")
-                print(f"YOUR 6-DIGIT RESET CODE IS: {code}")
-                print("="*40 + "\n")
-
-                flash("A reset code has been logged to the server terminal.")
-                return render_template('forgot_password.html', email=email, code_sent=True)
+                try:
+                    msg = Message("Your Password Reset Verification Code",
+                                  recipients=[email])
+                    msg.body = f"Hello,\n\nYour 6-digit verification code to reset your password is: {code}\n\nIf you did not request this, please ignore this email."
+                    mail.send(msg)
+                    
+                    flash("Success! Check your real Gmail inbox for the code.")
+                    return render_template('forgot_password.html', email=email, code_sent=True)
+                except Exception as e:
+                    flash("Failed to dispatch email. Check your app password or network.")
+                    print(f"❌ SMTP SERVER FAILURE: {e}")
+                    return render_template('forgot_password.html')
             
             flash("Email not found")
 
@@ -199,7 +204,6 @@ def forgot_password():
                 user = User.query.filter_by(email=email).first()
                 user.password = generate_password_hash(new_pw)
                 db.session.commit()
-                
                 del reset_codes[email]
                 
                 flash("Password updated successfully. Please log in.")
