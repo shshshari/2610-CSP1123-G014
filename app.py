@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify, session
 from reccsystem import recc_bp
 from ratings import ratings_bp
+from flask_mail import Mail, Message
 import random
 import os
 
@@ -22,6 +23,15 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ─── EXTENSIONS ───
 db = SQLAlchemy(app)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'cynthia070607@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'mwet qoaa lqnu ckyv'             
+app.config['MAIL_DEFAULT_SENDER'] = 'cynthia070607@gmail.com'
+
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -71,6 +81,10 @@ class Favourite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Optional: stores who sent it
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -445,6 +459,22 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         action = request.form.get('action')
+def edit_stall(stall_id):
+    stall = Stall.query.get_or_404(stall_id)
+
+    if stall.manager_id != current_user.id:
+        flash("Unauthorized. You can only edit your own stalls.")
+        return redirect(url_for('manager_dashboard'))
+    
+    if request.method == 'POST':
+        stall.name = request.form.get('name')
+        stall.category = request.form.get('category')
+        stall.description = request.form.get('description')
+        stall.location_id = int(request.form.get('location_id'))
+        stall.price_range = request.form.get('price_range')
+        db.session.commit()
+        flash("Stall updated successfully!")
+        return redirect(url_for('manager_dashboard'))
 
         if action == 'send_code':
             user = User.query.filter_by(email=email).first()
@@ -552,6 +582,48 @@ def quiz():
     return render_template('suggest.html')
 
 # ─── DB INIT & RUN WITH ALTER-PATCH ───
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        user_msg = request.form.get('comment')
+        
+        if not user_msg or user_msg.strip() == "":
+            flash("Feedback text cannot be empty!")
+            return redirect(url_for('feedback'))
+            
+        # Save only the text message to the independent Feedback table
+        new_fb = Feedback(
+            content=user_msg,
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+        db.session.add(new_fb)
+        db.session.commit()
+        
+        flash("Thank you! Your feedback has been recorded.")
+        return redirect(url_for('explore'))
+        
+    return render_template('feedback.html')
+
+@app.route('/manager_feedback', methods=['GET', 'POST'])
+@login_required
+def view_feedback():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only.")
+        return redirect(url_for('explore'))
+        
+    all_feedbacks = Feedback.query.all()
+    
+    return render_template('manager_feedback.html', feedbacks=all_feedbacks)
+
+with app.app_context():
+    db.create_all()
+    if not Location.query.first():
+        buildings = ["Starbees MMU (Main)", "FCI Building", "FOE Building", "Library area"]
+        for b in buildings:
+            db.session.add(Location(name=b))
+        db.session.commit()
+        print("Database Initialized with Buildings.")
+        
 if __name__ == '__main__':
     os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
     with app.app_context():
