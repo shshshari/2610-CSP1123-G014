@@ -7,6 +7,9 @@ from flask import jsonify, session
 from reccsystem import recc_bp
 from ratings import ratings_bp
 from flask_mail import Mail, Message
+from datetime import datetime, timedelta
+from flask import abort
+from functools import wraps
 import random
 import os
 
@@ -89,6 +92,17 @@ class Feedback(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def role_required(allowed_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or current_user.role not in allowed_roles:
+                flash("Access denied. You do not have permission to view this page.")
+                return redirect(url_for('home'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 
 # ─── ROUTES ───
@@ -206,7 +220,6 @@ def login():
 
     return render_template('logreg.html')
 
-# here
 @app.route('/logout')
 @login_required
 def logout():
@@ -217,6 +230,7 @@ def logout():
 
 @app.route('/manager_dashboard')
 @login_required
+@role_required(['manager'])
 def manager_dashboard():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
@@ -300,6 +314,7 @@ def delete_review(review_id):
 
 @app.route('/add_stall', methods=['GET', 'POST'])
 @login_required
+@role_required(['manager'])
 def add_stall():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
@@ -358,6 +373,7 @@ def edit_profile():
 
 @app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
 @login_required
+@role_required(['manager'])
 def edit_stall(stall_id):
     stall = Stall.query.get_or_404(stall_id)
     if stall.manager_id != current_user.id and current_user.role.lower() != 'admin':
@@ -459,48 +475,47 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         action = request.form.get('action')
-def edit_stall(stall_id):
-    stall = Stall.query.get_or_404(stall_id)
-
-    if stall.manager_id != current_user.id:
-        flash("Unauthorized. You can only edit your own stalls.")
-        return redirect(url_for('manager_dashboard'))
-    
-    if request.method == 'POST':
-        stall.name = request.form.get('name')
-        stall.category = request.form.get('category')
-        stall.description = request.form.get('description')
-        stall.location_id = int(request.form.get('location_id'))
-        stall.price_range = request.form.get('price_range')
-        db.session.commit()
-        flash("Stall updated successfully!")
-        return redirect(url_for('manager_dashboard'))
 
         if action == 'send_code':
             user = User.query.filter_by(email=email).first()
             if user:
                 code = str(random.randint(100000, 999999))
-                reset_codes[email] = code
-                print(f"\n--- EMAIL SENT TO {email} ---")
-                print(f"Your Reset Code is: {code}")
-                print("-------------------------------\n")
+                expiration_time = datetime.now() + timedelta(minutes=5)
+                
+                # Save as a tuple
+                reset_codes[email] = (code, expiration_time)
+                
+                print(f"DEBUG: Sent code {code} to {email}. Expires at {expiration_time}")
                 flash("A reset code has been sent to your email.", "reset")
                 return render_template('forgot_password.html', email=email, code_sent=True)
+            
             flash("Email not found.")
+            return render_template('forgot_password.html')
 
         elif action == 'verify_code':
             user_code = request.form.get('code')
             new_pw = request.form.get('new_password')
-            if email in reset_codes and reset_codes[email] == user_code:
-                user = User.query.filter_by(email=email).first()
-                user.password = generate_password_hash(new_pw)
-                db.session.commit()
-                del reset_codes[email]
-                flash("Password updated successfully.")
-                return redirect(url_for('login'))
-            else:
-                flash("Invalid or expired code.", "reset")
-                return render_template('forgot_password.html', email=email, code_sent=True)
+            
+            if email in reset_codes:
+                saved_code, expires_at = reset_codes[email]
+                
+                if datetime.now() > expires_at:
+                    del reset_codes[email]
+                    flash("Verification code has expired. Please request a new one.", "reset")
+                    return redirect(url_for('forgot_password'))
+                
+                if saved_code == user_code:
+                    user = User.query.filter_by(email=email).first()
+                    user.password = generate_password_hash(new_pw)
+                    db.session.commit()
+                    
+                    del reset_codes[email] 
+                    flash("Password updated successfully.")
+                    return redirect(url_for('login'))
+            
+            flash("Invalid or expired code.", "reset")
+            return render_template('forgot_password.html', email=email, code_sent=True)
+            
     return render_template('forgot_password.html')
 
 
@@ -606,6 +621,7 @@ def feedback():
 
 @app.route('/manager_feedback', methods=['GET', 'POST'])
 @login_required
+@role_required(['manager'])
 def view_feedback():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
