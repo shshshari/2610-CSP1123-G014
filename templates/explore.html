@@ -1,63 +1,78 @@
-<h2>Explore MMU Stalls</h2>
+{% extends "base.html" %}
 
-<form action="{{ url_for('explore') }}" method="GET">
-    <div class="form-group">
-        <input type="text" name="search" placeholder="Search stall names (e.g., He & She)..." value="{{ request.args.get('search', '') }}">
-    </div>
+{% block title %}Explore Stalls{% endblock %}
 
-    <select name="category">
-        <option value="">All Categories</option>
-        {% for cat in categories %}
-            <option value="{{ cat }}">{{ cat }}</option>
-        {% endfor %}
-    </select>
+{% block body_class %}page-explore{% endblock %}
 
-    <select name="location">
-        <option value="">All Locations</option>
-        {% for loc in locations %}
-            <option value="{{ loc.id }}">{{ loc.name }}</option>
-        {% endfor %}
-    </select>
+{% block content %}
+<main class="page-layout">
+    <aside class="sidebar">
+        <h3 class="sidebar-title">Filters</h3>
+        <form action="{{ url_for('explore') }}" method="GET">
+            <div class="filter-group">
+                <label class="filter-label">Category</label>
+                <select name="category">
+                    <option value="">All</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Price Range</label>
+                <select name="price_range">
+                    <option value="">All Prices</option>
+                    <option value="Under RM10" {% if request.args.get('price_range') == 'Under RM10' %}selected{% endif %}>Under RM10</option>
+                    <option value="RM10 - RM20" {% if request.args.get('price_range') == 'RM10 - RM20' %}selected{% endif %}>RM10 - RM20</option>
+                    <option value="Above RM20" {% if request.args.get('price_range') == 'Above RM20' %}selected{% endif %}>Above RM20</option>
+                </select>
+            </div>
 
-    <div class="form-group">
-        <label for="price_range">Price Tier:</label>
-        <select name="price_range" id="price_range">
-            <option value="">-- All Prices --</option>
-            <option value="$" {% if request.args.get('price_range') == '$' %}selected{% endif %}>$ (Under RM10)</option>
-            <option value="$$" {% if request.args.get('price_range') == '$$' %}selected{% endif %}>$$ (RM10 - RM20)</option>
-            <option value="$$$" {% if request.args.get('price_range') == '$$$' %}selected{% endif %}>$$$ (Above RM20)</option>
-        </select>
-    </div>
-    <div class="stall-grid">
-    {% for stall in stalls %}
-    <div class="stall-card">
-        <h3>{{ stall.name }}</h3>
-        <p class="category">{{ stall.category }}</p>
-        
-        <p class="price-indicator">
-            <strong>Price range: </strong>
-            {% if stall.price_range == '$' %}
-                <span class="badge badge-low">(Under RM10)</span>
-            {% elif stall.price_range == '$$' %}
-                <span class="badge badge-mid">(RM10 - RM20)</span>
-            {% elif stall.price_range == '$$$' %}
-                <span class="badge badge-high">(Above RM20)</span>
-            {% else %}
-                <span class="badge badge-unknown">N/A</span>
-            {% endif %}
-        </p>
-        
-        <p>{{ stall.description }}</p>
-    </div>
-    {% else %}
-    <div class="no-results">
-        <p>No campus stalls match your search or price criteria.</p>
-    </div>
-    {% endfor %}
+            <div class="filter-group">
+                <label class="filter-label">Min Rating</label>
+                <select name="rating">
+                    <option value="">Any Rating</option>
+                    <option value="4" {% if request.args.get('rating') == '4' %}selected{% endif %}>4+ Stars</option>
+                    <option value="3" {% if request.args.get('rating') == '3' %}selected{% endif %}>3+ Stars</option>
+                </select>
+<div class="filter-actions">
+    <button type="submit" class="apply-btn">Apply Filters</button>
+    <a href="{{ url_for('explore') }}" class="reset-btn">Reset</a>
 </div>
-    <div class="form-group">
-        <button type="submit" class="btn-search">Search & Filter</button>
-        <a href="{{ url_for('explore') }}" class="btn-clear">Reset All</a>
-    </div>
-</form>
+        </form>
+    </aside>
 
+    <section class="search-main">
+        <form action="{{ url_for('explore') }}" method="GET" class="search-bar-wrapper">
+            <i class="search-icon">🔍</i>
+            <input type="text" name="search" class="search-input" placeholder="Search stall names..." value="{{ request.args.get('search', '') }}">
+        </form>
+
+        <div class="stall-list">
+            {% for stall in stalls %}
+                <div class="stall-card">
+                    <div class="stall-card-left">
+                        <div class="stall-thumb">
+                            {% if stall.image_file and stall.image_file != 'default_stall.jpg' %}
+                                <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="Default Stall">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h3 class="stall-name">{{ stall.name }}</h3>
+                            <p class="stall-cat">{{ stall.category }}</p>
+                            <p class="stall-price">Price: <span>{{ stall.price_range }}</span></p>
+                        </div>
+                    </div>
+                    <div class="stall-card-right">
+                        <a href="{{ url_for('stall_details', stall_id=stall.id) }}" class="view-btn">View</a>
+                    </div>
+                </div>
+            {% else %}
+                <p>No stalls found.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

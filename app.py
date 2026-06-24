@@ -95,9 +95,19 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/home')
 def home():
-    raw_categories = db.session.query(Stall.category.distinct()).all()
-    categories_list = [c[0] for c in raw_categories if c[0]]
-
+    from sqlalchemy import func
+    reviewed_stall_ids = db.session.query(Review.stall_id).distinct()
+    featured_stalls = db.session.query(Stall) \
+        .join(Review) \
+        .filter(Stall.id.in_(reviewed_stall_ids)) \
+        .group_by(Stall.id) \
+        .order_by(func.avg(Review.rating).desc()) \
+        .limit(4).all()
+    if not featured_stalls:
+        featured_stalls = Stall.query.limit(4).all()
+    
+    categories = db.session.query(Stall.category).distinct().all()
+    categories_list = [c[0] for c in categories if c[0]]
     query = request.args.get('q', '')
     selected_category = request.args.get('category')
     selected_price = request.args.get('price_range')
@@ -115,6 +125,11 @@ def home():
         pass
     stalls = stall_query.all()
 
+    if not query and not selected_category and not selected_price:
+        display_stalls = featured_stalls
+    else:
+        display_stalls = stalls
+
     user_fav_ids = [] 
     if current_user.is_authenticated:
         favs = Favourite.query.filter_by(user_id=current_user.id).all()
@@ -122,13 +137,15 @@ def home():
 
     return render_template(
                 'homepage1.html', 
-                stalls=stalls, 
+                stalls=display_stalls, 
+                featured_stalls=featured_stalls,
                 user_fav_ids=user_fav_ids,
                 categories=categories_list,
                 selected_category=selected_category,
                 selected_price=selected_price,
                 selected_rating=selected_rating,
-                search_query=query
+                search_query=query,
+                
     )
 
 @app.route('/toggle_favorite/<int:stall_id>', methods=['POST'])
@@ -196,6 +213,7 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
+            session['role'] = user.role
             flash(f"Welcome back, {user.email}!")
             if user.role == 'manager':
                 return redirect(url_for('manager_dashboard'))
@@ -410,16 +428,24 @@ def delete_stall(stall_id):
 
 @app.route('/explore')
 def explore():
+    from sqlalchemy import func
+
+    query = db.session.query(
+        Stall,
+        func.avg(Review.rating).label('avg_rating')
+    ).outerjoin(Review).group_by(Stall.id)
+
     cat_filter = request.args.get('category')
     loc_filter = request.args.get('location')
     ftype = request.args.get('food_type')
     price = request.args.get('price_range')
     search = request.args.get('search')
+    rating_filter = request.args.get('rating')
 
-    query = Stall.query
-
+    if rating_filter:
+      query = query.having(func.avg(Review.rating) >= float(rating_filter))
     if cat_filter:
-        query = query.filter(Stall.category == cat_filter)
+        query = query.filter(func.lower(Stall.category) == cat_filter.lower())
     if loc_filter:
         query = query.filter(Stall.location_id == loc_filter)
     if ftype:
@@ -429,13 +455,19 @@ def explore():
     if search:
         query = query.filter(Stall.name.contains(search))
 
-    stalls = query.all()
-    locations = Location.query.all()
+    results = query.all()
 
+    processed_stalls = []
+    for stall, avg_rating in results:
+               
+        stall.rating = avg_rating if avg_rating else 0
+        processed_stalls.append(stall)
+
+    locations = Location.query.all()
     categories = db.session.query(Stall.category).distinct().all()
     categories = [c[0] for c in categories if c[0]]
 
-    return render_template('explore.html', stalls=stalls, locations=locations, categories=categories)
+    return render_template('explore.html', stalls=processed_stalls, locations=locations, categories=categories)
 
 
 @app.route('/profile')
@@ -459,22 +491,6 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         action = request.form.get('action')
-def edit_stall(stall_id):
-    stall = Stall.query.get_or_404(stall_id)
-
-    if stall.manager_id != current_user.id:
-        flash("Unauthorized. You can only edit your own stalls.")
-        return redirect(url_for('manager_dashboard'))
-    
-    if request.method == 'POST':
-        stall.name = request.form.get('name')
-        stall.category = request.form.get('category')
-        stall.description = request.form.get('description')
-        stall.location_id = int(request.form.get('location_id'))
-        stall.price_range = request.form.get('price_range')
-        db.session.commit()
-        flash("Stall updated successfully!")
-        return redirect(url_for('manager_dashboard'))
 
         if action == 'send_code':
             user = User.query.filter_by(email=email).first()
@@ -585,15 +601,18 @@ def quiz():
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
-        user_msg = request.form.get('comment')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        category = request.form.get('category')
+        message = request.form.get('message')
         
-        if not user_msg or user_msg.strip() == "":
+        if not message or message.strip() == "":
             flash("Feedback text cannot be empty!")
             return redirect(url_for('feedback'))
             
         # Save only the text message to the independent Feedback table
         new_fb = Feedback(
-            content=user_msg,
+            content=f"Category: {category} | Message: {message}",
             user_id=current_user.id if current_user.is_authenticated else None
         )
         db.session.add(new_fb)
@@ -644,7 +663,6 @@ if __name__ == '__main__':
                 db.session.add(Location(name=b))
             db.session.commit()
             print("Database initialized with buildings.")
-
 
         #if not Stall.query.first():
            # loc = Location.query.first()

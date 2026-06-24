@@ -1,37 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager - View Feedbacks</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px;">
+{% extends "base.html" %}
 
-    <div style="max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1c4273; padding-bottom: 10px; margin-bottom: 20px;">
-            <h2 style="margin: 0; color: #1c4273;">User Feedbacks & Suggestions</h2>
-            <a href="{{ url_for('manager_dashboard') }}" style="text-decoration: none; background: #1c4273; color: white; padding: 8px 16px; border-radius: 4px; font-size: 14px; font-weight: bold;">Back to Dashboard</a>
+{% block title %}View Feeback{% endblock %}
+
+{% block body_class %}page-viewfeedback{% endblock %}
+
+{% block content %}
+<body class="page-feedback">
+    <div class="feedback-container">
+        <div class="feedback-header">
+            <h2>User Feedbacks & Suggestions</h2>
+            <a href="{{ url_for('manager_dashboard') }}" class="back-btn">Back to Dashboard</a>
         </div>
 
         {% if feedbacks %}
-            <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="feedback-list">
                 {% for fb in feedbacks %}
-                    <div style="padding: 15px; background: #fdfdfd; border-left: 5px solid #1c4273; border-top: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; border-radius: 0 4px 4px 0;">
-                        <p style="margin: 0; color: #333; font-size: 15px; line-height: 1.5; white-space: pre-line;">
-                            "{{ fb.content }}"
-                        </p>
-                        <small style="display: block; margin-top: 8px; color: #777;">
+                    <div class="feedback-item">
+                        <p class="feedback-content">"{{ fb.content }}"</p>
+                        <small class="feedback-meta">
                             Submitted by User ID: {{ fb.user_id if fb.user_id else "Anonymous" }}
                         </small>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p style="text-align: center; color: #777; padding: 40px 0;">No system feedbacks have been submitted yet.</p>
+            <p class="no-feedback">No system feedbacks have been submitted yet.</p>
         {% endif %}
-
     </div>
-
 </body>
-</html>
+{% endblock %}

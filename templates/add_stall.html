@@ -1,80 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Stall - MMU Food Finder</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
-</head>
-<body class="add-stall-body"> 
-    <header>
-        <div class="container">
-            <h1 class="logo">MMU Food Recommender</h1>
-            <nav>
-                <ul class="nav-list">
-                    <li><a href="{{ url_for('manager_dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+{% extends 'base.html' %}
 
-    <div class="add-stall-page"> 
-        <main>
-            <h2>Register a New Food Stall</h2>
+{% block title %}Add New Stall - MMU Food Finder{% endblock %}
+{% block body_class %}page-addstall{% endblock %}
+{% block content %}
+<main class="page-addstall">
+    <div class="form-wrapper">
+        <h2>Register a New Food Stall</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Stall Name:</label>
+                <input type="text" name="name" placeholder="e.g., Sis Corner" required>
+            </div>
             
-            <form method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Stall Name:</label>
-                    <input type="text" name="name" placeholder="e.g., Sis Corner" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Building/Area:</label>
-                    <select name="location_id" required>
-                        {% for loc in locations %}
-                            <option value="{{ loc.id }}">{{ loc.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Building/Area:</label>
+                <select name="location_id" required>
+                    {% for loc in locations %}
+                        <option value="{{ loc.id }}">{{ loc.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-                <div class="form-group">
-                    <label>Specific Spot/Unit Number:</label>
-                    <input type="text" name="sub_location" placeholder="e.g., Level 1, Kiosk A" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Category:</label>
-                    <input type="text" name="category" placeholder="e.g., Malay, Nasi Lemak" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Description:</label>
-                    <textarea name="description" placeholder="Signature dish recommendations, operating hours, etc..."></textarea>
-                </div>
+            <div class="form-group">
+                <label>Specific Spot/Unit Number:</label>
+                <input type="text" name="sub_location" placeholder="e.g., Level 1, Kiosk A" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Category:</label>
+                <input type="text" name="category" placeholder="e.g., Malay, Nasi Lemak" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea name="description" placeholder="Signature dish recommendations, operating hours, etc..."></textarea>
+            </div>
 
-                <div class="form-group">
-                    <label for="price_range">Price Range:</label>
-                    <select name="price_range" id="price_range" required>
-                        <option value="Under RM10">Cheap ($) - Under RM10</option>
-                        <option value="RM10 - RM20" selected>Moderate ($$) - RM10-RM20</option>
-                        <option value="Above RM20">Expensive ($$$) - Above RM20</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Stall Cover Image:</label>
-                    <input type="file" name="image_file" accept="image/*" style="border: none; padding-left: 0;">
-                    <small style="color: #777; display: block; margin-top: 4px; font-size: 12px;">Leaves default placeholder image if left empty.</small>
-                </div>
-                
-                <div class="actions-div">
-                    <a href="{{ url_for('manager_dashboard') }}" class="back-link">Cancel</a>
-                    <button type="submit">Add Stall</button>
-                </div>
-            </form>
-        </main>
+            <div class="form-group">
+                <label for="price_range">Price Range:</label>
+                <select name="price_range" id="price_range" required>
+                    <option value="Under RM10">Cheap ($) - Under RM10</option>
+                    <option value="RM10 - RM20" selected>Moderate ($$) - RM10-RM20</option>
+                    <option value="Above RM20">Expensive ($$$) - Above RM20</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Stall Cover Image:</label>
+                <input type="file" name="image_file" accept="image/*">
+                <small>Leaves default placeholder image if left empty.</small>
+            </div>
+            
+            <div class="actions-div">
+                <a href="{{ url_for('manager_dashboard') }}" class="back-link">Cancel</a>
+                <button type="submit">Add Stall</button>
+            </div>
+        </form>
     </div>
-</body>
-</html>
+</main>
+{% endblock %}

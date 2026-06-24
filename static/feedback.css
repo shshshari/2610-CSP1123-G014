@@ -1,0 +1,73 @@
+/* --- Global Reset & Base --- */
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+
+/* --- Layout Containers --- */
+/* This is the key: it keeps the header and the main content exactly the same width */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* --- Header --- */
+header { background: #1c4273; border-bottom: 2px solid #eee; padding: 15px 0; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; }
+.logo { color: #fff; flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.2rem; margin: 0; }
+.logo img { height: 46px; }
+
+/* Nav */
+.nav-list { display: flex; list-style: none; gap: 20px; margin: 0; padding: 0; }
+.nav-list a { text-decoration: none; color: #ffffff; font-weight: 500; }
+.nav-right-group { display: flex; align-items: center; gap: 20px; }
+
+
+.nav-list a, 
+.dropdown-menu a, 
+.nav-right-group a {
+    color: white !important; 
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Hamburger Menu */
+#menu-toggle { display: none; }
+.hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
+.hamburger span { width: 25px; height: 3px; background: #ffffff; }
+.dropdown-menu { display: none; position: absolute; right: 90px; top: 70px; background: #1c4273; border: 1px solid #ddd; padding: 15px; flex-direction: column; gap: 10px; z-index: 1000; }
+#menu-toggle:checked ~ .dropdown-menu { display: flex; }
+.dropdown-menu a {
+    color: #ffffff; /* Keep this black if it's on a white dropdown background */
+}
+/* --- Main Section --- */
+main.container {
+    padding: 20px;
+    display: block;
+    flex-direction: column;
+    align-items: center; /* This centers the children horizontally */
+}
+.button-center-wrapper {
+    display: flex;
+    justify-content: center; /* This handles the centering */
+    margin-top: 20px;
+    width: 100%;
+}
+.back-btn {
+    background-color: #31109e;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* --- Feedback Wrapper --- */
+.feedback-wrapper { max-width: 600px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+/* Form Styling */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+.star-rating { cursor: pointer; font-size: 1.8rem; color: #ddd; }
+.star-rating span.active { color: #f39c12; }
+.submit-btn { width: 100%; padding: 15px; background: #31109e; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1rem; }
+
+/* --- Footer --- */
+footer { text-align: center; padding: 30px; color: #777; border-top: 1px solid #ddd; margin-top: 40px; }

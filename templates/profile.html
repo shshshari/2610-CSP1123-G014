@@ -1,38 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profile Page - MMU Food Recommender</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1 class="logo">Logo</h1>
- 
-            <h2 class="page-title">Profile Page</h2>
-            <div class="nav-right">
-                <span class="profile-label">Profile</span>
-                <label class="hamburger" for="menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </label>
-                <input type="checkbox" id="menu-toggle">
-                <div class="dropdown-menu">
-                    <a href="{{ url_for('home') }}">Home</a>
-                    <a href="{{ url_for('logout') }}">Sign Out</a>
-                </div>
-            </div>
-        </div>
-    </header>
+{% extends "base.html" %}
 
+{% block title %}Profile{% endblock %}
+
+{% block body_class %}page-profile{% endblock %}
+
+{% block content %}
+<body class="profile-page-container">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div style="max-width: 800px; margin: 15px auto; padding: 10px 15px; background: #d4edda; color: #155724; border-radius: 6px; text-align: center; font-weight: 500; font-size: 14px; border: 1px solid #c3e6cb;">
+        <div class="flash-alert">
           {% for message in messages %} {{ message }} {% endfor %}
         </div>
       {% endif %}
@@ -40,133 +16,67 @@
 
     <section class="profile-section">
         <div class="profile-card">
-            
-            <div class="avatar" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #eee;">
+            <div class="avatar">
                 {% if current_user.avatar_file == 'default_avatar.png' or not current_user.avatar_file %}
-                    <i class="fa fa-user" style="font-size: 40px; color: #888;"></i>
+                    <i class="fa fa-user"></i>
                 {% else %}
-                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar_file) }}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar_file) }}" alt="Profile Picture">
                 {% endif %}
             </div>
             
-            <div class="profile-info" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                <h2 class="profile-name" style="font-size: 26px; margin: 0 0 4px 0; font-weight: 600; color: #333; text-transform: capitalize;">
-                    {{ current_user.name if current_user.name else "No Name Provided" }}
-                </h2>
-                
-                <p class="profile-email" style="font-size: 14px; margin: 0 0 12px 0; color: #666; font-weight: 400;">
-                    {{ current_user.email }}
-                </p>
-
-                <p class="profile-bio" style="text-transform: capitalize; font-size: 13px; background: #f0f0f0; padding: 2px 8px; border-radius: 4px; margin: 0 0 15px 0; color: #555;">
-                    Role: {{ current_user.role }}
-                </p>
+            <div class="profile-info">
+                <h2 class="profile-name">{{ current_user.name or "No Name Provided" }}</h2>
+                <p class="profile-email">{{ current_user.email }}</p>
+                <p class="profile-bio">Role: {{ current_user.role }}</p>
             </div>
             
-            <div class="profile-actions" style="display: flex; gap: 10px;">
+            <div class="profile-actions">
                 <button class="btn-edit" onclick="openEditModal()">Edit Profile</button>
-                <button class="btn-logout"><a href="{{ url_for('logout') }}" style="color: inherit; text-decoration: none;">Logout</a></button>
+                <button class="btn-logout"><a href="{{ url_for('logout') }}">Logout</a></button>
             </div>
         </div>
     </section>
 
     <section class="bottom-section">
- 
         <div class="column">
             <h3 class="column-title">- Fav Stalls -</h3>
-            <div class="stalls-list" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="stalls-list">
                 {% if fav_stalls %}
                     {% for stall in fav_stalls %}
-                        <a href="{{ url_for('stall_details', stall_id=stall.id) }}" style="text-decoration: none; color: inherit;">
-                            <div class="fav-stall-card" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;">
-                                
-                                {% if stall.image_file == 'default_stall.jpg' %}
-                                    <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
-                                {% else %}
-                                    <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
-                                {% endif %}
-
+                        <a href="{{ url_for('stall_details', stall_id=stall.id) }}" class="fav-stall-link">
+                            <div class="fav-stall-card">
+                                <img src="{{ url_for('static', filename='uploads/' + stall.image_file if stall.image_file != 'default_stall.jpg' else 'default_stall.jpg') }}" alt="{{ stall.name }}">
                                 <div>
-                                    <h4 style="margin: 0 0 5px 0; font-size: 16px;">{{ stall.name }}</h4>
-                                    <span style="font-size: 12px; background: #eee; padding: 3px 8px; border-radius: 12px; text-transform: capitalize;">{{ stall.category }}</span>
+                                    <h4>{{ stall.name }}</h4>
+                                    <span class="category-badge">{{ stall.category }}</span>
                                 </div>
                             </div>
                         </a>
                     {% endfor %}
                 {% else %}
-                    <p style="color: #777; font-style: italic; text-align: center; padding: 20px;">No favorite stalls added yet.</p>
+                    <p class="empty-list">No favorite stalls added yet.</p>
                 {% endif %}
             </div>
         </div>
- 
+
         <div class="column">
             <h3 class="column-title">- My Reviews -</h3>
-            <div class="reviews-list" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="reviews-list">
                 {% if reviews %}
                     {% for review in reviews %}
-                        <a href="{{ url_for('stall_details', stall_id=review.stall_id) }}#review-card-{{ review.id }}" class="clickable-review-wrapper" style="text-decoration: none; color: inherit; display: block;">
-                            <div class="review-card" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.2s ease; cursor: pointer;">
-                                <h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333; display: flex; justify-content: space-between; align-items: center;">
-                                    <span>Review for: {{ review.stall.name }}</span>
-                                    <small style="color: #007bff; font-size: 11px; font-weight: normal;">View →</small>
-                                </h4>
-                                
-                                <div class="stars" style="color: #ffcc00; margin-bottom: 8px;">
-                                    {% for i in range(review.rating) %}⭐{% endfor %}
-                                </div>
-                                
-                                <p style="margin: 0; font-size: 14px; color: #666; font-style: italic;">"{{ review.comment }}"</p>
+                        <a href="{{ url_for('stall_details', stall_id=review.stall_id) }}#review-card-{{ review.id }}" class="clickable-review-wrapper">
+                            <div class="review-card">
+                                <h4><span>Review for: {{ review.stall.name }}</span> <small>View →</small></h4>
+                                <div class="stars">{% for i in range(review.rating) %}⭐{% endfor %}</div>
+                                <p>"{{ review.comment }}"</p>
                             </div>
                         </a>
                     {% endfor %}
                 {% else %}
-                    <p style="color: #777; font-style: italic; text-align: center; padding: 20px;">You haven't written any reviews yet.</p>
+                    <p class="empty-list">You haven't written any reviews yet.</p>
                 {% endif %}
             </div>
         </div>
- 
     </section>
-
-    <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 9999;">
-        <div style="background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); box-sizing: border-box;">
-            <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 20px; color: #333;">Edit Profile Info</h3>
-            
-            <form action="{{ url_for('edit_profile') }}" method="POST" enctype="multipart/form-data">
-                
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #555;">Full Name:</label>
-                    <input type="text" name="name" value="{{ current_user.name if current_user.name else '' }}" placeholder="Enter your name" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px;">
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #555;">Profile Picture:</label>
-                    <input type="file" name="avatar_image" accept="image/*" style="font-size: 13px;">
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" onclick="closeEditModal()" style="background: #e0e0e0; color: #333; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">Cancel</button>
-                    <button type="submit" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-    function openEditModal() {
-        document.getElementById('editProfileModal').style.display = 'flex';
-    }
-    function closeEditModal() {
-        document.getElementById('editProfileModal').style.display = 'none';
-    }
-    </script>
-
-    <style>
-        .clickable-review-wrapper:hover .review-card {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            border-color: #ddd;
-        }
-    </style>
-
 </body>
-</html>
+{% endblock %}

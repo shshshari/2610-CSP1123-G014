@@ -1,179 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMU Food Vibe Finder</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
-</head>
-<body style="background: #f7f9fc; font-family: sans-serif; margin: 0; padding: 20px;">
-    <div style="max-width: 800px; margin: 0 auto;">
+{% extends 'base.html' %}
 
-        <!-- ================= STAGE 1: DISPLAY THE QUIZ QUESTIONNAIRE ================= -->
+{% block title %}MMU Food Vibe Finder{% endblock %}
+{% block body_class %}page-quiz{% endblock %}
+{% block content %}
+<main class="page-quiz">
+    <div>
         {% if not vibe_name %}
-        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            
-            <!-- Compact Header Row -->
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 25px;">
-                <div style="text-align: left;">
-                    <h1 style="color: #1a73e8; margin: 0; font-size: 24px; font-weight: 700;">MMU Campus Archetype Test</h1>
-                    <p style="color: #666; margin: 4px 0 0 0; font-size: 13px;">Answer the questions below to extract your current mood match.</p>
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <div>
+                    <h1>MMU Campus Archetype Test</h1>
+                    <p>Answer the questions below to extract your current mood match.</p>
                 </div>
-                <a href="{{ url_for('home') }}" style="color: #555; text-decoration: none; font-size: 13px; font-weight: 500; border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; background: #fafafa; white-space: nowrap;">
-                    🏠 Back Home
-                </a>
+                <a href="{{ url_for('home') }}">🏠 Back Home</a>
             </div>
-            
-            <form action="{{ url_for('quiz') }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
-                
-                <!-- Q1 -->
-                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">1. If you had to delete one social media platform forever, which one goes?</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="fandom" value="tiktok" checked style="margin-right: 6px;"> TikTok — My attention span needs saving anyway.
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="fandom" value="instagram" style="margin-right: 6px;"> Instagram — Tired of seeing people's perfect vacation photos.
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="fandom" value="twitter" style="margin-right: 6px;"> X / Twitter — Too much arguing, my brain hurts.
-                    </label>
+
+            <form action="{{ url_for('quiz') }}" method="POST" class="quiz-form">
+                <div class="q-block">
+                    <h3>1. If you had to delete one social media platform forever, which one goes?</h3>
+                    <label><input type="radio" name="fandom" value="tiktok" checked> TikTok</label>
+                    <label><input type="radio" name="fandom" value="instagram"> Instagram</label>
+                    <label><input type="radio" name="fandom" value="twitter"> X / Twitter</label>
                 </div>
 
-                <!-- Q2 -->
-                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">2. Choose your current psychological battery state:</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="mood" value="chill" checked style="margin-right: 6px;"> Calm and chill — I just want to relax somewhere with a peaceful drink.
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="mood" value="stressed" style="margin-right: 6px;"> Panicked/Stressed — Assignments are breaking me, I need heavy comfort food.
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="mood" value="social" style="margin-right: 6px;"> Energetic and chatty — Gathering the campus squad for a big lunch hang out.
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="mood" value="hurry" style="margin-right: 6px;"> Complete emergency — My next class starts in minutes, I need a fast grab-and-go speedrun.
-                    </label>
+                <div class="q-block">
+                    <h3>2. Choose your current psychological battery state:</h3>
+                    <label><input type="radio" name="mood" value="chill" checked> Calm and chill</label>
+                    <label><input type="radio" name="mood" value="stressed"> Panicked/Stressed</label>
+                    <label><input type="radio" name="mood" value="social"> Energetic and chatty</label>
+                    <label><input type="radio" name="mood" value="hurry"> Complete emergency</label>
                 </div>
 
-                <!-- Q3 -->
-                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">3. If Cyberjaya suddenly had extreme seasonal weather, what are you picking?</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="weather" value="snow" checked style="margin-right: 6px;"> Heavy snow storm (Wearing massive winter jackets to class)
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="weather" value="leaves" style="margin-right: 6px;"> Cozy orange autumn (Leaves falling everywhere outside the library)
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="weather" value="sun" style="margin-right: 6px;"> Perpetual bright summer (Exactly how it already is right now)
-                    </label>
+                <div class="q-block">
+                    <h3>3. If Cyberjaya suddenly had extreme seasonal weather, what are you picking?</h3>
+                    <label><input type="radio" name="weather" value="snow" checked> Heavy snow storm</label>
+                    <label><input type="radio" name="weather" value="leaves"> Cozy orange autumn</label>
+                    <label><input type="radio" name="weather" value="sun"> Perpetual bright summer</label>
                 </div>
 
-                <!-- Q4 -->
-                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">4. Realistically, how are your digital bank balances looking at this exact second?</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="budget" value="low" checked style="margin-right: 6px;"> Broke student mode (Keep it strictly Under RM10)
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="budget" value="medium" style="margin-right: 6px;"> Standard average day budget (Around RM10 - RM20 is fine)
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="budget" value="high" style="margin-right: 6px;"> Treat yourself day! I am spending premium allowances (Above RM20)
-                    </label>
+                <div class="q-block">
+                    <h3>4. Realistically, how are your digital bank balances looking?</h3>
+                    <label><input type="radio" name="budget" value="low" checked> Broke student mode</label>
+                    <label><input type="radio" name="budget" value="medium"> Standard average</label>
+                    <label><input type="radio" name="budget" value="high"> Treat yourself</label>
                 </div>
 
-                <!-- Q5 -->
-                <div style="border-bottom: 1px solid #f5f5f5; padding-bottom: 15px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">5. What is your preferred, ultimate style of procrastinating assignments?</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="study" value="nap" checked style="margin-right: 6px;"> Clean my entire bedroom floor and take a mandatory 3-hour nap.
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="study" value="show" style="margin-right: 6px;"> Start watching a brand new 10-episode drama series from the beginning.
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="study" value="stare" style="margin-right: 6px;"> Open the blank document file, stare at the cursor blinking, then close it.
-                    </label>
+                <div class="q-block">
+                    <h3>5. What is your preferred, ultimate style of procrastinating assignments?</h3>
+                    <label><input type="radio" name="study" value="nap" checked> Clean room and nap</label>
+                    <label><input type="radio" name="study" value="show"> Watch new drama</label>
+                    <label><input type="radio" name="study" value="stare"> Stare at cursor</label>
                 </div>
 
-                <!-- Q6 -->
-                <div style="padding-bottom: 5px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333;">6. Pick an animal avatar to guide your dining journey:</h3>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="animal" value="cat" checked style="margin-right: 6px;"> A dramatic sleepy cat 🐱
-                    </label>
-                    <label style="display: block; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="animal" value="capybara" style="margin-right: 6px;"> A completely unbothered, zen Capybara 🧘
-                    </label>
-                    <label style="display: block; margin-bottom: 0; cursor: pointer; font-size: 13px; color: #444;">
-                        <input type="radio" name="animal" value="raccoon" style="margin-right: 6px;"> A dumpster-diving trash raccoon full of pure chaos 🦝
-                    </label>
+                <div class="q-block">
+                    <h3>6. Pick an animal avatar:</h3>
+                    <label><input type="radio" name="animal" value="cat" checked> Cat 🐱</label>
+                    <label><input type="radio" name="animal" value="capybara"> Capybara 🧘</label>
+                    <label><input type="radio" name="animal" value="raccoon"> Raccoon 🦝</label>
                 </div>
 
-                <button type="submit" style="background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;">
-                    Analyze My Eating Profile 🔮
-                </button>
+                <button type="submit">Analyze My Eating Profile 🔮</button>
             </form>
         </div>
 
-        <!-- ================= STAGE 2: DISPLAY DYNAMIC MATCH RESULTS ================= -->
         {% else %}
-        <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <div style="text-align: left;">
-                <p style="text-transform: uppercase; letter-spacing: 1px; color: #1a73e8; font-weight: 600; margin: 0; font-size: 11px;">Quiz Verdict</p>
-                <h1 style="font-size: 22px; margin: 4px 0 0 0; color: #222; font-weight: 700;">{{ vibe_name }}</h1>
+        <div class="result-container">
+            <div class="verdict-box">
+                <p>Quiz Verdict</p>
+                <h1>{{ vibe_name }}</h1>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <a href="{{ url_for('quiz') }}" style="color: #1a73e8; text-decoration: none; font-size: 13px; font-weight: 500; border: 1px solid #1a73e8; padding: 6px 12px; border-radius: 4px; background: white;">
-                    🔄 Retake Quiz
-                </a>
-                <a href="{{ url_for('home') }}" style="color: white; text-decoration: none; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 4px; background: #222;">
-                    🏠 Home
-                </a>
+            <div class="result-actions">
+                <a href="{{ url_for('quiz') }}">🔄 Retake Quiz</a>
+                <a href="{{ url_for('home') }}">🏠 Home</a>
             </div>
-        </div>
-
-        <h2 style="color: #444; margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">Your Custom Matches:</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 20px;">
-            {% for stall in stalls %}
-            <div style="background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; border: 1px solid #eee;">
-                
-                {% if stall.image_file == 'default_stall.jpg' %}
-                    <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}" style="width: 100%; height: 140px; object-fit: cover;">
-                {% else %}
-                    <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}" style="width: 100%; height: 140px; object-fit: cover;">
-                {% endif %}
-                
-                <div style="padding: 12px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; box-sizing: border-box;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
-                        <h3 style="margin: 0; font-size: 15px; color: #222; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ stall.name }}</h3>
-                        <span style="font-size: 10px; background: #e8f0fe; color: #1a73e8; padding: 1px 6px; border-radius: 10px; font-weight: 500; text-transform: capitalize; white-space: nowrap;">
-                            {{ stall.category }}
-                        </span>
-                    </div>
-
-                    <p style="font-size: 12px; color: #666; margin: 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                        {{ stall.description if stall.description else "No description specified." }}
-                    </p>
-                    
-                    <div style="margin-top: auto; padding-top: 4px;">
-                        <span style="font-size: 10px; color: #777; background: #f5f5f5; padding: 2px 6px; border-radius: 3px; display: inline-block;">
-                            Price: <strong style="color: #333;">{{ stall.price_range }}</strong>
-                        </span>
+            <h2>Your Custom Matches:</h2>
+            <div class="stall-grid">
+                {% for stall in stalls %}
+                <div class="stall-card">
+                    {% if stall.image_file == 'default_stall.jpg' %}
+                    <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}">
+                    {% else %}
+                    <img src="...">
+                    {% endif %}
+                    <div>
+                        <h3>{{ stall.name }}</h3>
+                        <span>{{ stall.category }}</span>
+                        <p>{{ stall.description if stall.description else "No description." }}</p>
+                        <span>Price: <strong>{{ stall.price_range }}</strong></span>
                     </div>
                 </div>
+                {% else %}
+                <p>No matching stalls found.</p>
+                {% endfor %}
             </div>
-            {% else %}
-                <p style="grid-column: 1/-1; text-align: center; color: #999; padding: 20px 0; font-size: 13px;">No matching stalls found for this tier.</p>
-            {% endfor %}
         </div>
         {% endif %}
-
     </div>
-</body>
-</html>
+</main>
+{% endblock %}

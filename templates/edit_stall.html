@@ -1,96 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Stall - MMU Food Finder</title> 
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
-</head>
-<body class="add-stall-body"> 
-    <header>
-        <div class="container">
-            <h1 class="logo">MMU Food Recommender</h1>
-            <nav>
-                <ul class="nav-list">
-                    <li><a href="{{ url_for('manager_dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+{% extends 'base.html' %}
 
-    <div class="add-stall-page"> 
-        <main>
-            <h2>Edit Food Stall Information</h2> 
+{% block title %}Edit Stall - MMU Food Finder{% endblock %}
+{% block body_class %}page-addstall{% endblock %}
+{% block content %}
+<main class="page-addstall">
+    <div class="form-wrapper">
+        <h2>Edit Food Stall Information</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Stall Name:</label>
+                <input type="text" name="name" value="{{ stall.name }}" required>
+            </div>
             
-            <form method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Stall Name:</label>
-                    <input type="text" name="name" value="{{ stall.name }}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Building/Area:</label>
-                    <select name="location_id" required>
-                        {% for loc in locations %}
-                            <option value="{{ loc.id }}" {% if stall.location_id == loc.id %}selected{% endif %}>
-                                {{ loc.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Building/Area:</label>
+                <select name="location_id" required>
+                    {% for loc in locations %}
+                        <option value="{{ loc.id }}" {% if stall.location_id == loc.id %}selected{% endif %}>
+                            {{ loc.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-                <div class="form-group">
-                    <label>Specific Spot/Unit Number:</label>
-                    <input type="text" name="sub_location" value="{{ stall.sub_location }}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Category:</label>
-                    <input type="text" name="category" value="{{ stall.category }}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Description:</label>
-                    <textarea name="description">{{ stall.description }}</textarea>
-                </div>
+            <div class="form-group">
+                <label>Specific Spot/Unit Number:</label>
+                <input type="text" name="sub_location" value="{{ stall.sub_location }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Category:</label>
+                <input type="text" name="category" value="{{ stall.category }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea name="description">{{ stall.description }}</textarea>
+            </div>
 
-                <div class="form-group">
-                    <label for="price_range">Price Range:</label>
-                    <select name="price_range" id="price_range" required>
-                        <option value="Under RM10" {% if stall.price_range == 'Under RM10' or stall.price_range == '$' %}selected{% endif %}>Cheap ($) - Under RM10</option>
-                        <option value="RM10 - RM20" {% if stall.price_range == 'RM10 - RM20' or stall.price_range == '$$' %}selected{% endif %}>Moderate ($$) - RM10-RM20</option>
-                        <option value="Above RM20" {% if stall.price_range == 'Above RM20' or stall.price_range == '$$$' %}selected{% endif %}>Expensive ($$$) - Above RM20</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Update Cover Image:</label>
-                    <input type="file" name="image_file" accept="image/*" style="border: none; padding-left: 0;">
-                    <small style="color: #777; display: block; margin-top: 4px; font-size: 12px;">Leave blank to preserve your current stall layout picture.</small>
-                </div>
-                
-                <div class="actions-div">
-                    <a href="{{ url_for('manager_dashboard') }}" class="back-link">Cancel</a>
-                    <button type="submit">Save Changes</button> 
-                </div>
-            </form>
-        </main>
+            <div class="form-group">
+                <label for="price_range">Price Range:</label>
+                <select name="price_range" id="price_range" required>
+                    <option value="Under RM10" {% if stall.price_range == 'Under RM10' %}selected{% endif %}>Cheap ($) - Under RM10</option>
+                    <option value="RM10 - RM20" {% if stall.price_range == 'RM10 - RM20' %}selected{% endif %}>Moderate ($$) - RM10-RM20</option>
+                    <option value="Above RM20" {% if stall.price_range == 'Above RM20' %}selected{% endif %}>Expensive ($$$) - Above RM20</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Update Cover Image:</label>
+                <input type="file" name="image_file" accept="image/*">
+                <small>Leave blank to preserve your current picture.</small>
+            </div>
+            
+            <div class="actions-div">
+                <a href="{{ url_for('manager_dashboard') }}" class="back-link">Cancel</a>
+                <button type="submit">Save Changes</button>
+            </div>
+        </form>
     </div>
-</body>
-</html>
-    <input type="text" name="category" value="{{ stall.category }}" placeholder="Category"><br>
-    <textarea name="description">{{ stall.description }}</textarea><br>
-
-    <div class="form-group" style="margin-bottom: 15px;">
-    <label for="price_range">Price Range:</label>
-    <select name="price_range" id="price_range" class="form-control" required>
-        <option value="$" {% if stall.price_range == '$' %}selected{% endif %}>$ (Under RM10)</option>
-        <option value="$$" {% if stall.price_range == '$$' %}selected{% endif %}>$$ (RM10 - RM20)</option>
-        <option value="$$$" {% if stall.price_range == '$$$' %}selected{% endif %}>$$$ (Above RM20)</option>
-    </select>
-</div>
-    <button type="submit">Save Changes</button>
-</form>
-<a href="{{ url_for('manager_dashboard') }}">Cancel</a>
+</main>
+{% endblock %}
