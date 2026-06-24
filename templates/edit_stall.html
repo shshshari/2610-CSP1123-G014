@@ -80,3 +80,17 @@
     </div>
 </body>
 </html>
+    <input type="text" name="category" value="{{ stall.category }}" placeholder="Category"><br>
+    <textarea name="description">{{ stall.description }}</textarea><br>
+
+    <div class="form-group" style="margin-bottom: 15px;">
+    <label for="price_range">Price Range:</label>
+    <select name="price_range" id="price_range" class="form-control" required>
+        <option value="$" {% if stall.price_range == '$' %}selected{% endif %}>$ (Under RM10)</option>
+        <option value="$$" {% if stall.price_range == '$$' %}selected{% endif %}>$$ (RM10 - RM20)</option>
+        <option value="$$$" {% if stall.price_range == '$$$' %}selected{% endif %}>$$$ (Above RM20)</option>
+    </select>
+</div>
+    <button type="submit">Save Changes</button>
+</form>
+<a href="{{ url_for('manager_dashboard') }}">Cancel</a>

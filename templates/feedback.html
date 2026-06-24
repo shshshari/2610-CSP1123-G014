@@ -1,343 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Feedback – MMU Food Recommender</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}"/>
-</head>
-<body>
+{% extends "base.html" %}
+{% block body_class %}page-feedback{% endblock %}
+{% block title %}Feedback{% endblock %}
 
-<h1 class="logo">
-  <img src="{{ url_for('static', filename='foodstall.png') }}" alt=""/> MMU Food Recommender
-</h1>
+{% block content %}
 
-<header>
-  <div class="container">
-    <nav>
-      <ul class="nav-list">
-        <li><a href="{{ url_for('index') }}">Home</a></li>
-        <li><a href="#">Stalls</a></li>
-        <li><a href="#">Favourite</a></li>
-        <li><a href="#">Review</a></li>
-      </ul>
-    </nav>
-    <div class="nav-right-group">
-      <a href="{{ url_for('profile') }}" class="nav-profile">
-        {% if session.get('role') == 'manager' %}Manager{% else %}Profile{% endif %}
-      </a>
-      <label class="hamburger" for="menu-toggle">
-        <span></span><span></span><span></span>
-      </label>
+        <div class="feedback-wrapper">
+            <div class="feedback-header">
+                <h2>Share Your Feedback</h2>
+                <p>Help us improve. We read every response!</p>
+            </div>
+
+            <form class="feedback-form" id="feedbackForm" action="{{ url_for('feedback') }}" method="POST">
+                <div class="form-group">
+                    <label for="fbName">Your Name</label>
+                    <input type="text" id="fbName" name="name" value="{{ session.get('name', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="fbEmail">Email Address</label>
+                    <input type="email" id="fbEmail" name="email" value="{{ session.get('email', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="fbCategory">Category</label>
+                    <select id="fbCategory" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="recommendation">Recommendation Quality</option>
+                        <option value="ui">Website Design / UI</option>
+                        <option value="stall">Stall Information</option>
+                        <option value="bug">Bug / Technical Issue</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fbMessage">Your Feedback</label>
+                    <textarea id="fbMessage" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Feedback</button>
+            </form>
+
+            <div class="success-msg" id="successMsg" style="display:none;">
+                <h3>Thank you!</h3>
+                <a href="{{ url_for('home') }}">← Back to Home</a>
+            </div>
+        </div>
+  
+    <div class="button-center-wrapper">
+        <button class="back-btn" onclick="history.back()">← Back</button>
     </div>
-    <input type="checkbox" id="menu-toggle"/>
-    <div class="dropdown-menu">
-      <a href="{{ url_for('index') }}">Home</a>
-      <a href="#">Favourite</a>
-      <a href="{{ url_for('profile') }}">Profile</a>
-      {% if logged_in %}
-        <a href="{{ url_for('logout') }}">Sign Out</a>
-      {% else %}
-        <a href="{{ url_for('login') }}">Sign In</a>
-      {% endif %}
-    </div>
-  </div>
-</header>
-
-<main>
-  <button class="back-btn" onclick="history.back()">← Back</button>
-
-  {% if session.get('role') == 'manager' %}
-  <div class="manager-wrapper">
-    <div class="manager-header">
-      <div>
-        <h2>📋 Feedback Dashboard</h2>
-        <p>Review all user feedback submitted for the MMU Food Recommender</p>
-      </div>
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-num" id="totalCount">5</div>
-          <div class="stat-label">Total</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-num" id="resolvedCount">2</div>
-          <div class="stat-label">Resolved</div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-num" id="pendingCount">3</div>
-          <div class="stat-label">Pending</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="manager-filters">
-      <input type="text" class="filter-search" id="filterInput"
-             placeholder="🔍 Search by name or keyword..." oninput="filterCards()"/>
-      <select class="filter-select" id="filterCat" onchange="filterCards()">
-        <option value="">All Categories</option>
-        <option value="recommendation">Recommendation Quality</option>
-        <option value="ui">Website Design / UI</option>
-        <option value="stall">Stall Information</option>
-        <option value="bug">Bug / Technical Issue</option>
-        <option value="other">Other</option>
-      </select>
-      <select class="filter-select" id="filterStatus" onchange="filterCards()">
-        <option value="">All Status</option>
-        <option value="pending">Pending</option>
-        <option value="resolved">Resolved</option>
-      </select>
-    </div>
-
-    <div class="feedback-list" id="feedbackList">
-      <div class="fb-card" data-cat="recommendation" data-status="pending">
-        <div class="fb-card-top">
-          <div class="fb-user">
-            <div class="fb-avatar">A</div>
-            <div><div class="fb-name">Aisha Razak</div><div class="fb-email">aisha@student.mmu.edu.my</div></div>
-          </div>
-          <div class="fb-meta">
-            <span class="fb-cat">Recommendation Quality</span>
-            <span class="fb-stars">⭐⭐⭐⭐⭐</span>
-            <span class="fb-date">12 Apr 2025</span>
-            <span class="fb-status pending">Pending</span>
-          </div>
-        </div>
-        <div class="fb-message">"The recommendations are really accurate! Would be great if there were more filter options though."</div>
-        <div class="fb-actions">
-          <button class="btn-resolve" onclick="resolveCard(this)">✅ Mark Resolved</button>
-          <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>
-        </div>
-      </div>
-
-      <div class="fb-card" data-cat="bug" data-status="pending">
-        <div class="fb-card-top">
-          <div class="fb-user">
-            <div class="fb-avatar">H</div>
-            <div><div class="fb-name">Haziq Mahmud</div><div class="fb-email">haziq@student.mmu.edu.my</div></div>
-          </div>
-          <div class="fb-meta">
-            <span class="fb-cat bug">Bug / Technical Issue</span>
-            <span class="fb-stars">⭐⭐⭐</span>
-            <span class="fb-date">10 Apr 2025</span>
-            <span class="fb-status pending">Pending</span>
-          </div>
-        </div>
-        <div class="fb-message">"The favourite button sometimes doesn't save when I refresh the page."</div>
-        <div class="fb-actions">
-          <button class="btn-resolve" onclick="resolveCard(this)">✅ Mark Resolved</button>
-          <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>
-        </div>
-      </div>
-
-      <div class="fb-card" data-cat="ui" data-status="resolved">
-        <div class="fb-card-top">
-          <div class="fb-user">
-            <div class="fb-avatar">W</div>
-            <div><div class="fb-name">Wei Ling Tan</div><div class="fb-email">weiling@student.mmu.edu.my</div></div>
-          </div>
-          <div class="fb-meta">
-            <span class="fb-cat ui">Website Design / UI</span>
-            <span class="fb-stars">⭐⭐⭐⭐</span>
-            <span class="fb-date">8 Apr 2025</span>
-            <span class="fb-status resolved">Resolved</span>
-          </div>
-        </div>
-        <div class="fb-message">"Love the design overall! Maybe add dark mode in the future? 😊"</div>
-        <div class="fb-actions">
-          <button class="btn-unresolve" onclick="unresolveCard(this)">↩ Mark Pending</button>
-          <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>
-        </div>
-      </div>
-
-      <div class="fb-card" data-cat="stall" data-status="pending">
-        <div class="fb-card-top">
-          <div class="fb-user">
-            <div class="fb-avatar">S</div>
-            <div><div class="fb-name">Shar Lim</div><div class="fb-email">shar@student.mmu.edu.my</div></div>
-          </div>
-          <div class="fb-meta">
-            <span class="fb-cat stall">Stall Information</span>
-            <span class="fb-stars">⭐⭐⭐⭐</span>
-            <span class="fb-date">5 Apr 2025</span>
-            <span class="fb-status pending">Pending</span>
-          </div>
-        </div>
-        <div class="fb-message">"The opening hours for Cita Rasa seem wrong — they actually close at 3pm, not 5pm."</div>
-        <div class="fb-actions">
-          <button class="btn-resolve" onclick="resolveCard(this)">✅ Mark Resolved</button>
-          <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>
-        </div>
-      </div>
-
-      <div class="fb-card" data-cat="recommendation" data-status="resolved">
-        <div class="fb-card-top">
-          <div class="fb-user">
-            <div class="fb-avatar">R</div>
-            <div><div class="fb-name">Rajan Kumar</div><div class="fb-email">rajan@student.mmu.edu.my</div></div>
-          </div>
-          <div class="fb-meta">
-            <span class="fb-cat">Recommendation Quality</span>
-            <span class="fb-stars">⭐⭐⭐⭐⭐</span>
-            <span class="fb-date">2 Apr 2025</span>
-            <span class="fb-status resolved">Resolved</span>
-          </div>
-        </div>
-        <div class="fb-message">"The What Should I Eat feature is genius! Keep up the great work team 👍"</div>
-        <div class="fb-actions">
-          <button class="btn-unresolve" onclick="unresolveCard(this)">↩ Mark Pending</button>
-          <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="no-feedback" id="noFeedback">
-      <div style="font-size:2.5rem">📭</div>
-      <p>No feedback found matching your filters.</p>
-    </div>
-  </div>
-
-  {% else %}
-
-  <div class="feedback-wrapper">
-    <div class="feedback-header">
-      <div class="feedback-icon">💬</div>
-      <h2>Share Your Feedback</h2>
-      <p>Help us improve the MMU Food Recommender. We read every response!</p>
-    </div>
-
-    <form class="feedback-form" id="feedbackForm" onsubmit="submitFeedback(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="fbName">Your Name</label>
-          <input type="text" id="fbName" name="name"
-                 placeholder="e.g. Aisha Binti Razak"
-                 value="{{ session.get('name', '') }}" required/>
-        </div>
-        <div class="form-group">
-          <label for="fbEmail">Email Address</label>
-          <input type="email" id="fbEmail" name="email"
-                 placeholder="e.g. aisha@student.mmu.edu.my"
-                 value="{{ session.get('email', '') }}" required/>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="fbCategory">Feedback Category</label>
-        <select id="fbCategory" name="category" required>
-          <option value="">Select a category</option>
-          <option value="recommendation">Recommendation Quality</option>
-          <option value="ui">Website Design / UI</option>
-          <option value="stall">Stall Information</option>
-          <option value="bug">Bug / Technical Issue</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Overall Experience</label>
-        <div class="star-rating" id="starRating">
-          <span onclick="setRating(1)">★</span>
-          <span onclick="setRating(2)">★</span>
-          <span onclick="setRating(3)">★</span>
-          <span onclick="setRating(4)">★</span>
-          <span onclick="setRating(5)">★</span>
-        </div>
-        <input type="hidden" id="ratingVal" name="rating"/>
-      </div>
-
-      <div class="form-group">
-        <label for="fbMessage">Your Feedback</label>
-        <textarea id="fbMessage" name="message" rows="5"
-                  placeholder="Tell us what you think — what's working well, what could be better..." required></textarea>
-      </div>
-
-      <button type="submit" class="submit-btn">
-        <i class="fa fa-paper-plane"></i> Submit Feedback
-      </button>
-    </form>
-
-    <div class="success-msg" id="successMsg">
-      <div class="success-icon">✅</div>
-      <h3>Thank you for your feedback!</h3>
-      <p>We really appreciate you taking the time to share your thoughts.</p>
-      <a href="{{ url_for('index') }}" class="back-home-btn">← Back to Home</a>
-    </div>
-  </div>
-  {% endif %}
-</main>
-
-<footer>
-  <p>© 2025 MMU Food Recommender &nbsp;·&nbsp; Group G014 &nbsp;·&nbsp; CSP1123</p>
-</footer>
-
-<script>
-  let selectedRating = 0;
-  function setRating(n) {
-    selectedRating = n;
-    document.getElementById('ratingVal').value = n;
-    document.querySelectorAll('#starRating span').forEach((s, i) => {
-      s.classList.toggle('active', i < n);
-    });
-  }
-  function submitFeedback(e) {
-    e.preventDefault();
-    if (!selectedRating) { alert('Please select a star rating!'); return; }
-    document.getElementById('feedbackForm').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'flex';
-  }
-  function updateStats() {
-    const all      = document.querySelectorAll('.fb-card');
-    const resolved = document.querySelectorAll('.fb-card[data-status="resolved"]');
-    const pending  = document.querySelectorAll('.fb-card[data-status="pending"]');
-    if (document.getElementById('totalCount'))    document.getElementById('totalCount').textContent    = all.length;
-    if (document.getElementById('resolvedCount')) document.getElementById('resolvedCount').textContent = resolved.length;
-    if (document.getElementById('pendingCount'))  document.getElementById('pendingCount').textContent  = pending.length;
-  }
-  function resolveCard(btn) {
-    const card = btn.closest('.fb-card');
-    card.dataset.status = 'resolved';
-    card.querySelector('.fb-status').textContent = 'Resolved';
-    card.querySelector('.fb-status').className = 'fb-status resolved';
-    card.querySelector('.fb-actions').innerHTML = `
-      <button class="btn-unresolve" onclick="unresolveCard(this)">↩ Mark Pending</button>
-      <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>`;
-    updateStats();
-  }
-  function unresolveCard(btn) {
-    const card = btn.closest('.fb-card');
-    card.dataset.status = 'pending';
-    card.querySelector('.fb-status').textContent = 'Pending';
-    card.querySelector('.fb-status').className = 'fb-status pending';
-    card.querySelector('.fb-actions').innerHTML = `
-      <button class="btn-resolve" onclick="resolveCard(this)">✅ Mark Resolved</button>
-      <button class="btn-delete" onclick="deleteCard(this)">🗑 Delete</button>`;
-    updateStats();
-  }
-  function deleteCard(btn) {
-    if (!confirm('Delete this feedback?')) return;
-    const card = btn.closest('.fb-card');
-    card.style.animation = 'slideOut 0.3s ease forwards';
-    setTimeout(() => { card.remove(); updateStats(); filterCards(); }, 300);
-  }
-  function filterCards() {
-    const query  = document.getElementById('filterInput') ? document.getElementById('filterInput').value.toLowerCase() : '';
-    const cat    = document.getElementById('filterCat') ? document.getElementById('filterCat').value : '';
-    const status = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : '';
-    const cards  = document.querySelectorAll('.fb-card');
-    let visible  = 0;
-    cards.forEach(card => {
-      const matchText = !query || card.textContent.toLowerCase().includes(query);
-      const matchCat  = !cat || card.dataset.cat === cat;
-      const matchStat = !status || card.dataset.status === status;
-      card.style.display = (matchText && matchCat && matchStat) ? 'block' : 'none';
-      if (matchText && matchCat && matchStat) visible++;
-    });
-    const noFb = document.getElementById('noFeedback');
-    if (noFb) noFb.style.display = visible === 0 ? 'flex' : 'none';
-  }
-  updateStats();
-</script>
-
-</body>
-</html>
+{% endblock %}
