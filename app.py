@@ -482,10 +482,8 @@ def forgot_password():
                 code = str(random.randint(100000, 999999))
                 expiration_time = datetime.now() + timedelta(minutes=5)
                 
-                # Save as a tuple
                 reset_codes[email] = (code, expiration_time)
                 
-                # ─── ✉️ ADDED: ACTUAL EMAIL DELIVERY ENGINE ───
                 try:
                     msg = Message(
                         subject="MMU Food Finder - Password Reset Code",
@@ -494,7 +492,7 @@ def forgot_password():
                     )
                     msg.body = f"Hello,\n\nYour 6-digit verification code is: {code}\n\nThis code will expire in 5 minutes. If you did not request this, please ignore this email."
                     
-                    mail.send(msg) # 🚀 This sends it via mmufoodfinder@gmail.com
+                    mail.send(msg) 
                     print(f"DEBUG: Sent code {code} to {email}. Expires at {expiration_time}")
                     
                     flash("A reset code has been sent to your email.", "reset")
