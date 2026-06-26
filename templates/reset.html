@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reset Password – MMU Food Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='forgot.css') }}">
+</head>
+<body>
+
+    <!-- Top navbar -->
+    <div class="top-bar">
+        <a href="{{ url_for('index') }}" class="site-name">🍽️ MMU Food Recommender</a>
+    </div>
+
+    <div class="card">
+
+        <!-- ── FORM SECTION ── -->
+        <div id="formSection">
+
+            <div class="icon-circle">🔑</div>
+            <h1>Set New Password</h1>
+            <p class="subtitle">
+                Almost done! Create a strong new password<br>for your account.
+            </p>
+
+            <!-- Step indicator: Step 3 of 3 -->
+            <div class="steps">
+                <div class="step-dot done">✓</div>
+                <div class="step-line done"></div>
+                <div class="step-dot done">✓</div>
+                <div class="step-line done"></div>
+                <div class="step-dot active">3</div>
+            </div>
+
+            <!-- DYNAMIC: show error from backend (e.g. passwords don't match) -->
+            {% if error %}
+            <div class="flash">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('reset_password') }}" id="resetForm">
+
+                <!-- New Password -->
+                <label for="newpw">New Password</label>
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="newpw"
+                        name="password"
+                        placeholder="Enter new password"
+                        oninput="checkStrength(this.value)"
+                        required
+                    />
+                    <span class="toggle-eye" onclick="togglePw('newpw', this)">👁</span>
+                </div>
+
+                <!-- Strength bar -->
+                <div class="strength-bar-wrap">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-label" id="strengthLabel">Enter a password</div>
+
+                <!-- Requirements checklist -->
+                <div class="requirements">
+                    <div class="req-item" id="req-len">
+                        <span class="dot">●</span> At least 8 characters
+                    </div>
+                    <div class="req-item" id="req-upper">
+                        <span class="dot">●</span> One uppercase letter
+                    </div>
+                    <div class="req-item" id="req-num">
+                        <span class="dot">●</span> One number
+                    </div>
+                    <div class="req-item" id="req-special">
+                        <span class="dot">●</span> One special character (!@#$…)
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <label for="confirmpw">Confirm Password</label>
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="confirmpw"
+                        name="confirm_password"
+                        placeholder="Re-enter new password"
+                        required
+                    />
+                    <span class="toggle-eye" onclick="togglePw('confirmpw', this)">👁</span>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    Reset Password ✓
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- ── SUCCESS SECTION (shown after reset) ── -->
+        <div class="success-card" id="successSection">
+            <div class="big-icon">🎉</div>
+            <h2>Password Reset!</h2>
+            <p>
+                Your password has been updated successfully.<br>
+                You can now sign in with your new password.
+            </p>
+            <a href="{{ url_for('login') }}" class="btn-go-login">Go to Sign In →</a>
+        </div>
+
+    </div>
+
+    <script>
+        // Show / hide password
+        function togglePw(id, el) {
+            const inp = document.getElementById(id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            el.textContent = inp.type === 'password' ? '👁' : '🙈';
+        }
+
+        // Password strength checker
+        function checkStrength(val) {
+            const bar   = document.getElementById('strengthBar');
+            const label = document.getElementById('strengthLabel');
+
+            const len     = val.length >= 8;
+            const upper   = /[A-Z]/.test(val);
+            const num     = /[0-9]/.test(val);
+            const special = /[^A-Za-z0-9]/.test(val);
+
+            setReq('req-len',     len);
+            setReq('req-upper',   upper);
+            setReq('req-num',     num);
+            setReq('req-special', special);
+
+            const score = [len, upper, num, special].filter(Boolean).length;
+            const configs = [
+                { w: '0%',   bg: '#e5e9f2', txt: 'Enter a password' },
+                { w: '25%',  bg: '#ef4444', txt: 'Weak'             },
+                { w: '50%',  bg: '#f97316', txt: 'Fair'             },
+                { w: '75%',  bg: '#eab308', txt: 'Good'             },
+                { w: '100%', bg: '#22c55e', txt: 'Strong 💪'        },
+            ];
+
+            const cfg = configs[score];
+            bar.style.width      = cfg.w;
+            bar.style.background = cfg.bg;
+            label.textContent    = val ? cfg.txt : 'Enter a password';
+        }
+
+        function setReq(id, met) {
+            document.getElementById(id).classList.toggle('met', met);
+        }
+
+        // Form submit — validate client-side, show success UI
+        document.getElementById('resetForm').addEventListener('submit', function(e) {
+            const pw  = document.getElementById('newpw').value;
+            const cpw = document.getElementById('confirmpw').value;
+
+            if (pw !== cpw) {
+                e.preventDefault();
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+
+            // DYNAMIC: POST to backend for real DB password update later.
+            // For now, prevent default and show the success card immediately.
+            e.preventDefault();
+            document.getElementById('formSection').style.display  = 'none';
+            document.getElementById('successSection').style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>

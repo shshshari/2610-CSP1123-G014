@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verify Code – MMU Food Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='forgot.css') }}">
+</head>
+<body>
+
+    <!-- Top navbar -->
+    <div class="top-bar">
+        <a href="{{ url_for('index') }}" class="site-name">🍽️ MMU Food Recommender</a>
+    </div>
+
+    <div class="card">
+
+        <div class="icon-circle">📩</div>
+        <h1>Check Your Email</h1>
+        <p class="subtitle">
+            We sent a 6-digit code to<br>
+            <span class="email-highlight">{{ email }}</span>
+        </p>
+
+        <!-- Step indicator: Step 2 of 3 -->
+        <div class="steps">
+            <div class="step-dot done">✓</div>
+            <div class="step-line done"></div>
+            <div class="step-dot active">2</div>
+            <div class="step-line"></div>
+            <div class="step-dot">3</div>
+        </div>
+
+        <!-- DYNAMIC: remove this dev hint once real email sending is wired up -->
+        <div class="dev-hint">🛠 Dev mode — your code is: <strong>{{ dev_code }}</strong></div>
+
+        <!-- DYNAMIC: show error message from backend if code is wrong -->
+        {% if error %}
+        <div class="flash">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('verify_code') }}" id="codeForm">
+
+            <!-- 6 individual digit boxes -->
+            <div class="code-inputs" id="codeBoxes">
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"/>
+            </div>
+
+            <!-- Hidden field that combines all 6 digits before submit -->
+            <input type="hidden" name="code" id="combinedCode"/>
+
+            <button type="submit" class="btn-primary">Verify Code →</button>
+        </form>
+
+        <div class="resend-row">
+            Didn't receive it?
+            <a href="{{ url_for('forgot_password_resend') }}">Resend code</a>
+        </div>
+
+        <br>
+        <a href="{{ url_for('forgot_password') }}" class="back-link">← Change email</a>
+
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll('#codeBoxes input');
+
+        boxes.forEach((box, i) => {
+            // Only allow digits
+            box.addEventListener('input', () => {
+                box.value = box.value.replace(/\D/g, '');
+                if (box.value && i < boxes.length - 1) {
+                    boxes[i + 1].focus();
+                }
+            });
+
+            // Backspace moves to previous box
+            box.addEventListener('keydown', e => {
+                if (e.key === 'Backspace' && !box.value && i > 0) {
+                    boxes[i - 1].focus();
+                }
+            });
+
+            // Paste support — paste a full 6-digit code into any box
+            box.addEventListener('paste', e => {
+                e.preventDefault();
+                const digits = (e.clipboardData.getData('text') || '')
+                    .replace(/\D/g, '')
+                    .slice(0, 6);
+                digits.split('').forEach((d, j) => {
+                    if (boxes[j]) boxes[j].value = d;
+                });
+                const last = Math.min(digits.length, boxes.length - 1);
+                boxes[last].focus();
+            });
+        });
+
+        // Combine all 6 boxes into the hidden field before submitting
+        document.getElementById('codeForm').addEventListener('submit', () => {
+            document.getElementById('combinedCode').value =
+                Array.from(boxes).map(b => b.value).join('');
+        });
+    </script>
+
+</body>
+</html>
