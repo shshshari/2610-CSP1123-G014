@@ -30,9 +30,9 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'cynthia070607@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'mwet qoaa lqnu ckyv'             
-app.config['MAIL_DEFAULT_SENDER'] = 'cynthia070607@gmail.com'
+app.config['MAIL_USERNAME'] = 'mmufoodfinder@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'cuvp uqts lplg jktb'             
+app.config['MAIL_DEFAULT_SENDER'] = 'mmufoodfinder@gmail.com'
 
 mail = Mail(app)
 login_manager = LoginManager()
@@ -242,7 +242,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("You have been logged out.")
     return redirect(url_for('home'))
 
 
@@ -514,12 +513,26 @@ def forgot_password():
                 code = str(random.randint(100000, 999999))
                 expiration_time = datetime.now() + timedelta(minutes=5)
                 
-                # Save as a tuple
                 reset_codes[email] = (code, expiration_time)
                 
-                print(f"DEBUG: Sent code {code} to {email}. Expires at {expiration_time}")
-                flash("A reset code has been sent to your email.", "reset")
-                return render_template('forgot_password.html', email=email, code_sent=True)
+                try:
+                    msg = Message(
+                        subject="MMU Food Finder - Password Reset Code",
+                        sender=app.config['MAIL_DEFAULT_SENDER'],
+                        recipients=[email]
+                    )
+                    msg.body = f"Hello,\n\nYour 6-digit verification code is: {code}\n\nThis code will expire in 5 minutes. If you did not request this, please ignore this email."
+                    
+                    mail.send(msg) 
+                    print(f"DEBUG: Sent code {code} to {email}. Expires at {expiration_time}")
+                    
+                    flash("A reset code has been sent to your email.", "reset")
+                    return render_template('forgot_password.html', email=email, code_sent=True)
+                
+                except Exception as e:
+                    print(f"ERROR DESPITE APP PASSWORD: {e}")
+                    flash("Failed to send email. Ensure App Password credentials are active.")
+                    return render_template('forgot_password.html')
             
             flash("Email not found.")
             return render_template('forgot_password.html')
@@ -549,7 +562,6 @@ def forgot_password():
             return render_template('forgot_password.html', email=email, code_sent=True)
             
     return render_template('forgot_password.html')
-
 
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():

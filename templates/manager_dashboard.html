@@ -5,34 +5,36 @@
 {% block body_class %}page-manager-dashboard{% endblock %}
 
 {% block content %}
-<body class="page-manager-dashboard">
-    <main class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>Manager Dashboard</h1>
-            <a href="{{ url_for('add_stall') }}" class="add-btn">+ Add New Stall</a>
-        </div>
-        
-        <h2>Your Registered Stalls</h2>
-        <ul class="stall-list">
-            {% for stall in stalls %}
-              <li class="stall-item">
+<main class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Manager Dashboard</h1>
+        <a href="{{ url_for('add_stall') }}" class="add-btn">+ Add New Stall</a>
+    </div>
+    
+    <h2>Your Registered Stalls</h2>
+    <ul class="stall-list">
+        {% for stall in stalls %}
+            <li class="stall-item">
                 <div>
-                  <strong class="stall-name">{{ stall.name }}</strong> 
-                  <p class="stall-desc">{{ stall.description }}</p>
+                    <strong class="stall-name">{{ stall.name }}</strong> 
+                    <p class="stall-desc">{{ stall.description }}</p>
                 </div>
                 <div class="stall-actions">
-                  <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="btn-edit">✏️ Edit</a>
-                  <form action="{{ url_for('delete_stall', stall_id=stall.id) }}" method="POST">
-                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn-delete">Delete</button>
-                  </form>
+                    <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="btn-edit">✏️ Edit</a>
+                    <form action="{{ url_for('delete_stall', stall_id=stall.id) }}" method="POST">
+                        <button type="submit" onclick="return confirm('Are you sure?')" class="btn-delete">Delete</button>
+                    </form>
                 </div>
-              </li>
-            {% else %}
-              <li class="no-stalls">
-                  No stalls registered yet. <a href="{{ url_for('add_stall') }}">Add one now.</a>
-              </li>
-            {% endfor %}
-        </ul>
-    </main>
-</body>
+            </li>
+        {% else %}
+            <li class="no-stalls">
+                No stalls registered yet. <a href="{{ url_for('add_stall') }}">Add one now.</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('view_feedback') }}" style="display: inline-block; background: #e67e22; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 20px;">
+        📋 View System Feedbacks
+    </a>
+</main>
 {% endblock %}
