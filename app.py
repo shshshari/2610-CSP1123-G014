@@ -6,6 +6,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify, session
 from reccsystem import recc_bp
 from ratings import ratings_bp
+from flask_mail import Mail, Message
+from datetime import datetime, timedelta
+from flask import abort
+from functools import wraps
 import random
 import os
 
@@ -22,6 +26,15 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ─── EXTENSIONS ───
 db = SQLAlchemy(app)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'mmufoodfinder@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'cuvp uqts lplg jktb'             
+app.config['MAIL_DEFAULT_SENDER'] = 'mmufoodfinder@gmail.com'
+
+mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -71,10 +84,25 @@ class Favourite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     stall_id = db.Column(db.Integer, db.ForeignKey('stall.id'), nullable=False)
 
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Optional: stores who sent it
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def role_required(allowed_roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or current_user.role not in allowed_roles:
+                flash("Access denied. You do not have permission to view this page.")
+                return redirect(url_for('home'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 
 # ─── ROUTES ───
@@ -192,7 +220,6 @@ def login():
 
     return render_template('logreg.html')
 
-# here
 @app.route('/logout')
 @login_required
 def logout():
@@ -203,6 +230,7 @@ def logout():
 
 @app.route('/manager_dashboard')
 @login_required
+@role_required(['manager'])
 def manager_dashboard():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
@@ -286,6 +314,7 @@ def delete_review(review_id):
 
 @app.route('/add_stall', methods=['GET', 'POST'])
 @login_required
+@role_required(['manager'])
 def add_stall():
     if current_user.role != 'manager':
         flash("Access denied. Managers only.")
@@ -344,6 +373,7 @@ def edit_profile():
 
 @app.route('/edit_stall/<int:stall_id>', methods=['GET', 'POST'])
 @login_required
+@role_required(['manager'])
 def edit_stall(stall_id):
     stall = Stall.query.get_or_404(stall_id)
     if stall.manager_id != current_user.id and current_user.role.lower() != 'admin':
@@ -450,29 +480,57 @@ def forgot_password():
             user = User.query.filter_by(email=email).first()
             if user:
                 code = str(random.randint(100000, 999999))
-                reset_codes[email] = code
-                print(f"\n--- EMAIL SENT TO {email} ---")
-                print(f"Your Reset Code is: {code}")
-                print("-------------------------------\n")
-                flash("A reset code has been sent to your email.", "reset")
-                return render_template('forgot_password.html', email=email, code_sent=True)
+                expiration_time = datetime.now() + timedelta(minutes=5)
+                
+                reset_codes[email] = (code, expiration_time)
+                
+                try:
+                    msg = Message(
+                        subject="MMU Food Finder - Password Reset Code",
+                        sender=app.config['MAIL_DEFAULT_SENDER'],
+                        recipients=[email]
+                    )
+                    msg.body = f"Hello,\n\nYour 6-digit verification code is: {code}\n\nThis code will expire in 5 minutes. If you did not request this, please ignore this email."
+                    
+                    mail.send(msg) 
+                    print(f"DEBUG: Sent code {code} to {email}. Expires at {expiration_time}")
+                    
+                    flash("A reset code has been sent to your email.", "reset")
+                    return render_template('forgot_password.html', email=email, code_sent=True)
+                
+                except Exception as e:
+                    print(f"ERROR DESPITE APP PASSWORD: {e}")
+                    flash("Failed to send email. Ensure App Password credentials are active.")
+                    return render_template('forgot_password.html')
+            
             flash("Email not found.")
+            return render_template('forgot_password.html')
 
         elif action == 'verify_code':
             user_code = request.form.get('code')
             new_pw = request.form.get('new_password')
-            if email in reset_codes and reset_codes[email] == user_code:
-                user = User.query.filter_by(email=email).first()
-                user.password = generate_password_hash(new_pw)
-                db.session.commit()
-                del reset_codes[email]
-                flash("Password updated successfully.")
-                return redirect(url_for('login'))
-            else:
-                flash("Invalid or expired code.", "reset")
-                return render_template('forgot_password.html', email=email, code_sent=True)
+            
+            if email in reset_codes:
+                saved_code, expires_at = reset_codes[email]
+                
+                if datetime.now() > expires_at:
+                    del reset_codes[email]
+                    flash("Verification code has expired. Please request a new one.", "reset")
+                    return redirect(url_for('forgot_password'))
+                
+                if saved_code == user_code:
+                    user = User.query.filter_by(email=email).first()
+                    user.password = generate_password_hash(new_pw)
+                    db.session.commit()
+                    
+                    del reset_codes[email] 
+                    flash("Password updated successfully.")
+                    return redirect(url_for('login'))
+            
+            flash("Invalid or expired code.", "reset")
+            return render_template('forgot_password.html', email=email, code_sent=True)
+            
     return render_template('forgot_password.html')
-
 
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
@@ -552,6 +610,49 @@ def quiz():
     return render_template('suggest.html')
 
 # ─── DB INIT & RUN WITH ALTER-PATCH ───
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        user_msg = request.form.get('comment')
+        
+        if not user_msg or user_msg.strip() == "":
+            flash("Feedback text cannot be empty!")
+            return redirect(url_for('feedback'))
+            
+        # Save only the text message to the independent Feedback table
+        new_fb = Feedback(
+            content=user_msg,
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+        db.session.add(new_fb)
+        db.session.commit()
+        
+        flash("Thank you! Your feedback has been recorded.")
+        return redirect(url_for('explore'))
+        
+    return render_template('feedback.html')
+
+@app.route('/manager_feedback', methods=['GET', 'POST'])
+@login_required
+@role_required(['manager'])
+def view_feedback():
+    if current_user.role != 'manager':
+        flash("Access denied. Managers only.")
+        return redirect(url_for('explore'))
+        
+    all_feedbacks = Feedback.query.all()
+    
+    return render_template('manager_feedback.html', feedbacks=all_feedbacks)
+
+with app.app_context():
+    db.create_all()
+    if not Location.query.first():
+        buildings = ["Starbees MMU (Main)", "FCI Building", "FOE Building", "Library area"]
+        for b in buildings:
+            db.session.add(Location(name=b))
+        db.session.commit()
+        print("Database Initialized with Buildings.")
+        
 if __name__ == '__main__':
     os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
     with app.app_context():
