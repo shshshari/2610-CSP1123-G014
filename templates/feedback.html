@@ -3,47 +3,45 @@
 {% block title %}Feedback{% endblock %}
 
 {% block content %}
-
-        <div class="feedback-wrapper">
-            <div class="feedback-header">
-                <h2>Share Your Feedback</h2>
-                <p>Help us improve. We read every response!</p>
-            </div>
-
-            <form class="feedback-form" id="feedbackForm" action="{{ url_for('feedback') }}" method="POST">
-                <div class="form-group">
-                    <label for="fbName">Your Name</label>
-                    <input type="text" id="fbName" name="name" value="{{ session.get('name', '') }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="fbEmail">Email Address</label>
-                    <input type="email" id="fbEmail" name="email" value="{{ session.get('email', '') }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="fbCategory">Category</label>
-                    <select id="fbCategory" name="category" required>
-                        <option value="">Select a category</option>
-                        <option value="recommendation">Recommendation Quality</option>
-                        <option value="ui">Website Design / UI</option>
-                        <option value="stall">Stall Information</option>
-                        <option value="bug">Bug / Technical Issue</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="fbMessage">Your Feedback</label>
-                    <textarea id="fbMessage" name="message" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Submit Feedback</button>
-            </form>
-
-            <div class="success-msg" id="successMsg" style="display:none;">
-                <h3>Thank you!</h3>
-                <a href="{{ url_for('home') }}">← Back to Home</a>
-            </div>
-        </div>
-  
-    <div class="button-center-wrapper">
-        <button class="back-btn" onclick="history.back()">← Back</button>
+<div class="feedback-wrapper">
+    <div class="feedback-header">
+        <h2>Share Your Feedback</h2>
+        <p>Help us improve. We read every response!</p>
     </div>
-</body>
-</html>
+
+    <form class="feedback-form" id="feedbackForm" action="{{ url_for('feedback') }}" method="POST">
+        <div class="form-group">
+            <label for="fbName">Your Name</label>
+            <input type="text" id="fbName" name="name" value="{{ session.get('name', '') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="fbEmail">Email Address</label>
+            <input type="email" id="fbEmail" name="email" value="{{ session.get('email', '') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="fbCategory">Category</label>
+            <select id="fbCategory" name="category" required>
+                <option value="">Select a category</option>
+                <option value="recommendation">Recommendation Quality</option>
+                <option value="ui">Website Design / UI</option>
+                <option value="stall">Stall Information</option>
+                <option value="bug">Bug / Technical Issue</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fbMessage">Your Feedback</label>
+            <textarea id="fbMessage" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit Feedback</button>
+    </form>
+
+    <div class="success-msg" id="successMsg" style="display:none;">
+        <h3>Thank you!</h3>
+        <a href="{{ url_for('home') }}">← Back to Home</a>
+    </div>
+</div>
+ 
+<div class="button-center-wrapper">
+    <button class="back-btn" onclick="history.back()">← Back</button>
+</div>
+{% endblock %}

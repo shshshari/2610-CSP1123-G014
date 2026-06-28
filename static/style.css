@@ -798,3 +798,400 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     font-size: 11px; color: #555; font-weight: bold; 
     margin-top: 10px; display: block; 
 }
+
+
+/* ── forgot password page ── */
+ .forgot-password .block {
+    background: #fdf6ec;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+
+ }
+
+.forgot-password .top-bar .site-name {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+}
+
+/* ── Card ── */
+.forgot-password .card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(28, 66, 115, 0.12);
+    padding: 48px 44px;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    margin-top: 72px;
+}
+
+/* ── Icon circle ── */
+.forgot-password .icon-circle {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 24px;
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+/* ── Headings ── */
+.forgot-password h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1c4273;
+    margin-bottom: 8px;
+}
+
+.forgot-password .subtitle {
+    font-size: 0.92rem;
+    color: #7a8599;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.email-highlight {
+    font-weight: 700;
+    color: #f97316;
+}
+
+/* ── Step indicator ── */
+.forgot-password .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0 32px;
+}
+
+.forgot-password .step-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e5e9f2;
+    color: #aab0c0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.forgot-password .step-dot.active {
+    background: #1c4273;
+    color: #fff;
+}
+
+.forgot-password .step-dot.done {
+    background: #f97316;
+    color: #fff;
+}
+
+.forgot-password .step-line {
+    width: 48px;
+    height: 3px;
+    background: #e5e9f2;
+}
+
+.forgot-password .step-line.done {
+    background: #f97316;
+}
+
+/* ── Form elements ── */
+.forgot-password label {
+    display: block;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1c4273;
+    margin-bottom: 6px;
+}
+
+.forgot-password input[type="email"],
+.forgot-password input[type="password"],
+.forgot-password input[type="text"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid #e5e9f2;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: #2d3748;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 22px;
+    background: #fff;
+}
+
+.forgot-password input[type="email"]:focus,
+.forgot-password input[type="password"]:focus,
+.forgot-password input[type="text"]:focus {
+    border-color: #1c4273;
+    box-shadow: 0 0 0 3px rgba(28, 66, 115, 0.08);
+}
+
+/* ── Password field with eye toggle ── */
+.forgot-password .input-wrap {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.forgot-password .input-wrap input {
+    padding-right: 44px;
+    margin-bottom: 0;
+}
+
+.forgot-password .toggle-eye {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1rem;
+    color: #aab0c0;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.forgot-password .toggle-eye:hover {
+    color: #1c4273;
+}
+
+/* ── Primary button ── */
+.forgot-password .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #1c4273, #2a5ca8);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+}
+
+.forgot-password .btn-primary:hover {
+    opacity: 0.92;
+}
+
+.forgot-password .btn-primary:active {
+    transform: scale(0.98);
+}
+
+.forgot-password .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Links ── */
+.forgot-password .back-link {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: #7a8599;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-password .back-link:hover {
+    color: #1c4273;
+}
+
+.forgot-password .resend-row {
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: #7a8599;
+}
+
+.forgot-password .resend-row a {
+    color: #f97316;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.forgot-password .resend-row a:hover {
+    text-decoration: underline;
+}
+
+/* ── Flash / error message ── */
+.forgot-password .flash {
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+/* ── Dev hint (remove in production) ── */
+.forgot-password .dev-hint {
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    color: #166534;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    margin-bottom: 20px;
+    /* DYNAMIC: remove this block once real email sending is wired up */
+}
+
+/* ─────────────────────────────────────────
+   VERIFY CODE PAGE – 6-box input
+───────────────────────────────────────── */
+.forgot-password .code-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.forgot-password .code-inputs input {
+    width: 48px;
+    height: 56px;
+    border: 2px solid #e5e9f2;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    color: #1c4273;
+    outline: none;
+    padding: 0;
+    margin-bottom: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.forgot-password .code-inputs input:focus {
+    border-color: #1c4273;
+    box-shadow: 0 0 0 3px rgba(28, 66, 115, 0.1);
+}
+
+/* ─────────────────────────────────────────
+   RESET PASSWORD PAGE – strength bar
+───────────────────────────────────────── */
+.forgot-password .strength-bar-wrap {
+    height: 6px;
+    background: #e5e9f2;
+    border-radius: 4px;
+    margin: 4px 0 6px;
+    overflow: hidden;
+}
+
+.forgot-password .strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s, background 0.3s;
+}
+
+.forgot-password .strength-label {
+    text-align: left;
+    font-size: 0.78rem;
+    color: #aab0c0;
+    margin-bottom: 18px;
+}
+
+/* requirements checklist */
+.forgot-password .requirements {
+    background: #f8faff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.forgot-password .req-item {
+    font-size: 0.8rem;
+    color: #aab0c0;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: color 0.2s;
+}
+
+.forgot-password .req-item .dot {
+    font-size: 0.55rem;
+    flex-shrink: 0;
+}
+
+.forgot-password .req-item.met {
+    color: #22c55e;
+}
+
+/* ─────────────────────────────────────────
+   SUCCESS STATE (reset password page)
+───────────────────────────────────────── */
+.forgot-password .success-card {
+    display: none;
+    text-align: center;
+}
+
+.forgot-password .success-card .big-icon {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+}
+
+.forgot-password .success-card h2 {
+    font-size: 1.4rem;
+    color: #1c4273;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.forgot-password .success-card p {
+    color: #7a8599;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.forgot-password .btn-go-login {
+    display: inline-block;
+    padding: 13px 32px;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: #fff;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+}
+
+.forgot-password .btn-go-login:hover {
+    opacity: 0.88;
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+    .forgot-password .card {
+        padding: 36px 24px;
+    }
+
+    .forgot-password .code-inputs input {
+        width: 40px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .forgot-password .step-line {
+        width: 32px;
+    }
+}
