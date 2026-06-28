@@ -9,12 +9,13 @@ from ratings import ratings_bp
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
 from flask import abort
+from dotenv import load_dotenv
 from functools import wraps
 import random
 import os
-
+load_dotenv()
 app = Flask(__name__)
-
+app_password = os.environ.get("APP_PASSWORD")
 # ─── CONFIG ───
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'database.db')
@@ -31,7 +32,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'mmufoodfinder@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'cuvp uqts lplg jktb'             
+app.config['MAIL_PASSWORD'] = os.environ.get("APP_PASSWORD")          
 app.config['MAIL_DEFAULT_SENDER'] = 'mmufoodfinder@gmail.com'
 
 mail = Mail(app)
