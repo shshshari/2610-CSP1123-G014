@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <title>Login Form</title>
-    <link rel="stylesheet" href="/static/style3.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body class="signup-page">
     <div class="container" id="container">
 
         <!-- SIGN UP FORM -->
@@ -80,19 +80,19 @@
         </div>
 
  
-    <script>
-        const container = document.getElementById('container');
-        const registerBtn = document.getElementById('register');
-        const loginBtn = document.getElementById('login');
- 
-        registerBtn.addEventListener('click', () => {
-            container.classList.add('active');
-        });
- 
-        loginBtn.addEventListener('click', () => {
-            container.classList.remove('active');
-        });
-    </script>
+<script>
+    const container = document.getElementById('container');
+    const registerBtn = document.getElementById('register');
+    const loginBtn = document.getElementById('login');
+
+    registerBtn.addEventListener('click', () => {
+        container.classList.add('active'); 
+    });
+
+    loginBtn.addEventListener('click', () => {
+        container.classList.remove('active'); 
+    });
+</script>
  
 </body>
 </html>
