@@ -50,29 +50,58 @@
 
         <div class="stall-list">
             {% for stall in stalls %}
-                <div class="stall-card">
-                    <div class="stall-card-left">
-                        <div class="stall-thumb">
-                            {% if stall.image_file and stall.image_file != 'default_stall.jpg' %}
-                                <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="Default Stall">
-                            {% endif %}
+                <a href="{{ url_for('stall_details', stall_id=stall.id) }}" class="stall-card-link">
+                    <div class="stall-card">
+                        <div class="stall-card-left">
+                            <div class="stall-thumb">
+                                {% if stall.image_file and stall.image_file != 'default_stall.jpg' %}
+                                    <img src="{{ url_for('static', filename='uploads/' + stall.image_file) }}" alt="{{ stall.name }}">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="Default Stall">
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h3 class="stall-name">{{ stall.name }}</h3>{% if stall.rating %}<span class="stall-rating">⭐ {{ "%.1f"|format(stall.rating) }}</span>{% endif %}
+                                <p class="stall-cat">{{ stall.category }}</p>
+                                <p class="stall-price">Price: <span>{{ stall.price_range }}</span></p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="stall-name">{{ stall.name }}</h3>
-                            <p class="stall-cat">{{ stall.category }}</p>
-                            <p class="stall-price">Price: <span>{{ stall.price_range }}</span></p>
+                        <div class="stall-card-right">
+                            <button class="fav-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleExploreFavorite(this, {{ stall.id }});">
+                                <i class="fa fa-heart {% if stall.id in user_fav_ids %}is-favorited{% endif %}"></i>
+                            </button>
+                            <span class="view-btn">View</span>
                         </div>
                     </div>
-                    <div class="stall-card-right">
-                        <a href="{{ url_for('stall_details', stall_id=stall.id) }}" class="view-btn">View</a>
-                    </div>
-                </div>
+                </a>
             {% else %}
                 <p>No stalls found.</p>
             {% endfor %}
         </div>
     </section>
 </main>
+
+<script>
+    function toggleExploreFavorite(buttonElement, stallId) {
+        const icon = buttonElement.querySelector('i');
+        fetch(`/toggle_favorite/${stallId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (data.action === 'added') {
+                    icon.classList.add('is-favorited');
+                } else {
+                    icon.classList.remove('is-favorited');
+                }
+            } else if (data.status === 'unauthorized') {
+                alert('Please log in!');
+                window.location.href = "{{ url_for('login') }}";
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 {% endblock %}

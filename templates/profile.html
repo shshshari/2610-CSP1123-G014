@@ -5,7 +5,6 @@
 {% block body_class %}page-profile{% endblock %}
 
 {% block content %}
-<body class="profile-page-container">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="flash-alert">
@@ -78,5 +77,33 @@
             </div>
         </div>
     </section>
-</body>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h3>Edit Profile</h3>
+            <form action="{{ url_for('edit_profile') }}" method="POST" enctype="multipart/form-data">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="{{ current_user.name or '' }}">
+
+                <label for="avatar_image">Profile Picture</label>
+                <input type="file" id="avatar_image" name="avatar_image" accept="image/*">
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal() {
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+    </script>
 {% endblock %}

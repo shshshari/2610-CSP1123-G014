@@ -1,9 +1,11 @@
 /* --- SHARED / GLOBAL (Keep these as they are) --- */
 :root { --primary: #1c4273;   --navy-dark: #153256;
+  --navy: #1c4273;
   --blue-mid: #578ef4;
   --cream: #fdf6ee;
   --warm-white: #fff9f2;
   --orange: #e07b39;
+  --orange-light: #fde8cc;
   --dark: #2b1f14;
   --mid: #6b4f35;
   --muted: #a08060;
@@ -11,11 +13,528 @@
   --green: #3d7a56;
   --green-light: #e4f2ea;
   --gold: #f0a500;
+  --red: #e0473e;
   --shadow: 0 2px 12px rgba(43, 31, 20, 0.08);
   --shadow-md: 0 4px 20px rgba(43, 31, 20, 0.13); }
 body { font-family: 'Roboto', sans-serif; background-color: var(--cream); color: var(--dark); min-height: 100vh;margin: 0;padding: 0; }
 header { height: 60px; background: var(--primary); color: white; display: flex; align-items: center; }
 
+
+
+/* --- STALL DETAIL PAGE--- */
+.stall-detail body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+/* ── MAIN ── */
+.stall-detail main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+/* ── BREADCRUMB ── */
+.stall-detail .breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.stall-detail .breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.stall-detail .breadcrumb a:hover {
+  color: var(--orange);
+}
+.stall-detail .breadcrumb .sep {
+  color: var(--border);
+}
+
+.stall-detail .breadcrumb .current {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.stall-detail .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+    padding: 0;
+    margin-bottom: 20px;
+    transition: color 0.15s;
+    background-color: #175393;
+    color: #fff;
+    border-radius: 0.5em;
+    padding: 5px;
+}
+.stall-detail .back-btn:hover {
+  background-color: #1c4273;
+}
+
+/* ── TOP SECTION ── */
+.stall-detail .stall-top {
+  display: flex;
+  gap: 36px;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+.stall-detail .stall-image {
+  flex-shrink: 0;
+  width: 250px;
+  height: 210px;
+  background: linear-gradient(135deg, #e8ddd0 0%, #d4c4b0 100%);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: var(--shadow);
+}
+.stall-detail .stall-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stall-detail .stall-info {
+  flex: 1;
+  padding-top: 2px;
+}
+.stall-detail .stall-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.stall-detail .stall-name {
+  font-size: 1.8rem;
+  font-weight: bolder;
+  color: var(--muted);
+  border: 2px solid var(--dark);
+  background-color: var(--warm-white);
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 0.9em;
+}
+/* ── STATUS BADGE ── */
+.stall-detail .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.stall-detail .status-open {
+  background: var(--green-light);
+  color: var(--green);
+}
+.stall-detail .status-open::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+ 
+/* ── TAGS ── */
+.stall-detail .tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.stall-detail .tag {
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--orange-light);
+  color: var(--orange);
+  border: 1.5px solid #f0c89a;
+}
+.stall-detail .tag.halal {
+  background: var(--green-light);
+  color: var(--green);
+  border-color: #b2d9bf;
+}
+/* ── STALL META ── */
+.stall-detail .stall-category {
+  font-size: 0.92rem;
+  color: var(--mid);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.stall-detail .stall-meta{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 12px;
+}  
+.stall-detail .stall-meta .divider {
+  color: var(--border);
+  font-weight: 400;
+}
+.stall-detail .review-count {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.stall-detail .stall-location,
+.stall-detail .stall-hours {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.85rem;
+  color: var(--mid);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+/* ── RECOMMENDER BADGE ── */
+.stall-detail .rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #fff3e6, #fde8cc);
+  border: 1.5px solid #f0c89a;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--orange);
+  flex-wrap: wrap;
+}
+.stall-detail .match-score {
+  background: var(--orange);
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 9px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+/* ── ACTION BUTTONS ── */
+.stall-detail .action-buttons {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.stall-detail .btn {
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--dark);
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--warm-white);
+  color: var(--dark);
+}
+.stall-detail .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(43, 31, 20, 0.12);
+}
+.stall-detail .btn-fav.active {
+  background: #fff0ee;
+  border-color: var(--red);
+  color: var(--red);
+}
+.stall-detail .btn-fav:hover {
+  background: #fff0ee;
+  border-color: var(--red);
+  color: var(--red);
+}
+.stall-detail .fav-count {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.stall-detail .btn-fav.active .fav-count {
+  color: var(--red);
+}
+ 
+.stall-detail .btn-review:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+}
+.stall-detail .btn-rate:hover {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+/* ── DIVIDER ── */
+.stall-detail .section-divider {
+  border: none;
+  border-top: 1.5px solid var(--border);
+  margin: 32px 0;
+}
+/* ── SECTION TITLE ── */
+.stall-detail .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  color: var(--dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stall-detail .section-title::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: var(--border);
+}
+/* ── MENU ── */
+.stall-detail .menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.stall-detail .menu-item {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.stall-detail .menu-item:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+.stall-detail .menu-item-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.stall-detail .menu-item-desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.stall-detail .menu-item-price {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1c4273;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+/* ── REVIEWS ── */
+.stall-detail .existing-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px
+}
+.stall-detail .review-card {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.4s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stall-detail .review-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.stall-detail .reviewer-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--dark);
+}
+.stall-detail .review-date {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.stall-detail .review-stars {
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+.stall-detail .review-text {
+  font-size: 0.85rem;
+  color: var(--mid);
+  line-height: 1.55;
+}
+/* ── WRITE REVIEW ── */
+.stall-detail .write-review-box {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+ 
+.stall-detail .write-review-box h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+.stall-detail .star-picker {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.stall-detail .star-picker span {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--border);
+  transition: color 0.15s, transform 0.1s;
+  user-select: none;
+}
+.stall-detail .star-picker span.active {
+  color: var(--gold);
+}
+ 
+.stall-detail .star-picker span:hover {
+  transform: scale(1.2);
+}
+.stall-detail .review-textarea {
+  width: 100%;
+  height: 80px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--cream);
+  padding: 10px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  color: var(--dark);
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 10px;
+  display: block;
+}
+ 
+.stall-detail .review-textarea:focus {
+  border-color: var(--orange);
+}
+.stall-detail .submit-btn {
+  padding: 9px 24px;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+}
+.stall-detail .submit-btn:hover {
+  background: #c96a28;
+  transform: translateY(-1px);
+}
+/* ── SIMILAR STALLS ── */
+.stall-detail .similar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.stall-detail .similar-card {
+  background: var(--warm-white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.18s, transform 0.15s;
+  box-shadow: var(--shadow);
+}
+ 
+.stall-detail .similar-card:hover{
+  box-shadow: 0 6px 20px rgba(43, 31, 20, 0.14);
+  transform: translateY(-3px);
+}
+.stall-detail .similar-card-img {
+  height: 90px;
+  background: linear-gradient(135deg, #e8ddd0, #d4c4b0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.stall-detail .similar-card-body {
+  padding: 10px 12px;
+}
+.stall-detail .similar-card-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+ 
+.stall-detail .similar-card-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+.stall-detail .similar-card-rating {
+  color: var(--gold);
+  font-weight: 700;
+}
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  nav {
+     padding: 12px 20px;
+  }
+  .stall-detail .nav-center {
+     display: none;
+  }
+  .stall-detail .stall-top{
+     flex-direction: column;
+  }
+  .stall-detail .stall-image {
+     width: 100%;
+     height: 180px;
+  }
+  .stall-detail .similar-grid {
+     grid-template-columns: 1fr 1fr;
+  }
+  main {
+     padding: 20px 16px 48px;
+  }
+}
 /* --- SIGN UP PAGE--- */
 /* ── RESET ── */
 .signup-page * {
@@ -524,9 +1043,34 @@ body.signup-page {
 .page-explore .stall-price { font-size: 0.8rem; color: var(--mid); font-weight: 600; margin-bottom: 6px; }
 .page-explore .stall-price span { font-weight: 800; color: var(--orange); }
 .page-explore .stall-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; margin-left: 12px; }
-.page-explore .view-btn { display: inline-flex; align-items: center; padding: 6px 16px; background: var(--navy); color: #fff; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none; transition: background 0.18s, transform 0.1s; }
+.page-explore .view-btn { display: inline-flex; align-items: center; padding: 6px 16px; background: var(--primary); color: #fff; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none; transition: background 0.18s, transform 0.1s; }
 .page-explore .view-btn:hover { background: var(--navy-dark); transform: translateY(-1px); }
-
+.page-explore .stall-rating {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--orange);
+    margin-left: 6px;
+}
+.page-explore .stall-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.page-explore .fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+.page-explore .fav-btn .fa-heart {
+    color: var(--border);
+    transition: color 0.2s;
+}
+.page-explore .fav-btn .fa-heart.is-favorited {
+    color: var(--red);
+}
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ── RESPONSIVE ── */
@@ -542,8 +1086,23 @@ body.signup-page {
 
 /* Profile & Stalls */
 .page-profile .container { width: 90%; margin: 0 auto; }
-.page-stall .container { /* Whatever width you had for stalls */ }
 
+.page-profile .stalls-list,
+.page-profile .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.page-profile .bottom-section h4 small {
+    background-color: #163459;
+    border-radius: 0.5em;
+    color: #fff;
+    padding: 5px;
+}
+.page-profile .bottom-section h4 small:hover {
+    background-color: #2b5587;
+}
 /* Auth/Reset (style3.css) */
 .page-auth .container { width: 768px; max-width: 95vw; min-height: 480px; }
 
@@ -570,7 +1129,83 @@ body.signup-page {
     width: auto;
     object-fit: contain;
 }
+/* ---- EDIT PROFILE MODAL ---- */
+.page-profile .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
 
+.page-profile .modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.page-profile .modal-box h3 {
+    font-size: 1.2rem;
+    color: #1c4273;
+    margin-bottom: 20px;
+}
+
+.page-profile .modal-box label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.page-profile .modal-box input[type="text"],
+.page-profile .modal-box input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+}
+
+.page-profile .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.page-profile .btn-cancel,
+.page-profile .btn-save {
+    padding: 9px 18px;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.page-profile .btn-cancel {
+    background: #eee;
+    color: #333;
+}
+
+.page-profile .btn-save {
+    background: #1c4273;
+    color: #fff;
+}
+
+.page-profile .btn-save:hover {
+    background: #163459;
+}
 /* Hamburger Menu Button */
 .hamburger {
     flex-shrink: 0 !important;
@@ -820,6 +1455,7 @@ body.signup-page {
 
 .page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 6px; }
 .page-profile .btn-edit:hover { background: #163459; }
+.page-profile .btn-logout:hover { background: #cccccc; }
 .page-profile .btn-logout { background: #eee; color: #333; }
 .page-profile .btn-logout a { color: inherit; text-decoration: none; }
 
@@ -870,7 +1506,8 @@ body.signup-page {
 
 .page-profile .empty-list { color: #777; font-style: italic; text-align: center; padding: 20px; }
 
-.page-profile .clickable-review-wrapper:hover .review-card {
+.page-profile .clickable-review-wrapper:hover .review-card,
+.page-profile .fav-stall-link:hover .fav-stall-card {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     border-color: #ddd;

@@ -260,7 +260,10 @@ def manager_dashboard():
 @app.route('/stall/<int:stall_id>')
 def stall_details(stall_id):
     stall = Stall.query.get_or_404(stall_id)
-    return render_template('stall.html', stall=stall)
+    is_favorited = False
+    if current_user.is_authenticated:
+        is_favorited = Favourite.query.filter_by(user_id=current_user.id, stall_id=stall.id).first() is not None
+    return render_template('stall.html', stall=stall, is_favorited=is_favorited)
 
 @app.route('/stall/<int:stall_id>/review', methods=['POST'])
 @login_required
@@ -484,7 +487,12 @@ def explore():
     categories = db.session.query(Stall.category).distinct().all()
     categories = [c[0] for c in categories if c[0]]
 
-    return render_template('explore.html', stalls=processed_stalls, locations=locations, categories=categories)
+    user_fav_ids = []
+    if current_user.is_authenticated:
+        favs = Favourite.query.filter_by(user_id=current_user.id).all()
+        user_fav_ids = [f.stall_id for f in favs]
+
+    return render_template('explore.html', stalls=processed_stalls, locations=locations, categories=categories, user_fav_ids=user_fav_ids)
 
 
 @app.route('/profile')
