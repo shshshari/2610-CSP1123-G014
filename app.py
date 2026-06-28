@@ -15,6 +15,7 @@ import random
 import os
 load_dotenv()
 app = Flask(__name__)
+MANAGER_SECRET = os.environ.get("MANAGER_SECRET_CODE")
 app_password = os.environ.get("APP_PASSWORD")
 # ─── CONFIG ───
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -192,7 +193,7 @@ def register():
         secret_code = request.form.get('secret_code', '').strip()
 
         if secret_code:
-            if secret_code == "mMu2o26bruh":
+            if secret_code == MANAGER_SECRET:
                 role = 'manager'
             else:
                 flash("Invalid manager secret code. Please try again.")
