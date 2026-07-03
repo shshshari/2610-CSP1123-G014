@@ -718,16 +718,5 @@ if __name__ == '__main__':
             db.session.commit()
             print("Database initialized with buildings.")
 
-        #if not Stall.query.first():
-           # loc = Location.query.first()
-           # sample_stalls = [
-           #     Stall(name="JINJJA SHYOK", category="western", location_id=loc.id),
-            #    Stall(name="CITA RASA", category="malay", location_id=loc.id),
-            #    Stall(name="Rasa Shiokk", category="malay", location_id=loc.id),
-            #    Stall(name="Stall 4", category="chinese", location_id=loc.id),
-           # ]
-          #  db.session.add_all(sample_stalls)
-          #  db.session.commit()
-          #  print("Sample stalls added.")
 
 app.run(debug=True)
