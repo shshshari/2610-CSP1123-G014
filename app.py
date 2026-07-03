@@ -428,6 +428,37 @@ def edit_stall(stall_id):
     locations = Location.query.all()
     return render_template('edit_stall.html', stall=stall, locations=locations)
 
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if request.method == 'POST':
+        current_pwd = request.form.get('current_password')
+        new_pwd = request.form.get('new_password')
+        confirm_pwd = request.form.get('confirm_password')
+
+        if not current_pwd or not new_pwd or not confirm_pwd:
+            flash("All fields are required.", "error")
+            return redirect(url_for('change_password'))
+
+        if not check_password_hash(current_user.password, current_pwd):
+            flash("Incorrect current password.", "error")
+            return redirect(url_for('change_password'))
+
+        if new_pwd != confirm_pwd:
+            flash("New passwords do not match.", "error")
+            return redirect(url_for('change_password'))
+            
+        if len(new_pwd) < 6:
+            flash("New password must be at least 6 characters long.", "error")
+            return redirect(url_for('change_password'))
+
+        current_user.password = generate_password_hash(new_pwd)
+        db.session.commit()
+
+        flash("Your password has been successfully updated.", "success")
+        return redirect(url_for('manager_dashboard'))  
+
+    return render_template('change_password.html')
 
 @app.route('/delete_stall/<int:stall_id>', methods=['POST'])
 @login_required
