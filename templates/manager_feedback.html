@@ -9,19 +9,20 @@
     <div class="feedback-container">
         <div class="feedback-header">
             <h2>User Feedbacks & Suggestions</h2>
-            <a href="{{ url_for('manager_dashboard') }}" class="back-btn">Back to Dashboard</a>
         </div>
 
         {% if feedbacks %}
             <div class="feedback-list">
-                {% for fb in feedbacks %}
-                    <div class="feedback-item">
-                        <p class="feedback-content">"{{ fb.content }}"</p>
-                        <small class="feedback-meta">
-                            Submitted by User ID: {{ fb.user_id if fb.user_id else "Anonymous" }}
-                        </small>
-                    </div>
-                {% endfor %}
+        {% for fb in feedbacks %}
+        <div class="feedback-item">
+        <p class="feedback-content">"{{ fb.content }}"</p>
+            <small class="feedback-meta">
+            Submitted by: {{ fb.name if fb.name else "Anonymous" }} | 
+            Email: {{ fb.email if fb.email else "Not provided" }} |
+            User ID: {{ fb.user_id if fb.user_id else "N/A" }}
+        </small>
+    </div>
+{% endfor %}
             </div>
         {% else %}
             <p class="no-feedback">No system feedbacks have been submitted yet.</p>

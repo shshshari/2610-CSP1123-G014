@@ -12,20 +12,20 @@
                     <h1>MMU Campus Archetype Test</h1>
                     <p>Answer the questions below to extract your current mood match.</p>
                 </div>
-                <a href="{{ url_for('home') }}">🏠 Back Home</a>
+                
             </div>
 
             <form action="{{ url_for('quiz') }}" method="POST" class="quiz-form">
                 <div class="q-block">
                     <h3>1. If you had to delete one social media platform forever, which one goes?</h3>
-                    <label><input type="radio" name="fandom" value="tiktok" checked> TikTok</label>
+                    <label><input type="radio" name="fandom" value="tiktok"> TikTok</label>
                     <label><input type="radio" name="fandom" value="instagram"> Instagram</label>
                     <label><input type="radio" name="fandom" value="twitter"> X / Twitter</label>
                 </div>
 
                 <div class="q-block">
                     <h3>2. Choose your current psychological battery state:</h3>
-                    <label><input type="radio" name="mood" value="chill" checked> Calm and chill</label>
+                    <label><input type="radio" name="mood" value="chill"> Calm and chill</label>
                     <label><input type="radio" name="mood" value="stressed"> Panicked/Stressed</label>
                     <label><input type="radio" name="mood" value="social"> Energetic and chatty</label>
                     <label><input type="radio" name="mood" value="hurry"> Complete emergency</label>
@@ -33,28 +33,28 @@
 
                 <div class="q-block">
                     <h3>3. If Cyberjaya suddenly had extreme seasonal weather, what are you picking?</h3>
-                    <label><input type="radio" name="weather" value="snow" checked> Heavy snow storm</label>
+                    <label><input type="radio" name="weather" value="snow"> Heavy snow storm</label>
                     <label><input type="radio" name="weather" value="leaves"> Cozy orange autumn</label>
                     <label><input type="radio" name="weather" value="sun"> Perpetual bright summer</label>
                 </div>
 
                 <div class="q-block">
-                    <h3>4. Realistically, how are your digital bank balances looking?</h3>
-                    <label><input type="radio" name="budget" value="low" checked> Broke student mode</label>
-                    <label><input type="radio" name="budget" value="medium"> Standard average</label>
-                    <label><input type="radio" name="budget" value="high"> Treat yourself</label>
+                    <h3>4. Realistically, how is your bank balance looking?</h3>
+                    <label><input type="radio" name="budget" value="low"> Broke student mode</label>
+                    <label><input type="radio" name="budget" value="medium">Average</label>
+                    <label><input type="radio" name="budget" value="high">Elon Musk</label>
                 </div>
 
                 <div class="q-block">
                     <h3>5. What is your preferred, ultimate style of procrastinating assignments?</h3>
-                    <label><input type="radio" name="study" value="nap" checked> Clean room and nap</label>
+                    <label><input type="radio" name="study" value="nap"> Clean room and nap</label>
                     <label><input type="radio" name="study" value="show"> Watch new drama</label>
-                    <label><input type="radio" name="study" value="stare"> Stare at cursor</label>
+                    <label><input type="radio" name="study" value="stare"> Stare at the wall</label>
                 </div>
 
                 <div class="q-block">
                     <h3>6. Pick an animal avatar:</h3>
-                    <label><input type="radio" name="animal" value="cat" checked> Cat 🐱</label>
+                    <label><input type="radio" name="animal" value="cat"> Cat 🐱</label>
                     <label><input type="radio" name="animal" value="capybara"> Capybara 🧘</label>
                     <label><input type="radio" name="animal" value="raccoon"> Raccoon 🦝</label>
                 </div>
@@ -71,7 +71,6 @@
             </div>
             <div class="result-actions">
                 <a href="{{ url_for('quiz') }}">🔄 Retake Quiz</a>
-                <a href="{{ url_for('home') }}">🏠 Home</a>
             </div>
             <h2>Your Custom Matches:</h2>
             <div class="stall-grid">

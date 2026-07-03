@@ -55,6 +55,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(20), default='user')
     avatar_file = db.Column(db.String(100), nullable=False, default='default_avatar.png')
+    bio = db.Column(db.Text, nullable=True, default="")
 
 class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,6 +89,8 @@ class Favourite(db.Model):
 
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Optional: stores who sent it
 
@@ -377,6 +380,9 @@ def edit_profile():
     if new_name:
         current_user.name = new_name.strip()
 
+    new_bio = request.form.get('bio')
+    current_user.bio = new_bio.strip() if new_bio else ""
+
     if 'avatar_image' in request.files:
         file = request.files['avatar_image']
         if file and file.filename != '':
@@ -655,12 +661,17 @@ def quiz():
 def delete_account():
     user = User.query.get(current_user.id)
 
-    db.session.delete(user)
-    db.session.commit()
-
     logout_user()
+    session.clear()
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
     
-    flash("Your account has been permanently deleted.")
+        flash("Your account has been permanently deleted.")
+    except Exception:
+        db.session.rollback()
+        flash("An error occurred while deleting your account.", "danger")
     return redirect(url_for('home'))
 
 @app.route('/feedback', methods=['GET', 'POST'])
@@ -677,6 +688,8 @@ def feedback():
             
         # Save only the text message to the independent Feedback table
         new_fb = Feedback(
+            name=name,
+            email=email,
             content=f"Category: {category} | Message: {message}",
             user_id=current_user.id if current_user.is_authenticated else None
         )

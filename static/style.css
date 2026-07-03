@@ -1443,7 +1443,14 @@ body.signup-page {
 .page-profile .profile-bio { font-size: 14px; color: #777; margin-bottom: 6px; }
 
 /* ---- BUTTONS ---- */
-.page-profile .btn-edit, .page-profile .btn-logout {
+/* ---- BUTTONS ---- */
+.page-profile .profile-actions {
+    display: flex;
+    flex-direction: column;   /* Force buttons to stack on top of each other */
+    gap: 8px;                 /* Consistent vertical spacing */
+}
+
+.page-profile .btn-edit, .page-profile .btn-logout, .page-profile .btn-delete {
     width: 120px;
     padding: 8px 0;
     border-radius: 5px;
@@ -1451,13 +1458,27 @@ body.signup-page {
     font-size: 0.85rem;
     cursor: pointer;
     font-weight: 600;
+    text-align: center;
 }
 
-.page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 6px; }
+.page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 0px; } /* Reset margin since flexbox handles layout gaps */
 .page-profile .btn-edit:hover { background: #163459; }
 .page-profile .btn-logout:hover { background: #cccccc; }
 .page-profile .btn-logout { background: #eee; color: #333; }
 .page-profile .btn-logout a { color: inherit; text-decoration: none; }
+
+/* Keeping Delete button uniform with other button structures */
+.page-profile .btn-delete { background: var(--red); color: white; }
+.page-profile .btn-delete:hover { opacity: 0.9; }
+.page-profile .btn-delete a { color: inherit; text-decoration: none; }
+
+/* ---- BIO TEXT DISPLAY STYLE ---- */
+.page-profile .profile-bio-text {
+    font-size: 14px;
+    color: #555;
+    margin: 2px 0 6px 0;
+    line-height: 1.4;
+}
 
 /* ---- BOTTOM SECTION ---- */
 .page-profile .bottom-section {
@@ -1635,7 +1656,33 @@ body.signup-page {
     margin: 40px auto;
     display: block;
 }
+/* Change background of the quiz area only */
+.page-quiz .quiz-container {
+    background: #ffffff; /* Replace with your desired color or background image */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+/* result button   */
+.page-quiz .quiz-form button[type="submit"] {
+    background: linear-gradient(135deg, #1c4273, #2a5ca8);
+    color: #ffffff;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(28, 66, 115, 0.2);
+    display: block;
+    margin: 20px auto 0;
+}
 
+.page-quiz .quiz-form button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(28, 66, 115, 0.3);
+}
 /* Questionnaire Container (Stage 1) */
 .page-quiz .quiz-card { 
     background: white; 
@@ -1659,7 +1706,7 @@ body.signup-page {
     border-radius: 0.85em;
     padding: 0.8%;
 }
-.page-quiz .quiz-header h1 { color: #1a73e8; margin: 0; font-size: 24px; font-weight: 700; }
+.page-quiz .quiz-header h1 { color: #1854a3; margin: 0; font-size: 24px; font-weight: 700; }
 .page-quiz .quiz-header p { color: #666; margin: 4px 0 0 0; font-size: 13px; }
 
 .page-quiz .back-link { 

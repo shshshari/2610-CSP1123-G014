@@ -25,7 +25,7 @@
                     <h2>{{ stall.name }}</h2>
                     <p>Category: <b>{{ stall.category }}</b></p>
                     <p><span class="price-tag">{{ stall.price_range }}</span></p>
-                    
+                    <p class="stall-desc">{{ stall.description or "No description available." }}</p>
                     <a href="{{ url_for('stall_details', stall_id=stall.id) }}">View Details</a>
                     
                     <button class="fav-btn" onclick="toggleHomeFavorite(this, {{ stall.id }});">
