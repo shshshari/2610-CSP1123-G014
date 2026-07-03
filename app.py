@@ -650,7 +650,19 @@ def quiz():
 
     return render_template('suggest.html')
 
-# ─── DB INIT & RUN WITH ALTER-PATCH ───
+@app.route('/delete_account', methods=['POST'])
+@login_required
+def delete_account():
+    user = User.query.get(current_user.id)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    logout_user()
+    
+    flash("Your account has been permanently deleted.")
+    return redirect(url_for('home'))
+
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
