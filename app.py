@@ -208,6 +208,10 @@ def register():
             flash("Email and Password fields are required.")
             return redirect(url_for('register'))
 
+        if len(user_password) < 6:
+            flash("Password must be at least 6 characters long.", "danger")
+            return redirect(url_for('register'))
+
         existing_user = User.query.filter_by(email=user_email).first()
         if existing_user:
             flash("This email is already registered. Please log in.")
@@ -438,27 +442,24 @@ def change_password():
 
         if not current_pwd or not new_pwd or not confirm_pwd:
             flash("All fields are required.", "error")
-            return redirect(url_for('change_password'))
-
-        if not check_password_hash(current_user.password, current_pwd):
+        elif not check_password_hash(current_user.password, current_pwd):
             flash("Incorrect current password.", "error")
-            return redirect(url_for('change_password'))
-
-        if new_pwd != confirm_pwd:
+        elif new_pwd != confirm_pwd:
             flash("New passwords do not match.", "error")
-            return redirect(url_for('change_password'))
-            
-        if len(new_pwd) < 6:
+        elif len(new_pwd) < 6:
             flash("New password must be at least 6 characters long.", "error")
-            return redirect(url_for('change_password'))
+        else:
+            
+            current_user.password = generate_password_hash(new_pwd)
+            db.session.commit()
+            flash("Your password has been successfully updated. Please log in again.", "success")
+            logout_user()
+            return redirect(url_for('login'))
+        
+        return redirect(url_for('profile'))
 
-        current_user.password = generate_password_hash(new_pwd)
-        db.session.commit()
 
-        flash("Your password has been successfully updated.", "success")
-        return redirect(url_for('manager_dashboard'))  
-
-    return render_template('change_password.html')
+    return redirect(url_for('profile'))
 
 @app.route('/delete_stall/<int:stall_id>', methods=['POST'])
 @login_required
@@ -555,6 +556,11 @@ def forgot_password():
         action = request.form.get('action')
 
         if action == 'send_code':
+
+            if len(new_pw) < 6:
+                flash("New password must be at least 6 characters long.", "danger")
+                return render_template('forgot_password.html', email=email, code_sent=True)
+
             user = User.query.filter_by(email=email).first()
             if user:
                 code = str(random.randint(100000, 999999))

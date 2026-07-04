@@ -15,7 +15,7 @@
   <div class="breadcrumb">
     <a href="{{ url_for('home') }}">Home</a>
     <span class="sep">›</span>
-    <span style="text-transform: capitalize;">{{ stall.category }}</span>
+    <span>{{ stall.category }}</span>
     <span class="sep">›</span>
     <span class="current">{{ stall.name }}</span>
   </div>
@@ -36,7 +36,7 @@
         </div>
         
         <div class="tags">
-            <span class="tag" style="text-transform: capitalize;">{{ stall.category }}</span>
+            <span class="tag">{{ stall.category }}</span>
         </div>
 
         <div class="stall-category">{{ stall.description if stall.description else "No description provided." }}</div>
@@ -54,16 +54,18 @@
 
   <!-- ── ACTION BUTTONS ── -->
   <div class="action-buttons">
+    {% if current_user.role != 'manager' %}
     <button class="btn btn-fav {% if is_favorited %}active{% endif %}" id="favBtn" onclick="toggleStallFavorite({{ stall.id }});">
       ♥ <span id="favLabel">{% if is_favorited %}Favorited{% else %}Favorite{% endif %}</span>
     </button>
+    
     <button class="btn btn-review" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
       ✏️ Write a Review
     </button>
+    {% endif %}
     {% if current_user.is_authenticated and (current_user.role.lower() == 'admin' or current_user.id == stall.manager_id) %}
-    <div class="admin-actions-div" style="margin-top: 20px; display: flex; gap: 10px;">
-        <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="edit-btn" 
-           style="background-color: #1a73e8; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: 500; font-size: 14px; transition: background 0.2s;">
+    <div class="admin-actions-div">
+        <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="edit-btn"></a>
             ⚙️ Edit Stall Details
         </a>
     </div>
@@ -73,51 +75,51 @@
   <hr class="section-divider"/>
 
   <!-- ── REVIEWS SECTION ── -->
-  <div class="section-title" style="font-size:22px; margin-bottom: 15px;">User Reviews</div>
-  <div class="existing-reviews" id="reviewContainer" style="display: flex; flex-direction: column; gap: 15px;">
+  <div class="section-title">User Reviews</div>
+  <div class="existing-reviews" id="reviewContainer">
 
     {% if stall.reviews %}
       {% for review in stall.reviews %}
-        <div class="review-card" id="review-card-{{ review.id }}" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <div class="review-card" id="review-card-{{ review.id }}">
           
           <div id="view-mode-{{ review.id }}">
-            <div class="review-card-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div class="review-card-top">
               <div>
-                <div class="reviewer-name" style="font-weight: 700; color: #333; text-transform: capitalize;">
+                <div class="reviewer-name">
                   {{ review.author.name if review.author.name else "Anonymous User" }}
                 </div>
-                <div class="review-stars" style="color: #ffcc00; margin-top: 3px;">
+                <div class="review-stars">
                   {% for i in range(review.rating) %}⭐{% endfor %}
                 </div>
               </div>
 
-              <div class="review-actions" style="display: flex; gap: 10px;">
+              <div class="review-actions">
                 {% if current_user.is_authenticated %}
                   
                   {% if review.user_id == current_user.id %}
-                    <button onclick="toggleEditMode('{{ review.id }}')" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 13px;">✏️ Edit</button>
-                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Delete your review?');">
-                      <button type="submit" style="background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 13px;">🗑️ Delete</button>
+                    <button onclick="toggleEditMode('{{ review.id }}')">✏️ Edit</button>
+                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" onsubmit="return confirm('Delete your review?');">
+                      <button type="submit">🗑️ Delete</button>
                     </form>
                   
                   {% elif current_user.role == 'manager' %}
-                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Admin Action: Delete this user review?');">
-                      <button type="submit" style="background: #ff3b30; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">🛡️ Admin Delete</button>
+                    <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" onsubmit="return confirm('Admin Action: Delete this user review?');">
+                      <button type="submit">🛡️ Admin Delete</button>
                     </form>
                   {% endif %}
 
                 {% endif %}
               </div>
             </div>
-            <div class="review-text" style="color: #555; font-style: italic;">"{{ review.comment }}"</div>
+            <div class="review-text">{{ review.comment }}</div>
           </div>
 
           {% if review.user_id == current_user.id %}
-          <div id="edit-mode-{{ review.id }}" style="display: none;">
+          <div id="edit-mode-{{ review.id }}">
             <form action="{{ url_for('edit_review', review_id=review.id) }}" method="POST">
-              <div style="margin-bottom: 10px;">
-                <label style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 4px;">Update Rating:</label>
-                <select name="rating" style="padding: 5px; border-radius: 4px;">
+              <div>
+                <label>Update Rating:</label>
+                <select name="rating">
                   <option value="5" {% if review.rating == 5 %}selected{% endif %}>⭐⭐⭐⭐⭐ (5)</option>
                   <option value="4" {% if review.rating == 4 %}selected{% endif %}>⭐⭐⭐⭐ (4)</option>
                   <option value="3" {% if review.rating == 3 %}selected{% endif %}>⭐⭐⭐ (3)</option>
@@ -125,10 +127,10 @@
                   <option value="1" {% if review.rating == 1 %}selected{% endif %}>⭐ (1)</option>
                 </select>
               </div>
-              <textarea name="comment" style="width: 100%; min-height: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px;">{{ review.comment }}</textarea>
-              <div style="display: flex; gap: 10px;">
-                <button type="submit" style="background: #28a745; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">Save</button>
-                <button type="button" onclick="toggleEditMode('{{ review.id }}')" style="background: #6c757d; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">Cancel</button>
+              <textarea name="comment">{{ review.comment }}</textarea>
+              <div>
+                <button type="submit">Save</button>
+                <button type="button" onclick="toggleEditMode('{{ review.id }}')">Cancel</button>
               </div>
             </form>
           </div>
@@ -137,40 +139,41 @@
         </div>
       {% endfor %}
     {% else %}
-      <p style="color: #777; font-style: italic; padding: 10px 0;">No reviews written yet. Be the first to share your experience!</p>
+      <p>No reviews written yet. Be the first to share your experience!</p>
     {% endif %}
  
   </div>
  
   <!-- ── WRITE A REVIEW FORM ── -->
-<div class="write-review-box" id="writeReview" style="background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 12px; margin-top: 30px;">
-    <h4 style="margin-top: 0; font-size: 18px; margin-bottom: 5px;">✍️ Leave your review</h4>
+   {% if current_user.role != 'manager' %}
+<div class="write-review-box" id="writeReview">
+    <h4>✍️ Leave your review</h4>
     
     <form action="{{ url_for('add_review', stall_id=stall.id) }}" method="POST">
       
       <input type="hidden" name="rating" id="ratingInput" value="5">
       
-      <div class="star-picker-container" style="margin-bottom: 15px;">
-        <label style="font-size: 14px; font-weight: bold; display: block; margin-bottom: 6px; color: #444;">Your Rating:</label>
-        <div class="star-picker" style="font-size: 32px; cursor: pointer; display: flex; gap: 5px; user-select: none;">
-          <span class="interactive-star" data-value="1" onclick="updateStarPicker(1)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
-          <span class="interactive-star" data-value="2" onclick="updateStarPicker(2)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
-          <span class="interactive-star" data-value="3" onclick="updateStarPicker(3)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
-          <span class="interactive-star" data-value="4" onclick="updateStarPicker(4)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
-          <span class="interactive-star" data-value="5" onclick="updateStarPicker(5)" style="color: #ffcc00; transition: color 0.1s ease;">★</span>
+      <div class="star-picker-container">
+        <label>Your Rating:</label>
+        <div class="star-picker">
+          <span class="interactive-star" data-value="1" onclick="updateStarPicker(1)">★</span>
+          <span class="interactive-star" data-value="2" onclick="updateStarPicker(2)">★</span>
+          <span class="interactive-star" data-value="3" onclick="updateStarPicker(3)">★</span>
+          <span class="interactive-star" data-value="4" onclick="updateStarPicker(4)">★</span>
+          <span class="interactive-star" data-value="5" onclick="updateStarPicker(5)">★</span>
         </div>
       </div>
       
-      <textarea class="review-textarea" name="comment" required placeholder="Share your dining experience..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Roboto'; margin-bottom: 15px; resize: vertical; box-sizing: border-box;"></textarea>
+      <textarea class="review-textarea" name="comment" required placeholder="Share your dining experience..."></textarea>
       
       {% if current_user.is_authenticated %}
-        <button type="submit" class="submit-btn" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Submit Review</button>
+        <button type="submit" class="submit-btn">Submit Review</button>
       {% else %}
-        <p style="margin: 0; color: #ff3b30; font-size: 14px;">⚠️ Please <a href="{{ url_for('login') }}">login</a> to submit a review.</p>
+        <p>⚠️ Please <a href="{{ url_for('login') }}">login</a> to submit a review.</p>
       {% endif %}
     </form>
   </div>
- 
+  {% endif %}
 </main>
 
 

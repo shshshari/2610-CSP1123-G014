@@ -67,9 +67,11 @@
                             </div>
                         </div>
                         <div class="stall-card-right">
+                            {% if current_user.role != 'manager' %}
                             <button class="fav-btn" onclick="event.preventDefault(); event.stopPropagation(); toggleExploreFavorite(this, {{ stall.id }});">
                                 <i class="fa fa-heart {% if stall.id in user_fav_ids %}is-favorited{% endif %}"></i>
                             </button>
+                            {% endif %}
                             <span class="view-btn">View</span>
                         </div>
                     </div>

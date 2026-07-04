@@ -23,7 +23,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 
 /* --- STALL DETAIL PAGE--- */
 .stall-detail body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto', sans-serif; 
   background: var(--cream);
   color: var(--dark);
   min-height: 100vh;
@@ -248,7 +248,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 .stall-detail .btn {
   padding: 11px 22px;
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto', sans-serif; 
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
@@ -301,7 +301,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 }
 /* ── SECTION TITLE ── */
 .stall-detail .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Roboto', sans-serif; 
   font-size: 1.15rem;
   color: var(--dark);
   margin-bottom: 16px;
@@ -360,27 +360,66 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   margin-bottom: 24px
 }
 .stall-detail .review-card {
-  background: var(--warm-white);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  box-shadow: var(--shadow);
-  animation: fadeUp 0.4s ease both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: none; 
 }
 .stall-detail .review-card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.stall-detail .review-actions {
+    display: flex;
+    gap: 8px;
+}
+.stall-detail .review-actions button {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.stall-detail .review-actions button:hover {
+    background: #e0e0e0;
+}
+/* Review Text */
+.stall-detail .review-text {
+    margin: 12px 0;
+    font-size: 1rem;
+    color: var(--dark);
+    font-style: normal; 
+    line-height: 1.5;
+}
+.stall-detail div[id^="edit-mode-"] {
+    display: none;
+}
+/* Edit Form Styling */
+.stall-detail .edit-mode form {
+    background: #fdfdfd;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+.stall-detail .edit-mode textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-family: inherit;
 }
 .stall-detail .reviewer-name {
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: var(--dark);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 .stall-detail .review-date {
   font-size: 0.75rem;
@@ -389,11 +428,6 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 .stall-detail .review-stars {
   font-size: 0.85rem;
   margin-top: 2px;
-}
-.stall-detail .review-text {
-  font-size: 0.85rem;
-  color: var(--mid);
-  line-height: 1.55;
 }
 /* ── WRITE REVIEW ── */
 .stall-detail .write-review-box {
@@ -436,7 +470,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   border-radius: 8px;
   background: var(--cream);
   padding: 10px 12px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto', sans-serif; 
   font-size: 0.88rem;
   color: var(--dark);
   resize: none;
@@ -444,6 +478,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   transition: border-color 0.2s;
   margin-bottom: 10px;
   display: block;
+  box-sizing: border-box;
 }
  
 .stall-detail .review-textarea:focus {
@@ -455,7 +490,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto', sans-serif; 
   font-size: 0.88rem;
   font-weight: 800;
   cursor: pointer;
@@ -541,7 +576,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Roboto', sans-serif; 
 }
 
 /* ── BODY ── */
@@ -834,7 +869,7 @@ body.signup-page {
 /* The hero section container */
 .page-home .hero {
     width: 100%;
-    background: url('stall.image.jpg') no-repeat center center / cover;
+    background: url('home_image.jpg') no-repeat center center / cover;
     color: white;
     text-align: center;
     padding: 100px 0; 
@@ -1026,7 +1061,7 @@ body.signup-page {
 .page-explore .search-bar-wrapper { display: flex; align-items: center; background: var(--warm-white); border: 2.5px solid var(--border); border-radius: 50px; padding: 12px 20px; gap: 12px; box-shadow: var(--shadow); margin-bottom: 18px; transition: border-color 0.2s, box-shadow 0.2s; }
 .page-explore .search-bar-wrapper:focus-within { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(28, 66, 115, 0.1); }
 .page-explore .search-icon { color: var(--muted); font-size: 1rem; flex-shrink: 0; }
-.page-explore .search-input { flex: 1; border: none; background: transparent; font-family: 'Segoe UI', sans-serif; font-size: 1rem; font-weight: 600; color: var(--dark); outline: none; }
+.page-explore .search-input { flex: 1; border: none; background: transparent; font-family: 'Roboto', sans-serif;  font-size: 1rem; font-weight: 600; color: var(--dark); outline: none; }
 .page-explore .search-input::placeholder { color: var(--muted); font-weight: 400; }
 .page-explore .results-info { font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-bottom: 14px; padding-left: 4px; }
 .page-explore .results-info span { font-weight: 800; color: var(--navy); }
@@ -1121,7 +1156,7 @@ body.signup-page {
     align-items: center;
     gap: 10px;
     font-size: 20px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif; 
 }
 
 .logo img {
@@ -1184,7 +1219,7 @@ body.signup-page {
 }
 
 .page-profile .btn-cancel,
-.page-profile .btn-save {
+.page-profile .btn-save, .page-profile .btn-change-pw {
     padding: 9px 18px;
     border-radius: 6px;
     border: none;
@@ -1205,6 +1240,10 @@ body.signup-page {
 
 .page-profile .btn-save:hover {
     background: #163459;
+}
+
+.page-profile .btn-change-pw:hover, .page-profile .btn-cancel:hover {
+    background: #d4d4d4;
 }
 /* Hamburger Menu Button */
 .hamburger {
@@ -1403,7 +1442,7 @@ body.signup-page {
     border: 1px dashed #ccc;
 }
 
-/* Flash Messages */
+
 /* ---- BASE STYLES ---- */
 .page-profile * {
     margin: 0;
@@ -1462,14 +1501,14 @@ body.signup-page {
 }
 
 .page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 0px; } /* Reset margin since flexbox handles layout gaps */
-.page-profile .btn-edit:hover { background: #163459; }
-.page-profile .btn-logout:hover { background: #cccccc; }
-.page-profile .btn-logout { background: #eee; color: #333; }
+.page-profile .btn-edit:hover { background: #2b5e98; }
+.page-profile .btn-logout:hover { background: #dadada; }
+.page-profile .btn-logout { background: #ffffff; color: #333; }
 .page-profile .btn-logout a { color: inherit; text-decoration: none; }
 
 /* Keeping Delete button uniform with other button structures */
 .page-profile .btn-delete { background: var(--red); color: white; }
-.page-profile .btn-delete:hover { opacity: 0.9; }
+.page-profile .btn-delete:hover { background-color: #b52626; }
 .page-profile .btn-delete a { color: inherit; text-decoration: none; }
 
 /* ---- BIO TEXT DISPLAY STYLE ---- */
@@ -1901,7 +1940,7 @@ body.signup-page {
     padding: 13px 16px;
     border: 2px solid #e5e9f2;
     border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto', sans-serif; 
     font-size: 0.95rem;
     color: #2d3748;
     outline: none;
@@ -1952,7 +1991,7 @@ body.signup-page {
     color: #fff;
     border: none;
     border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto', sans-serif; 
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
@@ -2045,7 +2084,7 @@ body.signup-page {
     text-align: center;
     font-size: 1.4rem;
     font-weight: 800;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto', sans-serif; 
     color: #1c4273;
     outline: none;
     padding: 0;
@@ -2144,7 +2183,7 @@ body.signup-page {
     background: linear-gradient(135deg, #f97316, #fb923c);
     color: #fff;
     border-radius: 10px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto', sans-serif; 
     font-weight: 800;
     font-size: 0.95rem;
     text-decoration: none;
