@@ -24,7 +24,25 @@
                     
                     <h2>{{ stall.name }}</h2>
                     <p>Category: <b>{{ stall.category }}</b></p>
-                    <p><span class="price-tag">{{ stall.price_range }}</span></p>
+                    <p><span class="price-tag">{{ stall.price_range }}</span>
+{% if stall.reviews %}
+        {# 1. Calculate the sum of all ratings and divide by the total review count #}
+        {% set total_rating = namespace(sum=0) %}
+        {% for review in stall.reviews %}
+            {% set total_rating.sum = total_rating.sum + review.rating %}
+        {% endfor %}
+        {% set avg_rating = total_rating.sum / stall.reviews|length %}
+        
+        {# 2. Display the actual calculated average #}
+        <span class="stall-rating" style="color: #ff9800 !important; font-weight: bold; margin-left: 8px;">
+            ⭐ {{ "%.1f"|format(avg_rating) }}
+        </span>
+    {% else %}
+        <span class="stall-rating" style="color: #888 !important; margin-left: 8px;">
+            ⭐ 0.0
+        </span>
+    {% endif %}
+                    </p>
                     <p class="stall-desc">{{ stall.description or "No description available." }}</p>
                     <a href="{{ url_for('stall_details', stall_id=stall.id) }}">View Details</a>
                     

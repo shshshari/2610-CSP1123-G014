@@ -750,14 +750,6 @@ def view_feedback():
     
     return render_template('manager_feedback.html', feedbacks=all_feedbacks)
 
-with app.app_context():
-    db.create_all()
-    if not Location.query.first():
-        buildings = ["Starbees MMU (Main)", "FCI Building", "FOE Building", "Library area"]
-        for b in buildings:
-            db.session.add(Location(name=b))
-        db.session.commit()
-        print("Database Initialized with Buildings.")
         
 if __name__ == '__main__':
     os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)

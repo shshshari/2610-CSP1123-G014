@@ -23,10 +23,26 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 
 /* --- STALL DETAIL PAGE--- */
 .stall-detail body {
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   background: var(--cream);
   color: var(--dark);
-  min-height: 100vh;
+  min-: 100vh;
+}
+
+.stall-detail .admin-actions-div {
+  display: inline-block;
+}
+
+.stall-detail .edit-btn {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.stall-detail .edit-btn:hover {
+  background: var(--navy-dark);
+  border-color: var(--navy-dark);
+  color: #fff;
 }
 
 /* ── MAIN ── */
@@ -157,7 +173,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
- 
+
 /* ── TAGS ── */
 .stall-detail .tags {
   display: flex;
@@ -195,7 +211,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   font-weight: 700;
   color: var(--dark);
   margin-bottom: 12px;
-}  
+}
 .stall-detail .stall-meta .divider {
   color: var(--border);
   font-weight: 400;
@@ -248,7 +264,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 .stall-detail .btn {
   padding: 11px 22px;
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
@@ -282,7 +298,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 .stall-detail .btn-fav.active .fav-count {
   color: var(--red);
 }
- 
+
 .stall-detail .btn-review:hover {
   background: var(--orange);
   border-color: var(--orange);
@@ -301,7 +317,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 }
 /* ── SECTION TITLE ── */
 .stall-detail .section-title {
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   font-size: 1.15rem;
   color: var(--dark);
   margin-bottom: 16px;
@@ -365,7 +381,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 16px;
-    box-shadow: none; 
+    box-shadow: none;
 }
 .stall-detail .review-card-top {
     display: flex;
@@ -393,7 +409,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     margin: 12px 0;
     font-size: 1rem;
     color: var(--dark);
-    font-style: normal; 
+    font-style: normal;
     line-height: 1.5;
 }
 .stall-detail div[id^="edit-mode-"] {
@@ -412,7 +428,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     border: 1px solid var(--border);
     border-radius: 6px;
     margin-bottom: 10px;
-    font-family: inherit;
+    font-family: 'Roboto', sans-serif;
 }
 .stall-detail .reviewer-name {
     font-weight: 600;
@@ -437,7 +453,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   padding: 18px 20px;
   box-shadow: var(--shadow);
 }
- 
+
 .stall-detail .write-review-box h4 {
   font-size: 0.9rem;
   font-weight: 800;
@@ -459,7 +475,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
 .stall-detail .star-picker span.active {
   color: var(--gold);
 }
- 
+
 .stall-detail .star-picker span:hover {
   transform: scale(1.2);
 }
@@ -470,7 +486,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   border-radius: 8px;
   background: var(--cream);
   padding: 10px 12px;
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   font-size: 0.88rem;
   color: var(--dark);
   resize: none;
@@ -480,7 +496,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   display: block;
   box-sizing: border-box;
 }
- 
+
 .stall-detail .review-textarea:focus {
   border-color: var(--orange);
 }
@@ -490,7 +506,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   font-size: 0.88rem;
   font-weight: 800;
   cursor: pointer;
@@ -515,7 +531,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   transition: box-shadow 0.18s, transform 0.15s;
   box-shadow: var(--shadow);
 }
- 
+
 .stall-detail .similar-card:hover{
   box-shadow: 0 6px 20px rgba(43, 31, 20, 0.14);
   transform: translateY(-3px);
@@ -537,7 +553,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
   color: var(--dark);
   margin-bottom: 4px;
 }
- 
+
 .stall-detail .similar-card-meta {
   font-size: 0.75rem;
   color: var(--muted);
@@ -576,7 +592,7 @@ header { height: 60px; background: var(--primary); color: white; display: flex; 
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
 }
 
 /* ── BODY ── */
@@ -872,23 +888,30 @@ body.signup-page {
     background: url('home_image.jpg') no-repeat center center / cover;
     color: white;
     text-align: center;
-    padding: 100px 0; 
+    padding: 100px 0;
     margin-bottom: 20px;
 }
-
+.page-home .stall-rating {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--orange);
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+}
 
 .page-home .hero-section {
     display: flex;
-    flex-direction: column; 
-    align-items: center;   
-    gap: 20px;           
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
 /* Image style */
 .page-home #maintxt {
-    width: 80%; 
-    max-width: 700px; 
-    height: auto;    
+    width: 80%;
+    max-width: 700px;
+    height: auto;
 }
 /* Quiz container */
 .page-home .quiz {
@@ -924,6 +947,12 @@ body.signup-page {
     position: relative;
     transition: transform 0.2s;
 }
+.page-home .stall-card .stall-desc {
+    height: 4.2em;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
 .page-home .stall-card:hover { transform: translateY(-5px); }
 .page-home .stall-card img {
     width: 100%;
@@ -991,8 +1020,8 @@ body.signup-page {
 .page-feedback .feedback-wrapper { max-width: 600px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 .page-feedback .form-group { margin-bottom: 20px; }
 .page-feedback .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
-.page-feedback .form-group input, 
-.page-feedback .form-group select, 
+.page-feedback .form-group input,
+.page-feedback .form-group select,
 .page-feedback .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
 .page-feedback .star-rating { cursor: pointer; font-size: 1.8rem; color: #ddd; }
 .page-feedback .star-rating span.active { color: #f39c12; }
@@ -1030,7 +1059,7 @@ body.signup-page {
 }
 
 /* Base style for both buttons */
-.page-explore .apply-btn, 
+.page-explore .apply-btn,
 .page-explore .reset-btn {
     width: 100%;
     padding: 10px;
@@ -1040,7 +1069,7 @@ body.signup-page {
     text-align: center;
     text-decoration: none;
     background: transparent;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     cursor: pointer;
     transition: all 0.2s;
     color: #a08060;
@@ -1156,7 +1185,7 @@ body.signup-page {
     align-items: center;
     gap: 10px;
     font-size: 20px;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
 }
 
 .logo img {
@@ -1265,7 +1294,7 @@ body.signup-page {
 }
 
 /* Dropdown Menu */
-#menu-toggle { display: none; } 
+#menu-toggle { display: none; }
 
 .dropdown-menu {
     display: none;
@@ -1484,8 +1513,8 @@ body.signup-page {
 /* ---- BUTTONS ---- */
 .page-profile .profile-actions {
     display: flex;
-    flex-direction: column;   
-    gap: 8px;                
+    flex-direction: column;
+    gap: 8px;
 }
 
 .page-profile .btn-edit, .page-profile .btn-logout, .page-profile .btn-delete {
@@ -1573,21 +1602,29 @@ body.signup-page {
 }
 
 .page-profile .bottom-section a {
-    text-decoration: none; 
-    color: #333;          
-    display: block;        
+    text-decoration: none;
+    color: #333;
+    display: block;
 }
 
 .page-profile .bottom-section h4 {
-    color: #1c4273;      
+    color: #1c4273;
     margin-bottom: 5px;
 }
 
 .page-profile .bottom-section a:hover {
-    color: #000;          
+    color: #000;
 }
 
 /* Styles for Add/Edit pages */
+.page-addstall input,
+.page-addstall textarea,
+.page-addstall select,
+.page-addstall input::placeholder,
+.page-addstall textarea::placeholder {
+    font-family: 'Roboto', sans-serif;
+}
+
 .page-addstall .form-wrapper {
     max-width: 600px;
     width: 100%;
@@ -1609,7 +1646,10 @@ body.signup-page {
 }
 
 .page-addstall .form-group {
+    font-family: 'Roboto', sans-serif;
+    font-size: .8rem;
     margin-bottom: 20px;
+
 }
 
 .page-addstall label {
@@ -1619,8 +1659,8 @@ body.signup-page {
     color: #2c3e50;
 }
 
-.page-addstall input[type="text"], 
-.page-addstall select, 
+.page-addstall input[type="text"],
+.page-addstall select,
 .page-addstall textarea {
     width: 100%;
     padding: 10px 12px;
@@ -1632,8 +1672,8 @@ body.signup-page {
     transition: border-color 0.2s;
 }
 
-.page-addstall input[type="text"]:focus, 
-.page-addstall select:focus, 
+.page-addstall input[type="text"]:focus,
+.page-addstall select:focus,
 .page-addstall textarea:focus {
     border-color: #1c4273;
     outline: none;
@@ -1689,7 +1729,7 @@ body.signup-page {
 }
 
 .page-quiz .quiz-container {
-    background: #ffffff; 
+    background: #ffffff;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1714,22 +1754,22 @@ body.signup-page {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(28, 66, 115, 0.3);
 }
-.page-quiz .quiz-card { 
-    background: white; 
-    padding: 30px; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+.page-quiz .quiz-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.page-quiz .quiz-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    border-bottom: 1px solid #eee; 
-    padding-bottom: 15px; 
-    margin-bottom: 25px; 
+.page-quiz .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
 }
-.page-quiz .quiz-header a { 
+.page-quiz .quiz-header a {
     text-decoration: none;
     color: #ffffff;
     background-color: #175393;
@@ -1739,10 +1779,10 @@ body.signup-page {
 .page-quiz .quiz-header h1 { color: #1854a3; margin: 0; font-size: 24px; font-weight: 700; }
 .page-quiz .quiz-header p { color: #666; margin: 4px 0 0 0; font-size: 13px; }
 
-.page-quiz .back-link { 
-    color: #555; text-decoration: none; font-size: 13px; font-weight: 500; 
-    border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px; 
-    background: #fafafa; white-space: nowrap; 
+.page-quiz .back-link {
+    color: #555; text-decoration: none; font-size: 13px; font-weight: 500;
+    border: 1px solid #ccc; padding: 6px 12px; border-radius: 4px;
+    background: #fafafa; white-space: nowrap;
 }
 
 .page-quiz .quiz-form { display: flex; flex-direction: column; gap: 20px; }
@@ -1751,61 +1791,103 @@ body.signup-page {
 
 .page-quiz .q-group h3 { margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333; }
 
-.page-quiz .radio-label { 
-    display: block; margin-bottom: 8px; cursor: pointer; 
-    font-size: 13px; color: #444; 
+.page-quiz .radio-label {
+    display: block; margin-bottom: 8px; cursor: pointer;
+    font-size: 13px; color: #444;
 }
 
 .page-quiz .radio-label input { margin-right: 6px; }
 
-.page-quiz .submit-btn { 
-    background: #1a73e8; color: white; border: none; padding: 12px; 
-    border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; 
+.page-quiz .submit-btn {
+    background: #1a73e8; color: white; border: none; padding: 12px;
+    border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;
 }
 
-.page-quiz .results-top { 
-    background: white; padding: 25px; border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; 
+/*   Quiz View   */
+.page-quiz .stalls { padding: 50px 0; }
+.page-quiz .stalls h1 { text-align: center; margin-bottom: 30px; }
+.page-quiz .stall-grid {
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
 }
-.page-quiz .result-actions a { 
+
+.page-quiz .stall-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 12px rgba(43, 31, 20, 0.08);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 340px;
+    flex: 1 1 300px;
+}
+
+.page-quiz .stall-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.page-quiz .stall-card h2 {
+    margin: 0;
+    padding: 8px 0 4px;
+    font-size: 22px;
+}
+
+.page-quiz .stall-card > p:not(.stall-desc) {
+    margin: 0;
+    padding: 2px 0;
+}
+
+.page-quiz .stall-card .stall-desc {
+    height: 4.2em;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.page-quiz .stall-card a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    margin-top: auto;
+    border-radius: 5px;
+}
+
+.page-quiz .result-container {
+    max-width: 1400px !important;
+    width: 95% !important;
+    margin: 40px auto;
+}
+
+.page-quiz .match-heading {
+    font-size: 2rem;
+    color: #222222;
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.page-quiz .result-actions a {
     text-decoration: none;
     color: #ffffff;
     background-color: #175393;
     border-radius: 0.85em;
     padding: 0.8%;
 }
-.page-quiz .results-top h1 { font-size: 22px; margin: 4px 0 0 0; color: #222; font-weight: 700; }
 
-.page-quiz .stall-grid { 
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
-    gap: 15px; margin-bottom: 20px; 
+.page-quiz .stall-card .stall-desc {
+    height: 4.2em;
+    overflow-y: auto;
+    padding-right: 4px;
 }
-
-.page-quiz .stall-card { 
-    background: white; border-radius: 6px; overflow: hidden; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; 
-}
-
-.page-quiz .stall-card img { width: 100%; height: 140px; object-fit: cover; }
-
-.page-quiz .card-inner { padding: 12px; }
-
-.page-quiz .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-
-.page-quiz .card-head h3 { margin: 0; font-size: 15px; }
-
-.page-quiz .card-badge { 
-    font-size: 10px; background: #e8f0fe; color: #1a73e8; 
-    padding: 1px 6px; border-radius: 10px; 
-}
-
-.page-quiz .card-price { 
-    font-size: 11px; color: #555; font-weight: bold; 
-    margin-top: 10px; display: block; 
-}
-
-
 /* ── forgot password page ── */
  .forgot-password .block {
     background: #fdf6ec;
@@ -1930,7 +2012,7 @@ body.signup-page {
     padding: 13px 16px;
     border: 2px solid #e5e9f2;
     border-radius: 10px;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
     font-size: 0.95rem;
     color: #2d3748;
     outline: none;
@@ -1980,7 +2062,7 @@ body.signup-page {
     color: #fff;
     border: none;
     border-radius: 10px;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
@@ -2059,7 +2141,7 @@ body.signup-page {
     text-align: center;
     font-size: 1.4rem;
     font-weight: 800;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
     color: #1c4273;
     outline: none;
     padding: 0;
@@ -2154,7 +2236,7 @@ body.signup-page {
     background: linear-gradient(135deg, #f97316, #fb923c);
     color: #fff;
     border-radius: 10px;
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', sans-serif;
     font-weight: 800;
     font-size: 0.95rem;
     text-decoration: none;

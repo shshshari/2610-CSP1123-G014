@@ -7,10 +7,10 @@
 {% block content %}
 <!-- ── MAIN ── -->
 <main>
- 
+
   <!-- Back Button -->
   <button class="back-btn" onclick="history.back()">← Back</button>
- 
+
   <!-- Breadcrumb -->
   <div class="breadcrumb">
     <a href="{{ url_for('home') }}">Home</a>
@@ -22,7 +22,7 @@
 
   <div class="stall-top">
     <div class="stall-image">
-     
+
         {% if stall.image_file == 'default_stall.jpg' %}
             <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}">
         {% else %}
@@ -34,7 +34,7 @@
         <div class="stall-header-row">
             <div class="stall-name">{{ stall.name }}</div>
         </div>
-        
+
         <div class="tags">
             <span class="tag">{{ stall.category }}</span>
         </div>
@@ -57,20 +57,20 @@
     <button class="btn btn-fav {% if is_favorited %}active{% endif %}" id="favBtn" onclick="toggleStallFavorite({{ stall.id }});">
       ♥ <span id="favLabel">{% if is_favorited %}Favorited{% else %}Favorite{% endif %}</span>
     </button>
-    
+
     <button class="btn btn-review" onclick="document.getElementById('writeReview').scrollIntoView({behavior:'smooth'})">
       ✏️ Write a Review
     </button>
     {% endif %}
-    {% if current_user.is_authenticated and (current_user.role.lower() == 'admin' or current_user.id == stall.manager_id) %}
+    {% if current_user.is_authenticated and (current_user.role.lower() == 'manager' or current_user.id == stall.manager_id) %}
     <div class="admin-actions-div">
-        <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="edit-btn"></a>
-            ⚙️ Edit Stall Details
-        </a>
+    <a href="{{ url_for('edit_stall', stall_id=stall.id) }}" class="btn edit-btn">
+    ⚙️ Edit Stall Details
+    </a>
     </div>
 {% endif %}
   </div>
- 
+
   <hr class="section-divider"/>
 
   <!-- ── REVIEWS SECTION ── -->
@@ -80,7 +80,7 @@
     {% if stall.reviews %}
       {% for review in stall.reviews %}
         <div class="review-card" id="review-card-{{ review.id }}">
-          
+
           <div id="view-mode-{{ review.id }}">
             <div class="review-card-top">
               <div>
@@ -94,13 +94,13 @@
 
               <div class="review-actions">
                 {% if current_user.is_authenticated %}
-                  
+
                   {% if review.user_id == current_user.id %}
                     <button onclick="toggleEditMode('{{ review.id }}')">✏️ Edit</button>
                     <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" onsubmit="return confirm('Delete your review?');">
                       <button type="submit">🗑️ Delete</button>
                     </form>
-                  
+
                   {% elif current_user.role == 'manager' %}
                     <form action="{{ url_for('delete_review', review_id=review.id) }}" method="POST" onsubmit="return confirm('Admin Action: Delete this user review?');">
                       <button type="submit">🛡️ Admin Delete</button>
@@ -140,18 +140,18 @@
     {% else %}
       <p>No reviews written yet. Be the first to share your experience!</p>
     {% endif %}
- 
+
   </div>
- 
+
   <!-- ── WRITE A REVIEW FORM ── -->
    {% if current_user.role != 'manager' %}
 <div class="write-review-box" id="writeReview">
     <h4>✍️ Leave your review</h4>
-    
+
     <form action="{{ url_for('add_review', stall_id=stall.id) }}" method="POST">
-      
+
       <input type="hidden" name="rating" id="ratingInput" value="5">
-      
+
       <div class="star-picker-container">
         <label>Your Rating:</label>
         <div class="star-picker">
@@ -162,9 +162,9 @@
           <span class="interactive-star" data-value="5" onclick="updateStarPicker(5)">★</span>
         </div>
       </div>
-      
+
       <textarea class="review-textarea" name="comment" required placeholder="Share your dining experience..."></textarea>
-      
+
       {% if current_user.is_authenticated %}
         <button type="submit" class="submit-btn">Submit Review</button>
       {% else %}
@@ -180,7 +180,7 @@
 function toggleEditMode(reviewId) {
     const viewDiv = document.getElementById(`view-mode-${reviewId}`);
     const editDiv = document.getElementById(`edit-mode-${reviewId}`);
-    
+
     if (viewDiv.style.display === "none") {
         viewDiv.style.display = "block";
         editDiv.style.display = "none";
@@ -192,17 +192,17 @@ function toggleEditMode(reviewId) {
 
 
 function updateStarPicker(rating) {
-  
+
     document.getElementById('ratingInput').value = rating;
-    
- 
+
+
     const stars = document.querySelectorAll('.interactive-star');
     stars.forEach(star => {
         const starValue = parseInt(star.getAttribute('data-value'));
         if (starValue <= rating) {
-            star.style.color = '#ffcc00'; 
+            star.style.color = '#ffcc00';
         } else {
-            star.style.color = '#ccc';  
+            star.style.color = '#ccc';
         }
     });
 }
