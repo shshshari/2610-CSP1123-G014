@@ -1040,7 +1040,7 @@ body.signup-page {
     text-align: center;
     text-decoration: none;
     background: transparent;
-    box-sizing: border-box; /* This prevents the overflow! */
+    box-sizing: border-box; 
     cursor: pointer;
     transition: all 0.2s;
     color: #a08060;
@@ -1138,7 +1138,7 @@ body.signup-page {
 .page-profile .bottom-section h4 small:hover {
     background-color: #2b5587;
 }
-/* Auth/Reset (style3.css) */
+/* Auth/Reset */
 .page-auth .container { width: 768px; max-width: 95vw; min-height: 480px; }
 
 .header-inner {
@@ -1265,7 +1265,7 @@ body.signup-page {
 }
 
 /* Dropdown Menu */
-#menu-toggle { display: none; } /* Hidden checkbox */
+#menu-toggle { display: none; } 
 
 .dropdown-menu {
     display: none;
@@ -1296,7 +1296,7 @@ body.signup-page {
 
 .dropdown-menu a:hover {background: #f5f5f5; color: #1c4273;}
 
-/* Feedback Page Layout - Scoped to .page-viewfeedback */
+/* Feedback Page Layout */
 .page-viewfeedback .feedback-container {
     max-width: 800px;
     margin: 20px auto;
@@ -1482,11 +1482,10 @@ body.signup-page {
 .page-profile .profile-bio { font-size: 14px; color: #777; margin-bottom: 6px; }
 
 /* ---- BUTTONS ---- */
-/* ---- BUTTONS ---- */
 .page-profile .profile-actions {
     display: flex;
-    flex-direction: column;   /* Force buttons to stack on top of each other */
-    gap: 8px;                 /* Consistent vertical spacing */
+    flex-direction: column;   
+    gap: 8px;                
 }
 
 .page-profile .btn-edit, .page-profile .btn-logout, .page-profile .btn-delete {
@@ -1500,7 +1499,7 @@ body.signup-page {
     text-align: center;
 }
 
-.page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 0px; } /* Reset margin since flexbox handles layout gaps */
+.page-profile .btn-edit { background: #1c4273; color: white; margin-bottom: 0px; }
 .page-profile .btn-edit:hover { background: #2b5e98; }
 .page-profile .btn-logout:hover { background: #dadada; }
 .page-profile .btn-logout { background: #ffffff; color: #333; }
@@ -1572,28 +1571,23 @@ body.signup-page {
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     border-color: #ddd;
 }
-/* Fix for Favorite Stalls and Reviews links */
+
 .page-profile .bottom-section a {
-    text-decoration: none; /* Removes the underline */
-    color: #333;           /* Sets the text to a nice dark grey/black */
-    display: block;        /* Ensures the whole area remains clickable */
+    text-decoration: none; 
+    color: #333;          
+    display: block;        
 }
 
-/* Ensure the titles inside these links stay the correct color */
 .page-profile .bottom-section h4 {
-    color: #1c4273;        /* Your brand blue for titles */
+    color: #1c4273;      
     margin-bottom: 5px;
 }
 
-/* Optional: Add a subtle hover effect if you want */
 .page-profile .bottom-section a:hover {
-    color: #000;           /* Pure black on hover */
+    color: #000;          
 }
 
-
-
-/* Shared Form Styles for Add/Edit pages */
-
+/* Styles for Add/Edit pages */
 .page-addstall .form-wrapper {
     max-width: 600px;
     width: 100%;
@@ -1686,8 +1680,6 @@ body.signup-page {
 }
 
 
-
-/* Quiz Page Scoped Styles */
 /* --- Quiz Page Layout Wrapper --- */
 .page-quiz main {
     width: 90%;
@@ -1695,9 +1687,9 @@ body.signup-page {
     margin: 40px auto;
     display: block;
 }
-/* Change background of the quiz area only */
+
 .page-quiz .quiz-container {
-    background: #ffffff; /* Replace with your desired color or background image */
+    background: #ffffff; 
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1722,7 +1714,6 @@ body.signup-page {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(28, 66, 115, 0.3);
 }
-/* Questionnaire Container (Stage 1) */
 .page-quiz .quiz-card { 
     background: white; 
     padding: 30px; 
@@ -1772,7 +1763,6 @@ body.signup-page {
     border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; 
 }
 
-/* Results Section (Stage 2) */
 .page-quiz .results-top { 
     background: white; padding: 25px; border-radius: 8px; 
     box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
@@ -1956,7 +1946,6 @@ body.signup-page {
     box-shadow: 0 0 0 3px rgba(28, 66, 115, 0.08);
 }
 
-/* ── Password field with eye toggle ── */
 .forgot-password .input-wrap {
     position: relative;
     margin-bottom: 18px;
@@ -2054,21 +2043,7 @@ body.signup-page {
     text-align: left;
 }
 
-/* ── Dev hint (remove in production) ── */
-.forgot-password .dev-hint {
-    background: #f0fdf4;
-    border: 1.5px solid #86efac;
-    color: #166534;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 0.82rem;
-    margin-bottom: 20px;
-    /* DYNAMIC: remove this block once real email sending is wired up */
-}
-
-/* ─────────────────────────────────────────
-   VERIFY CODE PAGE – 6-box input
-───────────────────────────────────────── */
+/* VERIFY CODE PAGE – 6-box input */
 .forgot-password .code-inputs {
     display: flex;
     gap: 10px;
@@ -2097,9 +2072,7 @@ body.signup-page {
     box-shadow: 0 0 0 3px rgba(28, 66, 115, 0.1);
 }
 
-/* ─────────────────────────────────────────
-   RESET PASSWORD PAGE – strength bar
-───────────────────────────────────────── */
+/* RESET PASSWORD PAGE */
 .forgot-password .strength-bar-wrap {
     height: 6px;
     background: #e5e9f2;
@@ -2150,9 +2123,7 @@ body.signup-page {
     color: #22c55e;
 }
 
-/* ─────────────────────────────────────────
-   SUCCESS STATE (reset password page)
-───────────────────────────────────────── */
+/* SUCCESS STATE (reset password page) */
 .forgot-password .success-card {
     display: none;
     text-align: center;
@@ -2195,19 +2166,3 @@ body.signup-page {
     opacity: 0.88;
 }
 
-/* ── Responsive ── */
-@media (max-width: 500px) {
-    .forgot-password .card {
-        padding: 36px 24px;
-    }
-
-    .forgot-password .code-inputs input {
-        width: 40px;
-        height: 48px;
-        font-size: 1.2rem;
-    }
-
-    .forgot-password .step-line {
-        width: 32px;
-    }
-}

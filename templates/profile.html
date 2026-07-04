@@ -79,7 +79,6 @@
     <div id="editProfileModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h3>Edit Profile</h3>
-            <!-- FORM 1 START -->
             <form action="{{ url_for('edit_profile') }}" method="POST" enctype="multipart/form-data">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" value="{{ current_user.name or '' }}">
@@ -96,11 +95,10 @@
                     <button type="submit" class="btn-save">Save</button>
                 </div>
             </form> 
-            <!-- FORM 1 END (This fixes the broken Save button) -->
         </div>
     </div>
 
-    <!-- Password Modal (This stays outside the Edit Profile Modal) -->
+    <!-- Password Modal -->
     <div id="changePasswordModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h3>Change Password</h3>
@@ -131,7 +129,6 @@
         document.getElementById('editProfileModal').style.display = 'none';
     }
 
-    // Add these missing functions
     function openPasswordModal() {
         document.getElementById('changePasswordModal').style.display = 'flex';
     }

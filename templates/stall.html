@@ -22,7 +22,7 @@
 
   <div class="stall-top">
     <div class="stall-image">
-        <!-- ✅ DYNAMICALLY ROUTED USING DATABASE PATH BACKENDS -->
+     
         {% if stall.image_file == 'default_stall.jpg' %}
             <img src="{{ url_for('static', filename='default_stall.jpg') }}" alt="{{ stall.name }}">
         {% else %}
@@ -47,7 +47,6 @@
             <span class="review-count">({{ stall.reviews|length }} reviews)</span>
         </div>
 
-        <!-- Displays location backref safely -->
         <div class="stall-location">📍 {{ stall.place.name if stall.place else "Main Campus" }}</div>
     </div>
   </div>
